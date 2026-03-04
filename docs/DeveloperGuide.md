@@ -286,34 +286,87 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 *{More to be added}*
 
-### Use cases
+## Use cases
 
-(For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
 
-**Use case: Delete a person**
+### UC01 Create a delivery record linked to a client contact
 
-**MSS**
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+**Actor:** User 
+**Preconditions:** 
+- The user has launched Mycelia.
+- A client contact already exists in the system.
 
-    Use case ends.
 
-**Extensions**
+**Main success scenario:**
+1. User searches for a client contact using a keyword (e.g., client name).
+2. System displays matching client contacts.
+3. User selects the intended client contact.
+4. User requests to create a delivery record and provides required details (e.g., delivery address, date/time, tags, cut-off time).
+5. System validates the input.
+6. System creates the delivery record linked to the selected client contact.
+7. System shows a confirmation message.
 
-* 2a. The list is empty.
 
-  Use case ends.
+**Extensions:**
+- **2a. No matches found:** System shows “No matching contacts found” and ends the use case.
+- **5a. Invalid/missing fields:** System shows validation errors and prompts user to correct the inputs.
+- **6a. Duplicate record detected:** System warns the user and asks whether to proceed or cancel.
 
-* 3a. The given index is invalid.
 
-    * 3a1. AddressBook shows an error message.
+---
 
-      Use case resumes at step 2.
 
-*{More to be added}*
+### UC02 Mark a delivery as complete
+
+
+**Actor:** User (dispatcher / delivery coordinator) 
+**Preconditions:** 
+- A delivery list for the day exists.
+- At least one delivery record is currently not completed.
+
+
+**Main success scenario:**
+1. User requests to view today’s delivery list.
+2. System displays the delivery list with current statuses.
+3. User selects the target delivery record.
+4. User marks the selected delivery record as **complete**.
+5. System updates the delivery status.
+6. System refreshes the delivery list and shows confirmation.
+
+
+**Extensions:**
+- **3a. Delivery not found:** System informs the user and ends the use case.
+- **4a. Delivery already completed:** System warns the user and leaves the status unchanged.
+- **4b. Wrong delivery chosen:** User marks the delivery as incomplete (undo) and repeats steps 3–6.
+
+
+---
+
+
+### UC03 Tag a client contact for special handling
+
+
+**Actor:** User 
+**Preconditions:** 
+- The client contact exists.
+
+
+**Main success scenario:**
+1. User searches for a client contact.
+2. System displays matching contacts.
+3. User selects the target contact.
+4. User adds one or more tags (e.g., VIP, fragile, COD, restricted).
+5. System updates the contact record and shows confirmation.
+
+
+**Extensions:**
+- **2a. No matches found:** System shows “No matching contacts found” and ends the use case.
+- **4a. Tag already exists:** System ignores the duplicate tag and confirms completion.
+
+
+---
+
 
 ### Non-Functional Requirements
 

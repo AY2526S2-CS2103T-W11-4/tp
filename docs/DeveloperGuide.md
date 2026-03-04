@@ -323,10 +323,17 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 *{More to be added}*
 
-### Glossary
+## Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Private contact detail**: A contact detail that is not meant to be shared with others
+
+- **Client contact:** A customer entry (company/person) with key fields such as name, phone, address, and notes.
+- **Partner:** A collaborating entity (e.g., supplier or 3PL partner) whose details are stored for coordination.
+- **Delivery record:** A single delivery task, optionally linked to a client contact, containing address, timing, and status.
+- **Delivery list:** A collection of delivery records grouped for a day or route.
+- **Cut-off time:** The latest time by which a delivery should be completed.
+- **Tag:** A label applied to contacts/addresses/deliveries for filtering and prioritization.
+- **Special-handling tags:** Tags such as VIP/fragile/COD/restricted indicating extra constraints.
+- **COD (Cash on Delivery):** A delivery that requires payment collection upon delivery.
 
 --------------------------------------------------------------------------------------------------------------------
 

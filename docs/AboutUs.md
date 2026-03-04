@@ -14,8 +14,23 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 <img src="images/eepyadventure.png" width="200px">
 
 [[github](https://github.com/eepyadventure)]
+### Yucheng Wang
 
-* Role: Project Advisor
+<img src="images/echoandland.png" width="200px">
+
+[[homepage](https://echoandland.github.io/)]
+[[github](https://github.com/Echoandland)]
+[[portfolio](team/Yucheng.md)]
+
+* Role: Developer & Project designer
+### Guo Xintong
+
+<img src="images/guoxintongmark.png" width="200px">
+
+* GitHub: [GuoxintongMark](https://github.com/GuoxintongMark)
+* Role: Developer
+* Responsibilities: Implementation and testing
+
 
 ### Jane Doe
 

@@ -33,8 +33,8 @@ public class ProductContainsKeywordsPredicate implements Predicate<Delivery> {
             return false;
         }
 
-        ProductContainsKeywordsPredicate otherProductContainsKeywordsPredicate = (ProductContainsKeywordsPredicate) other;
-        return keywords.equals(otherProductContainsKeywordsPredicate.keywords);
+        ProductContainsKeywordsPredicate otherContainsKeywordsPredicate = (ProductContainsKeywordsPredicate) other;
+        return keywords.equals(otherContainsKeywordsPredicate.keywords);
     }
 
     @Override

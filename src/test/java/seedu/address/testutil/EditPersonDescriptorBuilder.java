@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import seedu.address.logic.commands.EditCommand.EditCompanyDescriptor;
+import seedu.address.logic.commands.CompanyCommands.EditCommand.EditCompanyDescriptor;
 import seedu.address.model.company.Address;
 import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;

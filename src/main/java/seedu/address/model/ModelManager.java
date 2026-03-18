@@ -25,6 +25,7 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Company> filteredCompanies;
     private final FilteredList<Delivery> filteredDeliveries;
+    private boolean isCompanyPackage;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -67,6 +68,16 @@ public class ModelManager implements Model {
     public void setGuiSettings(GuiSettings guiSettings) {
         requireNonNull(guiSettings);
         userPrefs.setGuiSettings(guiSettings);
+    }
+
+    @Override
+    public boolean getCompanyPackage() {
+        return isCompanyPackage;
+    }
+
+    @Override
+    public void setCompanyPackage(boolean isCompanyPackage) {
+        this.isCompanyPackage = isCompanyPackage;
     }
 
     @Override
@@ -134,6 +145,11 @@ public class ModelManager implements Model {
     }
 
     //=========== DeliveryBook ==================================================================
+
+    @Override
+    public ReadOnlyDeliveryBook getDeliveryBook() {
+        return deliveryBook;
+    }
 
     @Override
     public boolean hasDelivery(Delivery delivery) {

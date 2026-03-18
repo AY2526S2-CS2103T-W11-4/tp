@@ -16,6 +16,7 @@ import seedu.address.logic.parser.deliveryparser.DeliveryBookParser;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyDeliveryBook;
 import seedu.address.model.company.Company;
 import seedu.address.storage.Storage;
 
@@ -35,8 +36,6 @@ public class LogicManager implements Logic {
     private final AddressBookParser addressBookParser;
     private final DeliveryBookParser deliveryBookParser;
 
-    private String commandPackage;
-
     /**
      * Constructs a {@code LogicManager} with the given {@code Model} and {@code Storage}.
      */
@@ -45,7 +44,6 @@ public class LogicManager implements Logic {
         this.storage = storage;
         addressBookParser = new AddressBookParser();
         deliveryBookParser = new DeliveryBookParser();
-        commandPackage = "companyparser";
     }
 
     @Override
@@ -54,10 +52,9 @@ public class LogicManager implements Logic {
 
         Command command;
         CommandResult commandResult = null;
+        boolean isCompanyPackage = model.getCompanyPackage();
 
-        switch (commandPackage) {
-
-        case AddressBookParser.PACKAGE:
+        if (isCompanyPackage) {
             command = addressBookParser.parseCommand(commandText);
             commandResult = command.execute(model);
 
@@ -68,27 +65,20 @@ public class LogicManager implements Logic {
             } catch (IOException ioe) {
                 throw new CommandException(String.format(FILE_OPS_ERROR_FORMAT, ioe.getMessage()), ioe);
             }
-            break;
-
-        case DeliveryBookParser.PACKAGE:
+        } else {
             command = deliveryBookParser.parseCommand(commandText);
             commandResult = command.execute(model);
 
             try {
-                storage.saveAddressBook(model.getAddressBook());
+                storage.saveDeliveryBook(model.getDeliveryBook());
             } catch (AccessDeniedException e) {
                 throw new CommandException(String.format(FILE_OPS_PERMISSION_ERROR_FORMAT, e.getMessage()), e);
             } catch (IOException ioe) {
                 throw new CommandException(String.format(FILE_OPS_ERROR_FORMAT, ioe.getMessage()), ioe);
             }
-            break;
         }
 
         return commandResult;
-    }
-
-    public void SwitchPackage(String newPackage) {
-        this.commandPackage = newPackage;
     }
 
     @Override

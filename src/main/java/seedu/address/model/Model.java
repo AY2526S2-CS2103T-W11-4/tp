@@ -36,6 +36,16 @@ public interface Model {
     void setGuiSettings(GuiSettings guiSettings);
 
     /**
+     * Gets the current package being used.
+     */
+    boolean getCompanyPackage();
+
+    /**
+     * Sets the current package being used.
+     */
+    void setCompanyPackage(boolean isCompanyPackage);
+
+    /**
      * Returns the user prefs' address book file path.
      */
     Path getAddressBookFilePath();
@@ -88,6 +98,9 @@ public interface Model {
     void updateFilteredCompanyList(Predicate<Company> predicate);
 
     // for deliveryCommands
+    /** Returns the DeliveryBook */
+    ReadOnlyDeliveryBook getDeliveryBook();
+
     boolean hasDelivery(Delivery delivery);
 
     void deleteDelivery(Delivery target);

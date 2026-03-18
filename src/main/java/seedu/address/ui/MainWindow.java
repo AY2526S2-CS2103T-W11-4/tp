@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
@@ -16,6 +17,7 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.Model;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -28,10 +30,12 @@ public class MainWindow extends UiPart<Stage> {
     private final Logger logger = LogsCenter.getLogger(getClass());
 
     private Stage primaryStage;
-    private Logic logic;
+    private final Logic logic;
+    private final Model model;
 
     // Independent Ui parts residing in this Ui container
     private CompanyListPanel companyListPanel;
+    private DeliveryListPanel deliveryListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
 
@@ -42,7 +46,13 @@ public class MainWindow extends UiPart<Stage> {
     private MenuItem helpMenuItem;
 
     @FXML
+    private TabPane listTabPane;
+
+    @FXML
     private StackPane companyListPanelPlaceholder;
+
+    @FXML
+    private StackPane deliveryListPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -53,15 +63,17 @@ public class MainWindow extends UiPart<Stage> {
     /**
      * Creates a {@code MainWindow} with the given {@code Stage} and {@code Logic}.
      */
-    public MainWindow(Stage primaryStage, Logic logic) {
+    public MainWindow(Stage primaryStage, Logic logic, Model model) {
         super(FXML, primaryStage);
 
         // Set dependencies
         this.primaryStage = primaryStage;
         this.logic = logic;
+        this.model = model;
 
         // Configure the UI
         setWindowDefaultSize(logic.getGuiSettings());
+        configureListTabs();
 
         setAccelerators();
 
@@ -110,8 +122,11 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        companyListPanel = new CompanyListPanel(logic.getFilteredCompanyList());
+        companyListPanel = new CompanyListPanel(model.getFilteredCompanyList());
         companyListPanelPlaceholder.getChildren().add(companyListPanel.getRoot());
+
+        deliveryListPanel = new DeliveryListPanel(model.getFilteredDeliveryList());
+        deliveryListPanelPlaceholder.getChildren().add(deliveryListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -121,6 +136,27 @@ public class MainWindow extends UiPart<Stage> {
 
         CommandBox commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+        syncSelectedTabWithMode();
+    }
+
+    /**
+     * Keeps the visible tab in sync with the current parser mode.
+     */
+    private void configureListTabs() {
+        listTabPane.getSelectionModel().selectedIndexProperty().addListener((unused, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+            model.setCompanyPackage(newValue.intValue() == 0);
+        });
+        syncSelectedTabWithMode();
+    }
+
+    /**
+     * Selects the tab that matches the current command mode.
+     */
+    private void syncSelectedTabWithMode() {
+        listTabPane.getSelectionModel().select(model.getCompanyPackage() ? 0 : 1);
     }
 
     /**
@@ -167,6 +203,10 @@ public class MainWindow extends UiPart<Stage> {
         return companyListPanel;
     }
 
+    public DeliveryListPanel getDeliveryListPanel() {
+        return deliveryListPanel;
+    }
+
     /**
      * Executes the command and returns the result.
      *
@@ -185,6 +225,8 @@ public class MainWindow extends UiPart<Stage> {
             if (commandResult.isExit()) {
                 handleExit();
             }
+
+            syncSelectedTabWithMode();
 
             return commandResult;
         } catch (CommandException | ParseException e) {

@@ -1,18 +1,24 @@
 package seedu.address.logic.parser.deliveryparser;
 
-import seedu.address.commons.core.LogsCenter;
-import seedu.address.logic.commands.Command;
-import seedu.address.logic.commands.uicommand.ExitCommand;
-import seedu.address.logic.commands.uicommand.HelpCommand;
-import seedu.address.logic.commands.deliverycommands.*;
-import seedu.address.logic.parser.exceptions.ParseException;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
+import seedu.address.commons.core.LogsCenter;
+import seedu.address.logic.commands.Command;
+import seedu.address.logic.commands.deliverycommands.AddCommand;
+import seedu.address.logic.commands.deliverycommands.ClearCommand;
+import seedu.address.logic.commands.deliverycommands.DeleteCommand;
+import seedu.address.logic.commands.deliverycommands.FindCommand;
+import seedu.address.logic.commands.deliverycommands.MarkCommand;
+import seedu.address.logic.commands.deliverycommands.SwitchCommand;
+import seedu.address.logic.commands.deliverycommands.UnmarkCommand;
+import seedu.address.logic.commands.uicommand.ExitCommand;
+import seedu.address.logic.commands.uicommand.HelpCommand;
+import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
  * Parses user input.
@@ -66,6 +72,9 @@ public class DeliveryBookParser {
 
         case UnmarkCommand.COMMAND_WORD:
             return new UnmarkCommandParser().parse(arguments);
+
+        case SwitchCommand.COMMAND_WORD:
+            return new SwitchCommand();
 
         case ExitCommand.COMMAND_WORD:
             return new ExitCommand();

@@ -3,16 +3,19 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Scene?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-         title="Address App" minWidth="450" minHeight="600" onCloseRequest="#handleExit">
+         title="MyCelia" minWidth="600" minHeight="650" onCloseRequest="#handleExit">
   <icons>
     <Image url="@/images/address_book_32.png" />
   </icons>
@@ -46,12 +49,39 @@
           </padding>
         </StackPane>
 
-        <VBox fx:id="companyList" styleClass="pane-with-border" minWidth="340" prefWidth="340" VBox.vgrow="ALWAYS">
-          <padding>
-            <Insets top="10" right="10" bottom="10" left="10" />
-          </padding>
-          <StackPane fx:id="companyListPanelPlaceholder" VBox.vgrow="ALWAYS"/>
-        </VBox>
+        <TabPane fx:id="listTabPane" VBox.vgrow="ALWAYS">
+          <tabs>
+            <Tab closable="false" text="Companies">
+              <VBox styleClass="pane-with-border" minWidth="340" prefWidth="340">
+                <padding>
+                  <Insets top="10" right="10" bottom="10" left="10" />
+                </padding>
+                <Label text="Company Book" styleClass="cell_big_label" />
+                <StackPane fx:id="companyListPanelPlaceholder" VBox.vgrow="ALWAYS">
+                  <VBox.margin>
+                    <Insets top="10" />
+                  </VBox.margin>
+                </StackPane>
+              </VBox>
+            </Tab>
+            <Tab closable="false" text="Deliveries">
+              <VBox styleClass="pane-with-border" minWidth="340" prefWidth="340">
+                <padding>
+                  <Insets top="10" right="10" bottom="10" left="10" />
+                </padding>
+                <Label text="Delivery Book" styleClass="cell_big_label" />
+                <StackPane fx:id="deliveryListPanelPlaceholder" VBox.vgrow="ALWAYS">
+                  <VBox.margin>
+                    <Insets top="10" />
+                  </VBox.margin>
+                </StackPane>
+              </VBox>
+            </Tab>
+          </tabs>
+          <VBox.vgrow>
+            <Priority fx:constant="ALWAYS" />
+          </VBox.vgrow>
+        </TabPane>
 
         <StackPane fx:id="statusbarPlaceholder" VBox.vgrow="NEVER" />
       </VBox>

@@ -5,45 +5,40 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
-import seedu.address.commons.core.LogsCenter;
-import seedu.address.model.company.Company;
-
-import java.util.logging.Logger;
+import seedu.address.model.delivery.Delivery;
 
 /**
- * Panel containing the list of companies.
+ * Panel containing the list of deliveries.
  */
 public class DeliveryListPanel extends UiPart<Region> {
-    private static final String FXML = "CompanyListPanel.fxml";
-    private final Logger logger = LogsCenter.getLogger(DeliveryListPanel.class);
+    private static final String FXML = "DeliveryListPanel.fxml";
 
     @FXML
-    private ListView<Company> companyListView;
+    private ListView<Delivery> deliveryListView;
 
     /**
-     * Creates a {@code CompanyListPanel} with the given {@code ObservableList}.
+     * Creates a {@code DeliveryListPanel} with the given {@code ObservableList}.
      */
-    public DeliveryListPanel(ObservableList<Company> companyList) {
+    public DeliveryListPanel(ObservableList<Delivery> deliveryList) {
         super(FXML);
-        companyListView.setItems(companyList);
-        companyListView.setCellFactory(listView -> new CompanyListViewCell());
+        deliveryListView.setItems(deliveryList);
+        deliveryListView.setCellFactory(listView -> new DeliveryListViewCell());
     }
 
     /**
-     * Custom {@code ListCell} that displays the graphics of a {@code Company} using a {@code CompanyCard}.
+     * Custom {@code ListCell} that displays the graphics of a {@code Delivery} using a {@code DeliveryCard}.
      */
-    class CompanyListViewCell extends ListCell<Company> {
+    class DeliveryListViewCell extends ListCell<Delivery> {
         @Override
-        protected void updateItem(Company company, boolean empty) {
-            super.updateItem(company, empty);
+        protected void updateItem(Delivery delivery, boolean empty) {
+            super.updateItem(delivery, empty);
 
-            if (empty || company == null) {
+            if (empty || delivery == null) {
                 setGraphic(null);
                 setText(null);
             } else {
-                setGraphic(new CompanyCard(company, getIndex() + 1).getRoot());
+                setGraphic(new DeliveryCard(delivery, getIndex() + 1).getRoot());
             }
         }
     }
-
 }

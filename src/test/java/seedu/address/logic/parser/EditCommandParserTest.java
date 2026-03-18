@@ -38,7 +38,7 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.companycommands.EditCommand;
 import seedu.address.logic.commands.companycommands.EditCommand.EditCompanyDescriptor;
-import seedu.address.logic.parser.deliveryparser.EditCommandParser;
+import seedu.address.logic.parser.companyparser.EditCommandParser;
 import seedu.address.model.company.Address;
 import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;

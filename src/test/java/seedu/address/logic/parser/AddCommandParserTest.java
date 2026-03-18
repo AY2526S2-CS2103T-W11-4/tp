@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.companycommands.AddCommand;
-import seedu.address.logic.parser.deliveryparser.AddCommandParser;
+import seedu.address.logic.parser.companyparser.AddCommandParser;
 import seedu.address.model.company.Address;
 import seedu.address.model.company.Company;
 import seedu.address.model.company.Email;

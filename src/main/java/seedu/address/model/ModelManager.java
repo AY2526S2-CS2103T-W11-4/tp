@@ -30,7 +30,8 @@ public class ModelManager implements Model {
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
      */
-    public ModelManager(ReadOnlyAddressBook addressBook, ReadOnlyDeliveryBook deliveryBook, ReadOnlyUserPrefs userPrefs) {
+    public ModelManager(
+            ReadOnlyAddressBook addressBook, ReadOnlyDeliveryBook deliveryBook, ReadOnlyUserPrefs userPrefs) {
         requireAllNonNull(addressBook, userPrefs);
 
         logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);

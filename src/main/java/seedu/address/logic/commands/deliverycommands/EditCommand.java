@@ -1,5 +1,19 @@
 package seedu.address.logic.commands.deliverycommands;
 
+import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.CollectionUtil;
 import seedu.address.commons.util.ToStringBuilder;
@@ -8,14 +22,11 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.delivery.*;
+import seedu.address.model.delivery.Address;
+import seedu.address.model.delivery.Company;
+import seedu.address.model.delivery.Delivery;
+import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
-
-import java.util.*;
-
-import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.*;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
 
 /**
  * Edits the details of an existing delivery in the address book.
@@ -80,13 +91,14 @@ public class EditCommand extends Command {
      * Creates and returns a {@code delivery} with the details of {@code deliveryToEdit}
      * edited with {@code editDeliveryDescriptor}.
      */
-    private static Delivery createEditedDelivery(Delivery deliveryToEdit, EditDeliveryDescriptor editdeliveryDescriptor) {
+    private static Delivery createEditedDelivery(
+            Delivery deliveryToEdit, EditDeliveryDescriptor editDeliveryDescriptor) {
         assert deliveryToEdit != null;
 
-        Product updatedProduct = editdeliveryDescriptor.getProduct().orElse(deliveryToEdit.getProduct());
-        Company updatedCompany = editdeliveryDescriptor.getCompany().orElse(deliveryToEdit.getCompany());
-        Address updatedAddress = editdeliveryDescriptor.getAddress().orElse(deliveryToEdit.getAddress());
-        Set<Tag> updatedTags = editdeliveryDescriptor.getTags().orElse(deliveryToEdit.getTags());
+        Product updatedProduct = editDeliveryDescriptor.getProduct().orElse(deliveryToEdit.getProduct());
+        Company updatedCompany = editDeliveryDescriptor.getCompany().orElse(deliveryToEdit.getCompany());
+        Address updatedAddress = editDeliveryDescriptor.getAddress().orElse(deliveryToEdit.getAddress());
+        Set<Tag> updatedTags = editDeliveryDescriptor.getTags().orElse(deliveryToEdit.getTags());
 
         return new Delivery(updatedProduct, updatedCompany, updatedAddress, updatedTags);
     }

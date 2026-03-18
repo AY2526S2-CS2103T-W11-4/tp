@@ -2,7 +2,10 @@ package seedu.address.logic.parser.deliveryparser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.*;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -53,7 +56,8 @@ public class EditCommandParser implements Parser<EditCommand> {
             editDeliveryDescriptor.setCompany(ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get()));
         }
         if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
-            editDeliveryDescriptor.setAddress(ParserUtil.parseDeliveryAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
+            editDeliveryDescriptor.setAddress(
+                    ParserUtil.parseDeliveryAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
         }
         parseTagsForEdit(argMultimap.getAllValues(PREFIX_TAG)).ifPresent(editDeliveryDescriptor::setTags);
 

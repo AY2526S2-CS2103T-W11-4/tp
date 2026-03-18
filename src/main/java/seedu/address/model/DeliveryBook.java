@@ -1,14 +1,14 @@
 package seedu.address.model;
 
-import javafx.collections.ObservableList;
-import seedu.address.commons.util.ToStringBuilder;
-import seedu.address.model.delivery.Delivery;
-import seedu.address.model.delivery.UniqueDeliveryList;
+import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
+import javafx.collections.ObservableList;
+import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.delivery.Delivery;
+import seedu.address.model.delivery.UniqueDeliveryList;
 
 /**
  * Wraps all data at the address-book level.

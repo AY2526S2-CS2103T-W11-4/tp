@@ -1,16 +1,17 @@
 package seedu.address.storage;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.DeliveryBook;
 import seedu.address.model.ReadOnlyDeliveryBook;
 import seedu.address.model.delivery.Delivery;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * An Immutable DeliveryBook that is serializable to JSON format.
@@ -38,7 +39,9 @@ class JsonSerializableDeliveryBook {
      * @param source future changes to this will not affect the created {@code JsonSerializableDeliveryBook}.
      */
     public JsonSerializableDeliveryBook(ReadOnlyDeliveryBook source) {
-        deliveries.addAll(source.getDeliveryList().stream().map(JsonAdaptedDelivery::new).collect(Collectors.toList()));
+        deliveries.addAll(source.getDeliveryList().stream()
+                .map(JsonAdaptedDelivery::new)
+                .collect(Collectors.toList()));
     }
 
     /**

@@ -23,12 +23,14 @@ import seedu.address.logic.commands.companycommands.AddCommand;
 import seedu.address.logic.commands.companycommands.ListCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.DeliveryBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.company.Company;
 import seedu.address.storage.JsonAddressBookStorage;
+import seedu.address.storage.JsonDeliveryBookStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
 import seedu.address.storage.StorageManager;
 import seedu.address.testutil.CompanyBuilder;
@@ -47,8 +49,11 @@ public class LogicManagerTest {
     public void setUp() {
         JsonAddressBookStorage addressBookStorage =
                 new JsonAddressBookStorage(temporaryFolder.resolve("addressBook.json"));
+        JsonDeliveryBookStorage deliveryBookStorage =
+                new JsonDeliveryBookStorage(temporaryFolder.resolve("deliveryBook.json"));
         JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(temporaryFolder.resolve("userPrefs.json"));
-        StorageManager storage = new StorageManager(addressBookStorage, userPrefsStorage);
+        model.setCompanyPackage(true);
+        StorageManager storage = new StorageManager(addressBookStorage, deliveryBookStorage, userPrefsStorage);
         logic = new LogicManager(model, storage);
     }
 
@@ -123,7 +128,7 @@ public class LogicManagerTest {
      */
     private void assertCommandFailure(String inputCommand, Class<? extends Throwable> expectedException,
             String expectedMessage) {
-        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        Model expectedModel = new ModelManager(model.getAddressBook(), new DeliveryBook(), new UserPrefs());
         assertCommandFailure(inputCommand, expectedException, expectedMessage, expectedModel);
     }
 
@@ -157,10 +162,13 @@ public class LogicManagerTest {
                 throw e;
             }
         };
+        JsonDeliveryBookStorage deliveryBookStorage =
+                new JsonDeliveryBookStorage(temporaryFolder.resolve("ExceptionDeliveryBook.json"));
 
         JsonUserPrefsStorage userPrefsStorage =
                 new JsonUserPrefsStorage(temporaryFolder.resolve("ExceptionUserPrefs.json"));
-        StorageManager storage = new StorageManager(addressBookStorage, userPrefsStorage);
+        model.setCompanyPackage(true);
+        StorageManager storage = new StorageManager(addressBookStorage, deliveryBookStorage, userPrefsStorage);
 
         logic = new LogicManager(model, storage);
 

@@ -1,20 +1,20 @@
 package seedu.address.ui;
 
+import java.util.Comparator;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import seedu.address.model.company.Company;
-
-import java.util.Comparator;
+import seedu.address.model.delivery.Delivery;
 
 /**
- * An UI component that displays information of a {@code Company}.
+ * An UI component that displays information of a {@code Delivery}.
  */
 public class DeliveryCard extends UiPart<Region> {
 
-    private static final String FXML = "CompanyListCard.fxml";
+    private static final String FXML = "DeliveryListCard.fxml";
 
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
@@ -24,35 +24,32 @@ public class DeliveryCard extends UiPart<Region> {
      * @see <a href="https://github.com/se-edu/addressbook-level4/issues/336">The issue on AddressBook level 4</a>
      */
 
-    public final Company company;
+    public final Delivery delivery;
 
     @FXML
     private HBox cardPane;
     @FXML
-    private Label name;
+    private Label product;
     @FXML
     private Label id;
     @FXML
-    private Label phone;
+    private Label company;
     @FXML
     private Label address;
-    @FXML
-    private Label email;
     @FXML
     private FlowPane tags;
 
     /**
-     * Creates a {@code CompanyCard} with the given {@code Company} and index to display.
+     * Creates a {@code DeliveryCard} with the given {@code Delivery} and index to display.
      */
-    public DeliveryCard(Company company, int displayedIndex) {
+    public DeliveryCard(Delivery delivery, int displayedIndex) {
         super(FXML);
-        this.company = company;
+        this.delivery = delivery;
         id.setText(displayedIndex + ". ");
-        name.setText(company.getName().fullName);
-        phone.setText(company.getPhone().value);
-        address.setText(company.getAddress().value);
-        email.setText(company.getEmail().value);
-        company.getTags().stream()
+        product.setText(delivery.getProduct().productName);
+        company.setText(delivery.getCompany().value);
+        address.setText(delivery.getAddress().value);
+        delivery.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }

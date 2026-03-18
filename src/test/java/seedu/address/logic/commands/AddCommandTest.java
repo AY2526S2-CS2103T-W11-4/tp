@@ -20,8 +20,10 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.companycommands.AddCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
+import seedu.address.model.DeliveryBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyDeliveryBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.company.Company;
 import seedu.address.model.delivery.Delivery;
@@ -111,12 +113,27 @@ public class AddCommandTest {
         }
 
         @Override
+        public boolean getCompanyPackage() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setCompanyPackage(boolean isCompanyPackage) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public Path getAddressBookFilePath() {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public void setAddressBookFilePath(Path addressBookFilePath) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setDeliveryBookFilePath(Path deliveryBookFilePath) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -133,6 +150,16 @@ public class AddCommandTest {
         @Override
         public ReadOnlyAddressBook getAddressBook() {
             throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setDeliveryBook(ReadOnlyDeliveryBook deliveryBook) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ReadOnlyDeliveryBook getDeliveryBook() {
+            return new DeliveryBook();
         }
 
         @Override

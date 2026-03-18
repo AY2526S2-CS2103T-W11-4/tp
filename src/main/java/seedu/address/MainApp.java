@@ -15,7 +15,14 @@ import seedu.address.commons.util.ConfigUtil;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.Logic;
 import seedu.address.logic.LogicManager;
-import seedu.address.model.*;
+import seedu.address.model.AddressBook;
+import seedu.address.model.DeliveryBook;
+import seedu.address.model.Model;
+import seedu.address.model.ModelManager;
+import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyDeliveryBook;
+import seedu.address.model.ReadOnlyUserPrefs;
+import seedu.address.model.UserPrefs;
 import seedu.address.model.util.SampleAddressDataUtil;
 import seedu.address.model.util.SampleDeliveryDataUtil;
 import seedu.address.storage.AddressBookStorage;
@@ -46,7 +53,7 @@ public class MainApp extends Application {
 
     @Override
     public void init() throws Exception {
-        logger.info("=============================[ Initializing AddressBook ]===========================");
+        logger.info("=============================[ Initializing application ]===========================");
         super.init();
 
         AppParameters appParameters = AppParameters.parse(getParameters());
@@ -60,10 +67,11 @@ public class MainApp extends Application {
         storage = new StorageManager(addressBookStorage, deliveryBookStorage, userPrefsStorage);
 
         model = initModelManager(storage, userPrefs);
+        model.setCompanyPackage(true);
 
         logic = new LogicManager(model, storage);
 
-        ui = new UiManager(logic);
+        ui = new UiManager(logic, model);
     }
 
     /**
@@ -98,8 +106,8 @@ public class MainApp extends Application {
             }
             initialDeliveryData = deliveryBookOptional.orElseGet(SampleDeliveryDataUtil::getSampleDeliveryBook);
         } catch (DataLoadingException e) {
-            logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
-                    + " Will be starting with an empty AddressBook.");
+            logger.warning("Data file at " + storage.getDeliveryBookFilePath() + " could not be loaded."
+                    + " Will be starting with an empty DeliveryBook.");
             initialDeliveryData = new DeliveryBook();
         }
 
@@ -183,13 +191,13 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        logger.info("Starting AddressBook " + MainApp.VERSION);
+        logger.info("Starting application " + MainApp.VERSION);
         ui.start(primaryStage);
     }
 
     @Override
     public void stop() {
-        logger.info("============================ [ Stopping AddressBook ] =============================");
+        logger.info("============================ [ Stopping application ] =============================");
         try {
             storage.saveUserPrefs(model.getUserPrefs());
         } catch (IOException e) {

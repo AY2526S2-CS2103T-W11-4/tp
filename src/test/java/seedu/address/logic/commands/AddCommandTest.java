@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
-import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalCompanies.ALICE;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.company.Company;
 import seedu.address.model.delivery.Delivery;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.CompanyBuilder;
 
 public class AddCommandTest {
 
@@ -37,7 +37,7 @@ public class AddCommandTest {
     @Test
     public void execute_personAcceptedByModel_addSuccessful() throws Exception {
         ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-        Company validPerson = new PersonBuilder().build();
+        Company validPerson = new CompanyBuilder().build();
 
         CommandResult commandResult = new AddCommand(validPerson).execute(modelStub);
 
@@ -48,7 +48,7 @@ public class AddCommandTest {
 
     @Test
     public void execute_duplicatePerson_throwsCommandException() {
-        Company validPerson = new PersonBuilder().build();
+        Company validPerson = new CompanyBuilder().build();
         AddCommand addCommand = new AddCommand(validPerson);
         ModelStub modelStub = new ModelStubWithPerson(validPerson);
 
@@ -57,8 +57,8 @@ public class AddCommandTest {
 
     @Test
     public void equals() {
-        Company alice = new PersonBuilder().withName("Alice").build();
-        Company bob = new PersonBuilder().withName("Bob").build();
+        Company alice = new CompanyBuilder().withName("Alice").build();
+        Company bob = new CompanyBuilder().withName("Bob").build();
         AddCommand addAliceCommand = new AddCommand(alice);
         AddCommand addBobCommand = new AddCommand(bob);
 

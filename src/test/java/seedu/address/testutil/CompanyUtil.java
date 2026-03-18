@@ -16,25 +16,25 @@ import seedu.address.model.tag.Tag;
 /**
  * A utility class for Company.
  */
-public class PersonUtil {
+public class CompanyUtil {
 
     /**
-     * Returns an add command string for adding the {@code person}.
+     * Returns an add command string for adding the {@code company}.
      */
-    public static String getAddCommand(Company person) {
-        return AddCommand.COMMAND_WORD + " " + getPersonDetails(person);
+    public static String getAddCommand(Company company) {
+        return AddCommand.COMMAND_WORD + " " + getCompanyDetails(company);
     }
 
     /**
-     * Returns the part of command string for the given {@code person}'s details.
+     * Returns the part of command string for the given {@code company}'s details.
      */
-    public static String getPersonDetails(Company person) {
+    public static String getCompanyDetails(Company company) {
         StringBuilder sb = new StringBuilder();
-        sb.append(PREFIX_NAME + person.getName().fullName + " ");
-        sb.append(PREFIX_PHONE + person.getPhone().value + " ");
-        sb.append(PREFIX_EMAIL + person.getEmail().value + " ");
-        sb.append(PREFIX_ADDRESS + person.getAddress().value + " ");
-        person.getTags().stream().forEach(
+        sb.append(PREFIX_NAME + company.getName().fullName + " ");
+        sb.append(PREFIX_PHONE + company.getPhone().value + " ");
+        sb.append(PREFIX_EMAIL + company.getEmail().value + " ");
+        sb.append(PREFIX_ADDRESS + company.getAddress().value + " ");
+        company.getTags().stream().forEach(
             s -> sb.append(PREFIX_TAG + s.tagName + " ")
         );
         return sb.toString();
@@ -43,7 +43,7 @@ public class PersonUtil {
     /**
      * Returns the part of command string for the given {@code EditCompanyDescriptor}'s details.
      */
-    public static String getEditPersonDescriptorDetails(EditCompanyDescriptor descriptor) {
+    public static String getEditCompanyDescriptorDetails(EditCompanyDescriptor descriptor) {
         StringBuilder sb = new StringBuilder();
         descriptor.getName().ifPresent(name -> sb.append(PREFIX_NAME).append(name.fullName).append(" "));
         descriptor.getPhone().ifPresent(phone -> sb.append(PREFIX_PHONE).append(phone.value).append(" "));

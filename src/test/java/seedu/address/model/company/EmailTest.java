@@ -68,10 +68,10 @@ public class EmailTest {
 
     @Test
     public void equals() {
-        Email email = new Email("valid@email");
+        Email email = new Email("ops@acme-logistics.com");
 
         // same values -> returns true
-        assertTrue(email.equals(new Email("valid@email")));
+        assertTrue(email.equals(new Email("ops@acme-logistics.com")));
 
         // same object -> returns true
         assertTrue(email.equals(email));
@@ -83,6 +83,6 @@ public class EmailTest {
         assertFalse(email.equals(5.0f));
 
         // different values -> returns false
-        assertFalse(email.equals(new Email("other.valid@email")));
+        assertFalse(email.equals(new Email("support@zenith-freight.com")));
     }
 }

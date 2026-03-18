@@ -33,23 +33,23 @@ public class TestUtil {
     }
 
     /**
-     * Returns the middle index of the person in the {@code model}'s person list.
+     * Returns the middle index of the company in the {@code model}'s filtered company list.
      */
     public static Index getMidIndex(Model model) {
         return Index.fromOneBased(model.getFilteredCompanyList().size() / 2);
     }
 
     /**
-     * Returns the last index of the person in the {@code model}'s person list.
+     * Returns the last index of the company in the {@code model}'s filtered company list.
      */
     public static Index getLastIndex(Model model) {
         return Index.fromOneBased(model.getFilteredCompanyList().size());
     }
 
     /**
-     * Returns the person in the {@code model}'s person list at {@code index}.
+     * Returns the company in the {@code model}'s filtered company list at {@code index}.
      */
-    public static Company getPerson(Model model, Index index) {
+    public static Company getCompany(Model model, Index index) {
         return model.getFilteredCompanyList().get(index.getZeroBased());
     }
 }

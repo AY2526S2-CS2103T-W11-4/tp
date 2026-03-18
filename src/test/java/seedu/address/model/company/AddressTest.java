@@ -27,19 +27,21 @@ public class AddressTest {
         // invalid addresses
         assertFalse(Address.isValidAddress("")); // empty string
         assertFalse(Address.isValidAddress(" ")); // spaces only
+        assertFalse(Address.isValidAddress("  Warehouse 12")); // leading whitespace
 
         // valid addresses
-        assertTrue(Address.isValidAddress("Blk 456, Den Road, #01-355"));
-        assertTrue(Address.isValidAddress("-")); // one character
-        assertTrue(Address.isValidAddress("Leng Inc; 1234 Market St; San Francisco CA 2349879; USA")); // long address
+        assertTrue(Address.isValidAddress("Warehouse 12, Jurong Port Road, #02-01"));
+        assertTrue(Address.isValidAddress("Dock A")); // short dispatch location
+        assertTrue(Address.isValidAddress(
+                "Acme Logistics Pte Ltd, 21 Pioneer Road North, Singapore 628467")); // company delivery address
     }
 
     @Test
     public void equals() {
-        Address address = new Address("Valid Address");
+        Address address = new Address("North Distribution Hub");
 
         // same values -> returns true
-        assertTrue(address.equals(new Address("Valid Address")));
+        assertTrue(address.equals(new Address("North Distribution Hub")));
 
         // same object -> returns true
         assertTrue(address.equals(address));
@@ -51,6 +53,6 @@ public class AddressTest {
         assertFalse(address.equals(5.0f));
 
         // different values -> returns false
-        assertFalse(address.equals(new Address("Other Valid Address")));
+        assertFalse(address.equals(new Address("South Delivery Hub")));
     }
 }

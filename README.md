@@ -1,12 +1,12 @@
 # MyCelia 🍄
 
-\[!\[CI Status](https://github.com/se-edu/addressbook-level3/workflows/Java%20CI/badge.svg)](https://github.com/AY2526S2-CS2103T-W11-4/tp)
+[!\[CI Status](https://github.com/se-edu/addressbook-level3/workflows/Java%20CI/badge.svg)](https://github.com/AY2526S2-CS2103T-W11-4/tp)
 
 > \_Keeping your business network connected.\_
 
 MyCelia is a command-line-driven desktop application for B2B delivery coordinators. Manage your business contacts and track outgoing deliveries — all from a single keyboard-driven interface. No clicking around. Just type and go.
 
-!\[MyCelia Main Window](docs/images/main-window.png)
+![MyCelia Main Window](docs/images/main-window.png)
 
 \---
 
@@ -41,7 +41,7 @@ MyCelia can be used entirely by keyboard, but several actions are also accessibl
 
 **Action tabs:**
 
-!\[UI Tabs and Buttons](docs/images/action-tabs.png)
+![UI Tabs and Buttons](docs/images/action-tabs.png)
 
 |Tab|What it does|
 |-|-|
@@ -50,7 +50,7 @@ MyCelia can be used entirely by keyboard, but several actions are also accessibl
 
 **Command terminal**:
 
-!\[UI Tabs and Buttons](docs/images/command-terminal.png)
+![UI Tabs and Buttons](docs/images/command-terminal.png)
 
 |Box|What it does|
 |-|-|
@@ -61,7 +61,7 @@ MyCelia can be used entirely by keyboard, but several actions are also accessibl
 
 **Book tabs**:
 
-!\[UI Tabs and Buttons](docs/images/book-tabs.png)
+![UI Tabs and Buttons](docs/images/book-tabs.png)
 
 |Tab|What it does|
 |-|-|
@@ -72,19 +72,19 @@ Every UI action has an equivalent command. Use whichever feels faster for your w
 
 ### Help Window
 
-!\[Help Window](docs/images/help-window.png)
+![Help Window](docs/images/help-window.png)
 
 The help window provides a link to this user guide.
 
 ### Company Book View
 
-!\[Company Book](docs/images/company-book.png)
+![Company Book](docs/images/company-book.png)
 
 The Company Book view shows all your business contacts. Each entry displays the company name, phone number, email, address, and any tags assigned to it. Below is the location the data is saved.
 
 ### Delivery Book View
 
-!\[Delivery Book](docs/images/delivery-book.png)
+![Delivery Book](docs/images/delivery-book.png)
 
 The Delivery Book view shows all logged deliveries. Deliveries marked as delivered will display a `delivered` tag. Below is the location the data is saved.
 

@@ -301,8 +301,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ### UC01 Create a delivery record linked to a client contact
 
 
-**Actor:** User 
-**Preconditions:** 
+**Actor:** User
+**Preconditions:**
 - The user has launched Mycelia.
 - A client contact already exists in the system.
 
@@ -328,8 +328,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### UC02 Mark a delivery as complete
 
-**Actor:** User (dispatcher / delivery coordinator) 
-**Preconditions:** 
+**Actor:** User (dispatcher / delivery coordinator)
+**Preconditions:**
 - A delivery list for the day exists.
 - At least one delivery record is currently not completed.
 
@@ -355,8 +355,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ### UC03 Tag a client contact for special handling
 
 
-**Actor:** User 
-**Preconditions:** 
+**Actor:** User
+**Preconditions:**
 - The client contact exists.
 
 

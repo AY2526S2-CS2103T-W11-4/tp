@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -19,6 +20,10 @@ import seedu.address.model.delivery.Delivery;
  */
 public class ModelManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
+    private static final Comparator<Delivery> DELIVERY_DEADLINE_COMPARATOR = Comparator
+            .comparing((Delivery delivery) -> delivery.getDeadline().getValue())
+            .thenComparing(delivery -> delivery.getCompany().value.toLowerCase())
+            .thenComparing(delivery -> delivery.getProduct().productName.toLowerCase());
 
     private final AddressBook addressBook;
     private final DeliveryBook deliveryBook;
@@ -181,6 +186,12 @@ public class ModelManager implements Model {
         requireAllNonNull(target, editedDelivery);
         deliveryBook.setDelivery(target, editedDelivery);
         updateFilteredDeliveryList(deliveryItem -> true);
+    }
+
+    @Override
+    public void sortDeliveriesByDeadline(Predicate<Delivery> predicate) {
+        requireNonNull(predicate);
+        deliveryBook.sortDeliveries(predicate, DELIVERY_DEADLINE_COMPARATOR);
     }
 
     @Override

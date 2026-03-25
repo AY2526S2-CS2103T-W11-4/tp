@@ -133,12 +133,13 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 
 |Command|Format|Example|
 |-|-|-|
-|Add|`add pr/PRODUCT c/COMPANY a/ADDRESS \[t/TAG]...`|`add pr/Industrial Printer c/Acme Supplies a/10 Anson Road t/urgent`|
-|Edit|`edit INDEX \[pr/PRODUCT] \[c/COMPANY] \[a/ADDRESS] \[t/TAG]...`|`edit 1 a/20 Harbour Front Walk t/fragile`|
+|Add|`add pr/PRODUCT c/COMPANY dl/DEADLINE a/ADDRESS \[t/TAG]...`|`add pr/Industrial Printer c/Acme Supplies dl/2026-03-25 14:30 a/10 Anson Road t/urgent`|
+|Edit|`edit INDEX \[pr/PRODUCT] \[c/COMPANY] \[dl/DEADLINE] \[a/ADDRESS] \[t/TAG]...`|`edit 1 dl/2026-03-26 09:00 a/20 Harbour Front Walk t/fragile`|
 |Delete|`delete INDEX`|`delete 2`|
 |Mark delivered|`mark INDEX`|`mark 1`|
 |Unmark|`unmark INDEX`|`unmark 1`|
 |Find|`find KEYWORD \[MORE\_KEYWORDS]...`|`find printer laptop`|
+|Sort by deadline|`sort c/COMPANY`|`sort c/Acme Supplies`|
 |Clear all|`clear`|`clear`|
 
 **Delivery prefixes:**
@@ -147,8 +148,11 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 |-|-|-|
 |`pr/`|Product name|Yes|
 |`c/`|Company name|Yes|
+|`dl/`|Deadline (`yyyy-MM-dd HH:mm`)|Yes for `add`, optional for `edit`|
 |`a/`|Delivery address|Yes|
 |`t/`|Tag (repeatable)|No|
+
+Deliveries are sorted by deadline in ascending order, so the earliest deadline appears first.
 
 \---
 

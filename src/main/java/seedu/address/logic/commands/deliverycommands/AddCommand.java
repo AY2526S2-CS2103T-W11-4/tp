@@ -3,6 +3,7 @@ package seedu.address.logic.commands.deliverycommands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
@@ -24,11 +25,13 @@ public class AddCommand extends Command {
             + "Parameters: "
             + PREFIX_PRODUCT + "PRODUCT "
             + PREFIX_COMPANY + "COMPANY "
+            + PREFIX_DEADLINE + "DEADLINE "
             + PREFIX_ADDRESS + "ADDRESS "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_PRODUCT + "Laptop "
             + PREFIX_COMPANY + "Dell "
+            + PREFIX_DEADLINE + "2026-03-25 14:30 "
             + PREFIX_ADDRESS + "311, Clementi Ave 2, #02-25 "
             + PREFIX_TAG + "urgent";
 

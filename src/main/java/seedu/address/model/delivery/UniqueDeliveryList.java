@@ -3,8 +3,12 @@ package seedu.address.model.delivery;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -96,6 +100,34 @@ public class UniqueDeliveryList implements Iterable<Delivery> {
         }
 
         internalList.setAll(deliveries);
+    }
+
+    /**
+     * Sorts the deliveries by the given comparator.
+     */
+    public void sort(Comparator<Delivery> comparator) {
+        requireNonNull(comparator);
+        FXCollections.sort(internalList, comparator);
+    }
+
+    /**
+     * Sorts only deliveries matching the predicate while preserving the positions of non-matching deliveries.
+     */
+    public void sortMatching(Predicate<Delivery> predicate, Comparator<Delivery> comparator) {
+        requireNonNull(predicate);
+        requireNonNull(comparator);
+
+        List<Delivery> sortedMatches = internalList.stream()
+                .filter(predicate)
+                .sorted(comparator)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        int replacementIndex = 0;
+        for (int i = 0; i < internalList.size(); i++) {
+            if (predicate.test(internalList.get(i))) {
+                internalList.set(i, sortedMatches.get(replacementIndex++));
+            }
+        }
     }
 
     /**

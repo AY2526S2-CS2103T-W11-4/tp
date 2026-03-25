@@ -34,12 +34,13 @@ public class JsonDeliveryBookStorage implements DeliveryBookStorage {
     }
 
     @Override
-    public Optional<ReadOnlyDeliveryBook> readDeliveryBook(ObservableList<Company> existingCompanies) throws DataLoadingException {
+    public Optional<ReadOnlyDeliveryBook> readDeliveryBook(ObservableList<Company> existingCompanies)
+            throws DataLoadingException {
         return readDeliveryBook(filePath, existingCompanies);
     }
 
     /**
-     * Similar to {@link #readDeliveryBook(ObservableList<Company>)}.
+     * Similar to {@link #readDeliveryBook(ObservableList)}.
      *
      * @param filePath location of the data. Cannot be null.
      * @throws DataLoadingException if loading the data from storage failed.

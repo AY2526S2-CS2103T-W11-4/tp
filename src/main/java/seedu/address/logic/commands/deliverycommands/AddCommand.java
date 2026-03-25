@@ -6,6 +6,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.Set;
+
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
@@ -17,7 +19,6 @@ import seedu.address.model.delivery.Address;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
-import java.util.Set;
 
 /**
  * Adds a delivery to the address book.

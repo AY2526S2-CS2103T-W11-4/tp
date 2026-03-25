@@ -7,10 +7,16 @@ import seedu.address.model.ReadOnlyDeliveryBook;
 import seedu.address.model.company.Company;
 import seedu.address.model.delivery.Delivery;
 
+/**
+ * Contains utility methods for populating {@code AddressBook} and {@code DeliveryBook} with sample data.
+ */
 public class SampleData {
     private final Company[] companies;
     private final Delivery[] deliveries;
 
+    /**
+     * Creates SampleData instance with the relevant entries
+     */
     public SampleData(Company[] companies, Delivery[] deliveries) {
         this.companies = companies;
         this.deliveries = deliveries;

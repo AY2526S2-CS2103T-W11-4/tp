@@ -109,7 +109,7 @@ public class MainApp extends Application {
             initialAddressData = new AddressBook();
         }
 
-        ObservableList<Company> existingCompanies =  initialAddressData.getCompanyList();
+        ObservableList<Company> existingCompanies = initialAddressData.getCompanyList();
 
         if (!isSampleAddress) {
             try {

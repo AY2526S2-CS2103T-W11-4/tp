@@ -14,7 +14,7 @@ import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
 
 /**
- * Contains utility methods for populating {@code AddressBook} and {@code DeliveryBook} with sample data.
+ * Contains utility methods for populating {@code AddressBook} and {@code DeliveryBook} in SampleData.
  */
 public class SampleDataUtil {
     public static SampleData getSampleDataUtil() {

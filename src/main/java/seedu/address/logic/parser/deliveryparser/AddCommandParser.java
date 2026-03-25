@@ -18,8 +18,6 @@ import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Address;
-import seedu.address.model.company.Company;
-import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
 
@@ -44,7 +42,8 @@ public class AddCommandParser implements Parser<AddCommand> {
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_ADDRESS);
         Product product = ParserUtil.parseProduct(argMultimap.getValue(PREFIX_PRODUCT).get());
-        CompanyNameContainsKeywordsPredicate company = ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
+        CompanyNameContainsKeywordsPredicate company =
+                ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
         Address address = ParserUtil.parseDeliveryAddress(argMultimap.getValue(PREFIX_ADDRESS).get());
         Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
 

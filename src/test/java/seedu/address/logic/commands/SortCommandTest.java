@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static seedu.address.model.util.SampleDataUtil.getTagSet;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.Collections;
@@ -14,21 +15,29 @@ import seedu.address.model.DeliveryBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.company.*;
 import seedu.address.model.delivery.Address;
-import seedu.address.model.delivery.Company;
 import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 
 public class SortCommandTest {
+    private static final Company DELL = new Company(new Name("Dell"), new Phone("99272758"),
+            new Email("dell@example.com"),
+            new seedu.address.model.company.Address("Changi Business Park Central 1"),
+            getTagSet("test"));
+    private static final Company ACER = new Company(new Name("Acer"), new Phone("91031282"),
+            new Email("acer@example.com"),
+            new seedu.address.model.company.Address("313 Orchard Rd"),
+            getTagSet("test"));
 
     @Test
     public void execute_companyDeliveriesSortedByDeadline_success() throws Exception {
-        Delivery laterDell = new Delivery(new Product("Laptop"), new Company("Dell"),
+        Delivery laterDell = new Delivery(new Product("Laptop"), DELL,
                 new Deadline("2026-03-26 10:00"), new Address("10 Anson Road"), Collections.emptySet());
-        Delivery earlierDell = new Delivery(new Product("Printer"), new Company("Dell"),
+        Delivery earlierDell = new Delivery(new Product("Printer"), DELL,
                 new Deadline("2026-03-25 09:00"), new Address("11 Anson Road"), Collections.emptySet());
-        Delivery acerDelivery = new Delivery(new Product("Monitor"), new Company("Acer"),
+        Delivery acerDelivery = new Delivery(new Product("Monitor"), ACER,
                 new Deadline("2026-03-24 08:00"), new Address("12 Anson Road"), Collections.emptySet());
 
         Model model = new ModelManager(new seedu.address.model.AddressBook(), new DeliveryBook(), new UserPrefs());
@@ -36,10 +45,12 @@ public class SortCommandTest {
         model.addDelivery(earlierDell);
         model.addDelivery(acerDelivery);
 
-        SortCommand command = new SortCommand(new Company("Dell"));
+        SortCommand command = new SortCommand(new CompanyNameContainsKeywordsPredicate(List.of("Dell")));
         CommandResult result = command.execute(model);
 
-        assertEquals(String.format(SortCommand.MESSAGE_SORT_SUCCESS, 2, "Dell"), result.getFeedbackToUser());
+        assertEquals(String.format(SortCommand.MESSAGE_SORT_SUCCESS, 2,
+                "seedu.address.model.company.CompanyNameContainsKeywordsPredicate{keywords=[Dell]}"),
+                result.getFeedbackToUser());
         assertEquals(2, model.getFilteredDeliveryList().size());
         assertEquals(earlierDell, model.getFilteredDeliveryList().get(0));
         assertEquals(laterDell, model.getFilteredDeliveryList().get(1));
@@ -49,8 +60,9 @@ public class SortCommandTest {
     @Test
     public void execute_missingCompanyDelivery_throwsCommandException() {
         Model model = new ModelManager(new seedu.address.model.AddressBook(), new DeliveryBook(), new UserPrefs());
-        SortCommand command = new SortCommand(new Company("Dell"));
-        String expectedMessage = String.format(SortCommand.MESSAGE_NO_DELIVERIES_FOR_COMPANY, "Dell");
+        SortCommand command = new SortCommand(new CompanyNameContainsKeywordsPredicate(List.of("Dell")));
+        String expectedMessage = String.format(SortCommand.MESSAGE_NO_DELIVERIES_FOR_COMPANY,
+                "seedu.address.model.company.CompanyNameContainsKeywordsPredicate{keywords=[Dell]}");
 
         assertThrows(CommandException.class, expectedMessage, () -> command.execute(model));
     }

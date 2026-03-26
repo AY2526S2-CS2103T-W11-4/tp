@@ -28,33 +28,33 @@ public class SortCommand extends Command {
     public static final String MESSAGE_SORT_SUCCESS = "Sorted %1$d delivery(s) for company: %2$s";
     public static final String MESSAGE_NO_DELIVERIES_FOR_COMPANY = "No deliveries found for company: %1$s";
 
-    private final CompanyNameContainsKeywordsPredicate company;
+    private final CompanyNameContainsKeywordsPredicate name;
 
     /**
      * Creates a SortCommand to sort deliveries for the specified company.
      */
-    public SortCommand(CompanyNameContainsKeywordsPredicate company) {
-        requireNonNull(company);
-        this.company = company;
+    public SortCommand(CompanyNameContainsKeywordsPredicate name) {
+        requireNonNull(name);
+        this.name = name;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         Predicate<Delivery> matchesCompany = delivery ->
-                delivery.getCompany().getName().toString().equalsIgnoreCase(company.toString());
+                name.test(delivery.getCompany());
 
         boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
-                .anyMatch(matchesCompany);
+                .anyMatch(delivery -> name.test(delivery.getCompany()));
         if (!hasMatchingDelivery) {
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, company));
+            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, name));
         }
 
         model.sortDeliveriesByDeadline(matchesCompany);
         model.updateFilteredDeliveryList(matchesCompany);
 
         return new CommandResult(
-                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(), company));
+                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(), name));
     }
 
     @Override
@@ -68,13 +68,13 @@ public class SortCommand extends Command {
         }
 
         SortCommand otherSortCommand = (SortCommand) other;
-        return company.equals(otherSortCommand.company);
+        return name.equals(otherSortCommand.name);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("company", company)
+                .add("company", name)
                 .toString();
     }
 }

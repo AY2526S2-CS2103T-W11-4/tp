@@ -89,7 +89,7 @@ class JsonAdaptedDelivery {
             throw new IllegalValueException("Company should be a string that does not begin with a whitespace");
         }
         seedu.address.model.company.Company modelCompany = existingCompanies.stream()
-                .filter(c -> c.getName().toString().equals(company))
+                .filter(c -> c.getName().toString().equalsIgnoreCase(company))
                 .findFirst()
                 .orElseThrow(() -> new IllegalValueException(
                         "Unable to find Company for this Delivery"

@@ -64,6 +64,7 @@
                 </StackPane>
               </VBox>
             </Tab>
+
             <Tab closable="false" text="Deliveries">
               <VBox styleClass="pane-with-border" minWidth="340" prefWidth="340">
                 <padding>
@@ -76,6 +77,11 @@
                   </VBox.margin>
                 </StackPane>
               </VBox>
+            </Tab>
+
+            <!-- Routes tab: placeholder filled by RoutePanel in MainWindow.fillInnerParts() -->
+            <Tab closable="false" text="Routes">
+              <StackPane fx:id="routePanelPlaceholder" styleClass="pane-with-border" />
             </Tab>
           </tabs>
           <VBox.vgrow>

@@ -11,11 +11,12 @@ import seedu.address.model.ReadOnlyDeliveryBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.company.Company;
+import seedu.address.model.user.User;
 
 /**
- * API of the Storage component
+ * API of the Storage component.
  */
-public interface Storage extends AddressBookStorage, DeliveryBookStorage, UserPrefsStorage {
+public interface Storage extends AddressBookStorage, DeliveryBookStorage, UserPrefsStorage, UserStorage {
 
     @Override
     Optional<UserPrefs> readUserPrefs() throws DataLoadingException;
@@ -39,4 +40,12 @@ public interface Storage extends AddressBookStorage, DeliveryBookStorage, UserPr
     @Override
     void saveDeliveryBook(ReadOnlyDeliveryBook deliveryBook) throws IOException;
 
+    @Override
+    Path getUserFilePath();
+
+    @Override
+    Optional<User> readUser() throws DataLoadingException;
+
+    @Override
+    void saveUser(User user) throws IOException;
 }

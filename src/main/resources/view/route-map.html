@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <style>
+        body { margin: 0; padding: 0; background: #1d1d1d; }
+
+        #map { width: 100%; height: 100vh; }
+        #placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #888;
+            font-family: "Segoe UI Semibold", sans-serif;
+            font-size: 16px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="placeholder">Click "Plan Today's Routes" to generate the route map.</div>
+    <div id="map" style="display:none;"></div>
+
+    <script>
+        var map = null;
+        var COLORS = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
+                      '#1abc9c', '#e67e22', '#e91e63'];
+
+        function initMap() {
+            if (map) return;
+            document.getElementById('placeholder').style.display = 'none';
+            document.getElementById('map').style.display = 'block';
+            map = L.map('map').setView([1.3521, 103.8198], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        }
+
+        function drawRoutes(routesJson) {
+            initMap();
+
+            map.eachLayer(function(layer) {
+                if (!(layer instanceof L.TileLayer)) map.removeLayer(layer);
+            });
+
+            var routes = JSON.parse(routesJson);
+            var allLatLngs = [];
+
+            routes.forEach(function(vehicle, idx) {
+                var color = COLORS[idx % COLORS.length];
+
+                // Draw depot start marker
+                if (vehicle.depotLat && vehicle.depotLon) {
+                    var depotLatLng = [vehicle.depotLat, vehicle.depotLon];
+                    allLatLngs.push(depotLatLng);
+                    var depotIcon = L.divIcon({
+                        html: '<div style="' +
+                              'background:' + color + ';color:white;' +
+                              'border-radius:4px;' +
+                              'width:32px;height:32px;' +
+                              'display:flex;align-items:center;justify-content:center;' +
+                              'font-weight:bold;font-size:11px;' +
+                              'border:2px solid white;' +
+                              'box-shadow:0 1px 4px rgba(0,0,0,0.5);">START</div>',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16],
+                        className: ''
+                    });
+                    L.marker(depotLatLng, { icon: depotIcon })
+                     .addTo(map)
+                     .bindPopup('<b style="color:' + color + '">Depot (Start)</b>');
+                }
+
+                // Draw numbered markers for each stop
+                vehicle.stops.forEach(function(stop, stopIdx) {
+                    var latLng = [stop.lat, stop.lon];
+                    allLatLngs.push(latLng);
+
+                    var icon = L.divIcon({
+                        html: '<div style="' +
+                              'background:' + color + ';color:white;border-radius:50%;' +
+                              'width:30px;height:30px;display:flex;align-items:center;' +
+                              'justify-content:center;font-weight:bold;font-size:13px;' +
+                              'border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.5);">' +
+                              (stopIdx + 1) + '</div>',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15],
+                        className: ''
+                    });
+
+                    L.marker(latLng, { icon: icon })
+                     .addTo(map)
+                     .bindPopup(
+                         '<b style="color:' + color + '">Stop ' + (stopIdx + 1) + '</b><br>' +
+                         stop.address + '<br><b>Arrive:</b> ' + stop.arrivalTime
+                     );
+                });
+
+                // Draw road-following route if geometry is available,
+                // otherwise fall back to straight lines between stops
+                if (vehicle.geometry && vehicle.geometry.length > 0) {
+                    // geometry is [[lon, lat], ...] — Leaflet needs [lat, lon]
+                    var roadLatLngs = vehicle.geometry.map(function(pt) {
+                        return [pt[1], pt[0]];
+                    });
+                    L.polyline(roadLatLngs, {
+                        color: color,
+                        weight: 4,
+                        opacity: 0.8
+                    }).addTo(map);
+                } else {
+                    // Fallback: straight lines between stop coordinates
+                    var stopLatLngs = vehicle.stops.map(function(s) {
+                        return [s.lat, s.lon];
+                    });
+                    if (stopLatLngs.length > 0) {
+                        L.polyline(stopLatLngs, {
+                            color: color,
+                            weight: 4,
+                            opacity: 0.8,
+                            dashArray: '8 4' // dashed to indicate it's approximate
+                        }).addTo(map);
+                    }
+                }
+            });
+
+            if (allLatLngs.length > 0) {
+                map.fitBounds(allLatLngs, { padding: [30, 30] });
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('map').style.display = 'none';
+            document.getElementById('placeholder').style.display = 'flex';
+            document.getElementById('placeholder').innerText = 'Error: ' + message;
+        }
+    </script>
+</body>
+</html>

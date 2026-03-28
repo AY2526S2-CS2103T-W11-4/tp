@@ -25,6 +25,7 @@ import seedu.address.model.ReadOnlyDeliveryBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.company.Company;
+import seedu.address.model.user.User;
 import seedu.address.model.util.SampleData;
 import seedu.address.model.util.SampleDataUtil;
 import seedu.address.storage.AddressBookStorage;
@@ -32,9 +33,11 @@ import seedu.address.storage.DeliveryBookStorage;
 import seedu.address.storage.JsonAddressBookStorage;
 import seedu.address.storage.JsonDeliveryBookStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
+import seedu.address.storage.JsonUserStorage;
 import seedu.address.storage.Storage;
 import seedu.address.storage.StorageManager;
 import seedu.address.storage.UserPrefsStorage;
+import seedu.address.storage.UserStorage;
 import seedu.address.ui.Ui;
 import seedu.address.ui.UiManager;
 
@@ -58,15 +61,19 @@ public class MainApp extends Application {
         logger.info("=============================[ Initializing application ]===========================");
         super.init();
 
+
         AppParameters appParameters = AppParameters.parse(getParameters());
         config = initConfig(appParameters.getConfigPath());
         initLogging(config);
 
         UserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(config.getUserPrefsFilePath());
         UserPrefs userPrefs = initPrefs(userPrefsStorage);
+
         AddressBookStorage addressBookStorage = new JsonAddressBookStorage(userPrefs.getAddressBookFilePath());
         DeliveryBookStorage deliveryBookStorage = new JsonDeliveryBookStorage(userPrefs.getDeliveryBookFilePath());
-        storage = new StorageManager(addressBookStorage, deliveryBookStorage, userPrefsStorage);
+        UserStorage userStorage = new JsonUserStorage(userPrefs.getUserFilePath());
+
+        storage = new StorageManager(addressBookStorage, deliveryBookStorage, userPrefsStorage, userStorage);
 
         model = initModelManager(storage, userPrefs);
         model.setCompanyPackage(true);
@@ -77,9 +84,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * Returns a {@code ModelManager} with the data from {@code storage}'s address book and {@code userPrefs}. <br>
-     * The data from the sample address book will be used instead if {@code storage}'s address book is not found,
-     * or an empty address book will be used instead if errors occur when reading {@code storage}'s address book.
+     * Returns a {@code ModelManager} with the data from {@code storage}'s books and {@code userPrefs}.
      */
     private Model initModelManager(Storage storage, ReadOnlyUserPrefs userPrefs) {
         logger.info("Using data file : " + storage.getAddressBookFilePath());
@@ -94,6 +99,7 @@ public class MainApp extends Application {
 
         assert sampleData != null : "sampleData should not be null";
 
+        // Address book
         try {
             addressBookOptional = storage.readAddressBook();
             if (!addressBookOptional.isPresent()) {
@@ -111,6 +117,7 @@ public class MainApp extends Application {
 
         ObservableList<Company> existingCompanies = initialAddressData.getCompanyList();
 
+        // Delivery book
         if (!isSampleAddress) {
             try {
                 deliveryBookOptional = storage.readDeliveryBook(existingCompanies);
@@ -118,7 +125,7 @@ public class MainApp extends Application {
                     logger.info("Creating a new data file " + storage.getDeliveryBookFilePath()
                             + " Will be starting with an empty DeliveryBook.");
                 }
-                initialDeliveryData = deliveryBookOptional.orElseGet(() -> new DeliveryBook());
+                initialDeliveryData = deliveryBookOptional.orElseGet(DeliveryBook::new);
             } catch (DataLoadingException e) {
                 logger.warning("Data file at " + storage.getDeliveryBookFilePath() + " could not be loaded."
                         + " Will be starting with an empty DeliveryBook.");
@@ -130,23 +137,31 @@ public class MainApp extends Application {
             initialDeliveryData = sampleData.getSampleDeliveryBook();
         }
 
-        return new ModelManager(initialAddressData, initialDeliveryData, userPrefs);
+        // User
+        User initialUser;
+        try {
+            Optional<User> userOptional = storage.readUser();
+            if (!userOptional.isPresent()) {
+                logger.info("Creating a new user data file " + storage.getUserFilePath()
+                        + " populated with sample user data.");
+            }
+            initialUser = userOptional.orElseGet(SampleDataUtil::getSampleUser);
+        } catch (DataLoadingException e) {
+            logger.warning("User data file at " + storage.getUserFilePath() + " could not be loaded."
+                    + " Will be starting with sample user data.");
+            initialUser = SampleDataUtil.getSampleUser();
+        }
+
+        return new ModelManager(initialAddressData, initialDeliveryData, userPrefs, initialUser);
     }
 
     private void initLogging(Config config) {
         LogsCenter.init(config);
     }
 
-    /**
-     * Returns a {@code Config} using the file at {@code configFilePath}. <br>
-     * The default file path {@code Config#DEFAULT_CONFIG_FILE} will be used instead
-     * if {@code configFilePath} is null.
-     */
     protected Config initConfig(Path configFilePath) {
         Config initializedConfig;
-        Path configFilePathUsed;
-
-        configFilePathUsed = Config.DEFAULT_CONFIG_FILE;
+        Path configFilePathUsed = Config.DEFAULT_CONFIG_FILE;
 
         if (configFilePath != null) {
             logger.info("Custom Config file specified " + configFilePath);
@@ -167,7 +182,6 @@ public class MainApp extends Application {
             initializedConfig = new Config();
         }
 
-        //Update config file in case it was missing to begin with or there are new/unused fields
         try {
             ConfigUtil.saveConfig(initializedConfig, configFilePathUsed);
         } catch (IOException e) {
@@ -176,11 +190,6 @@ public class MainApp extends Application {
         return initializedConfig;
     }
 
-    /**
-     * Returns a {@code UserPrefs} using the file at {@code storage}'s user prefs file path,
-     * or a new {@code UserPrefs} with default configuration if errors occur when
-     * reading from the file.
-     */
     protected UserPrefs initPrefs(UserPrefsStorage storage) {
         Path prefsFilePath = storage.getUserPrefsFilePath();
         logger.info("Using preference file : " + prefsFilePath);
@@ -198,7 +207,6 @@ public class MainApp extends Application {
             initializedPrefs = new UserPrefs();
         }
 
-        //Update prefs file in case it was missing to begin with or there are new/unused fields
         try {
             storage.saveUserPrefs(initializedPrefs);
         } catch (IOException e) {

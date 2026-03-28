@@ -13,25 +13,31 @@ import seedu.address.model.ReadOnlyDeliveryBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.company.Company;
+import seedu.address.model.user.User;
 
 /**
- * Manages storage of AddressBook data in local storage.
+ * Manages storage of AddressBook, DeliveryBook and User data in local storage.
  */
 public class StorageManager implements Storage {
 
     private static final Logger logger = LogsCenter.getLogger(StorageManager.class);
-    private AddressBookStorage addressBookStorage;
-    private DeliveryBookStorage deliveryBookStorage;
-    private UserPrefsStorage userPrefsStorage;
+
+    private final AddressBookStorage addressBookStorage;
+    private final DeliveryBookStorage deliveryBookStorage;
+    private final UserPrefsStorage userPrefsStorage;
+    private final UserStorage userStorage;
 
     /**
-     * Creates a {@code StorageManager} with the given {@code AddressBookStorage} and {@code UserPrefStorage}.
+     * Creates a {@code StorageManager} with the given storage components.
      */
-    public StorageManager(AddressBookStorage addressBookStorage, DeliveryBookStorage deliveryBookStorage,
-            UserPrefsStorage userPrefsStorage) {
+    public StorageManager(AddressBookStorage addressBookStorage,
+                          DeliveryBookStorage deliveryBookStorage,
+                          UserPrefsStorage userPrefsStorage,
+                          UserStorage userStorage) {
         this.addressBookStorage = addressBookStorage;
         this.deliveryBookStorage = deliveryBookStorage;
         this.userPrefsStorage = userPrefsStorage;
+        this.userStorage = userStorage;
     }
 
     // ================ UserPrefs methods ==============================
@@ -50,7 +56,6 @@ public class StorageManager implements Storage {
     public void saveUserPrefs(ReadOnlyUserPrefs userPrefs) throws IOException {
         userPrefsStorage.saveUserPrefs(userPrefs);
     }
-
 
     // ================ AddressBook methods ==============================
 
@@ -95,8 +100,8 @@ public class StorageManager implements Storage {
     }
 
     @Override
-    public Optional<ReadOnlyDeliveryBook> readDeliveryBook(Path filePath, ObservableList<Company> existingCompanies)
-            throws DataLoadingException {
+    public Optional<ReadOnlyDeliveryBook> readDeliveryBook(Path filePath,
+            ObservableList<Company> existingCompanies) throws DataLoadingException {
         logger.fine("Attempting to read data from file: " + filePath);
         return deliveryBookStorage.readDeliveryBook(filePath, existingCompanies);
     }
@@ -110,5 +115,34 @@ public class StorageManager implements Storage {
     public void saveDeliveryBook(ReadOnlyDeliveryBook deliveryBook, Path filePath) throws IOException {
         logger.fine("Attempting to write to data file: " + filePath);
         deliveryBookStorage.saveDeliveryBook(deliveryBook, filePath);
+    }
+
+    // ================ User methods ==============================
+
+    @Override
+    public Path getUserFilePath() {
+        return userStorage.getUserFilePath();
+    }
+
+    @Override
+    public Optional<User> readUser() throws DataLoadingException {
+        return readUser(userStorage.getUserFilePath());
+    }
+
+    @Override
+    public Optional<User> readUser(Path filePath) throws DataLoadingException {
+        logger.fine("Attempting to read user data from file: " + filePath);
+        return userStorage.readUser(filePath);
+    }
+
+    @Override
+    public void saveUser(User user) throws IOException {
+        saveUser(user, userStorage.getUserFilePath());
+    }
+
+    @Override
+    public void saveUser(User user, Path filePath) throws IOException {
+        logger.fine("Attempting to write user data to file: " + filePath);
+        userStorage.saveUser(user, filePath);
     }
 }

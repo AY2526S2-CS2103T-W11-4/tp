@@ -14,30 +14,23 @@ import seedu.address.commons.core.GuiSettings;
 public class UserPrefs implements ReadOnlyUserPrefs {
 
     private GuiSettings guiSettings = new GuiSettings();
-    private Path addressBookFilePath = Paths.get("data" , "addressbook.json");
-    private Path deliveryBookFilePath = Paths.get("data" , "deliverybook.json");
+    private Path addressBookFilePath = Paths.get("data", "addressbook.json");
+    private Path deliveryBookFilePath = Paths.get("data", "deliverybook.json");
+    private Path userFilePath = Paths.get("data", "user.json");
 
-    /**
-     * Creates a {@code UserPrefs} with default values.
-     */
     public UserPrefs() {}
 
-    /**
-     * Creates a {@code UserPrefs} with the prefs in {@code userPrefs}.
-     */
     public UserPrefs(ReadOnlyUserPrefs userPrefs) {
         this();
         resetData(userPrefs);
     }
 
-    /**
-     * Resets the existing data of this {@code UserPrefs} with {@code newUserPrefs}.
-     */
     public void resetData(ReadOnlyUserPrefs newUserPrefs) {
         requireNonNull(newUserPrefs);
         setGuiSettings(newUserPrefs.getGuiSettings());
         setAddressBookFilePath(newUserPrefs.getAddressBookFilePath());
         setDeliveryBookFilePath(newUserPrefs.getDeliveryBookFilePath());
+        setUserFilePath(newUserPrefs.getUserFilePath());
     }
 
     public GuiSettings getGuiSettings() {
@@ -67,33 +60,39 @@ public class UserPrefs implements ReadOnlyUserPrefs {
         this.deliveryBookFilePath = deliveryBookFilePath;
     }
 
+    public Path getUserFilePath() {
+        return userFilePath;
+    }
+
+    public void setUserFilePath(Path userFilePath) {
+        requireNonNull(userFilePath);
+        this.userFilePath = userFilePath;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
         }
-
-        // instanceof handles nulls
         if (!(other instanceof UserPrefs)) {
             return false;
         }
-
         UserPrefs otherUserPrefs = (UserPrefs) other;
         return guiSettings.equals(otherUserPrefs.guiSettings)
-                && addressBookFilePath.equals(otherUserPrefs.addressBookFilePath);
+                && addressBookFilePath.equals(otherUserPrefs.addressBookFilePath)
+                && deliveryBookFilePath.equals(otherUserPrefs.deliveryBookFilePath)
+                && userFilePath.equals(otherUserPrefs.userFilePath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(guiSettings, addressBookFilePath);
+        return Objects.hash(guiSettings, addressBookFilePath, deliveryBookFilePath, userFilePath);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Gui Settings : " + guiSettings);
-        sb.append("\nLocal data file location : " + addressBookFilePath);
-        return sb.toString();
+        return "Gui Settings : " + guiSettings
+                + "\nLocal data file location : " + addressBookFilePath
+                + "\nUser file location : " + userFilePath;
     }
-
 }

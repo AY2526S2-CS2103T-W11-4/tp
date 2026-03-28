@@ -1,6 +1,7 @@
 package seedu.address.model.util;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,9 @@ import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.user.User;
+import seedu.address.model.user.Vehicle;
+import seedu.address.model.user.VehicleProfile;
 
 /**
  * Contains utility methods for populating {@code AddressBook} and {@code DeliveryBook} in SampleData.
@@ -33,24 +37,40 @@ public class SampleDataUtil {
 
         Delivery[] deliveries = new Delivery[] {
             new Delivery(new Product("iPhone"), apple,
-                new Deadline("2026-03-25 14:30"),
+                new Deadline("2026-03-29 14:30"),
                 new seedu.address.model.delivery.Address("78 Airport Blvd, #02-234"),
                 getTagSet("fragile")),
             new Delivery(new Product("laptop"), dell,
-                new Deadline("2026-03-25 14:30"),
+                new Deadline("2026-03-29 14:30"),
                 new seedu.address.model.delivery.Address("Changi Business Park Central 1"),
                 getTagSet("test")),
             new Delivery(new Product("tablet"), samsung,
-                new Deadline("2026-03-25 14:30"),
+                new Deadline("2026-03-29 14:30"),
                 new seedu.address.model.delivery.Address("313 Orchard Rd"),
                 getTagSet("fragile")),
             new Delivery(new Product("printer"), hp,
-                new Deadline("2026-03-25 14:30"),
+                new Deadline("2026-03-29 14:30"),
                 new seedu.address.model.delivery.Address("750 Chai Chee Road, #01-01"),
                 getTagSet("heavy")),
         };
 
         return new SampleData(companies, deliveries);
+    }
+
+    /**
+     * Returns a sample User with a default company (depot) and vehicle.
+     * Used when no user data has been saved yet.
+     */
+    public static User getSampleUser() {
+        Company defaultCompany = new Company(
+                new Name("My Company"),
+                new Phone("61234567"),
+                new Email("company@example.com"),
+                new Address("3 Temasek Boulevard, Singapore 038983"),
+                new HashSet<>()
+        );
+        Vehicle defaultVehicle = new Vehicle(new VehicleProfile("driving-car"));
+        return new User(defaultCompany, defaultVehicle);
     }
 
     /**
@@ -61,5 +81,4 @@ public class SampleDataUtil {
                 .map(Tag::new)
                 .collect(Collectors.toSet());
     }
-
 }

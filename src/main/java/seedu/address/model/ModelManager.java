@@ -14,11 +14,14 @@ import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.company.Company;
 import seedu.address.model.delivery.Delivery;
+import seedu.address.model.user.User;
+import seedu.address.model.util.SampleDataUtil;
 
 /**
  * Represents the in-memory model of the address book data.
  */
 public class ModelManager implements Model {
+
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
     private static final Comparator<Delivery> DELIVERY_DEADLINE_COMPARATOR = Comparator
             .comparing((Delivery delivery) -> delivery.getDeadline().getValue())
@@ -28,31 +31,42 @@ public class ModelManager implements Model {
     private final AddressBook addressBook;
     private final DeliveryBook deliveryBook;
     private final UserPrefs userPrefs;
+    private User user;
     private final FilteredList<Company> filteredCompanies;
     private final FilteredList<Delivery> filteredDeliveries;
     private boolean isCompanyPackage;
 
     /**
-     * Initializes a ModelManager with the given addressBook and userPrefs.
+     * Initializes a ModelManager with the given addressBook, deliveryBook, userPrefs and user.
      */
-    public ModelManager(
-            ReadOnlyAddressBook addressBook, ReadOnlyDeliveryBook deliveryBook, ReadOnlyUserPrefs userPrefs) {
-        requireAllNonNull(addressBook, userPrefs);
-
-        logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
+    public ModelManager(ReadOnlyAddressBook addressBook, ReadOnlyDeliveryBook deliveryBook,
+                        ReadOnlyUserPrefs userPrefs, User user) {
+        requireAllNonNull(addressBook, deliveryBook, userPrefs, user);
+        logger.fine("Initializing with address book: " + addressBook
+                + " and user prefs " + userPrefs
+                + " and user " + user);
 
         this.addressBook = new AddressBook(addressBook);
         this.deliveryBook = new DeliveryBook(deliveryBook);
         this.userPrefs = new UserPrefs(userPrefs);
+        this.user = user;
         this.filteredCompanies = new FilteredList<>(this.addressBook.getCompanyList());
         this.filteredDeliveries = new FilteredList<>(this.deliveryBook.getDeliveryList());
+    }
+
+    /**
+     * Convenience constructor — uses sample user. Preserves backward compatibility.
+     */
+    public ModelManager(ReadOnlyAddressBook addressBook, ReadOnlyDeliveryBook deliveryBook,
+                        ReadOnlyUserPrefs userPrefs) {
+        this(addressBook, deliveryBook, userPrefs, SampleDataUtil.getSampleUser());
     }
 
     public ModelManager() {
         this(new AddressBook(), new DeliveryBook(), new UserPrefs());
     }
 
-    //=========== UserPrefs ==================================================================================
+    // =========== UserPrefs ===========================================================
 
     @Override
     public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
@@ -97,7 +111,7 @@ public class ModelManager implements Model {
         userPrefs.setAddressBookFilePath(addressBookFilePath);
     }
 
-    //=========== AddressBook ================================================================================
+    // =========== AddressBook =========================================================
 
     @Override
     public void setAddressBook(ReadOnlyAddressBook addressBook) {
@@ -134,11 +148,6 @@ public class ModelManager implements Model {
         addressBook.setCompany(target, editedCompany);
     }
 
-    //=========== Company List Accessors =====================================================================
-
-    /**
-     * Returns an unmodifiable view of the list of {@code Company} backed by the internal address book.
-     */
     @Override
     public ObservableList<Company> getFilteredCompanyList() {
         return filteredCompanies;
@@ -150,7 +159,7 @@ public class ModelManager implements Model {
         filteredCompanies.setPredicate(predicate);
     }
 
-    //=========== DeliveryBook ==================================================================
+    // =========== DeliveryBook ========================================================
 
     @Override
     public void setDeliveryBookFilePath(Path deliveryBookFilePath) {
@@ -201,8 +210,6 @@ public class ModelManager implements Model {
         updateFilteredDeliveryList(deliveryItem -> true);
     }
 
-    //=========== Delivery List Accessors ====================================================================
-
     @Override
     public ObservableList<Delivery> getFilteredDeliveryList() {
         return filteredDeliveries;
@@ -214,19 +221,33 @@ public class ModelManager implements Model {
         filteredDeliveries.setPredicate(predicate);
     }
 
+    // =========== User ================================================================
+
+    @Override
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public void setUser(User user) {
+        requireNonNull(user);
+        this.user = user;
+    }
+
+    // =========== Equality ============================================================
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
         }
-
         if (!(other instanceof ModelManager)) {
             return false;
         }
-
         ModelManager otherModelManager = (ModelManager) other;
         return addressBook.equals(otherModelManager.addressBook)
                 && userPrefs.equals(otherModelManager.userPrefs)
+                && user.equals(otherModelManager.user)
                 && filteredCompanies.equals(otherModelManager.filteredCompanies)
                 && filteredDeliveries.equals(otherModelManager.filteredDeliveries);
     }

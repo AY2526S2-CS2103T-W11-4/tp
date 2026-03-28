@@ -1,28 +1,16 @@
 package seedu.address.ui;
 
-import java.net.URL;
-import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.Logic;
@@ -30,9 +18,6 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
-import seedu.address.model.delivery.Delivery;
-import seedu.address.routing.model.RouteResult;
-import seedu.address.routing.service.DeliveryRouterService;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -41,8 +26,6 @@ import seedu.address.routing.service.DeliveryRouterService;
 public class MainWindow extends UiPart<Stage> {
 
     private static final String FXML = "MainWindow.fxml";
-    private static final int ROUTES_TAB_INDEX = 2;
-    private static final int DEFAULT_NUM_VEHICLES = 2;
 
     private final Logger logger = LogsCenter.getLogger(getClass());
 
@@ -50,35 +33,50 @@ public class MainWindow extends UiPart<Stage> {
     private final Logic logic;
     private final Model model;
 
-    private final DeliveryRouterService routerService = new DeliveryRouterService();
-    private WebView mapView;
-    private WebEngine webEngine;
-
+    // Independent Ui parts residing in this Ui container
     private CompanyListPanel companyListPanel;
     private DeliveryListPanel deliveryListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
 
-    @FXML private StackPane commandBoxPlaceholder;
-    @FXML private MenuItem helpMenuItem;
-    @FXML private TabPane listTabPane;
-    @FXML private StackPane companyListPanelPlaceholder;
-    @FXML private StackPane deliveryListPanelPlaceholder;
-    @FXML private StackPane resultDisplayPlaceholder;
-    @FXML private StackPane statusbarPlaceholder;
-    @FXML private StackPane mapPlaceholder;
-    @FXML private Button planRoutesButton;
-    @FXML private Label routeStatusLabel;
+    @FXML
+    private StackPane commandBoxPlaceholder;
 
+    @FXML
+    private MenuItem helpMenuItem;
+
+    @FXML
+    private TabPane listTabPane;
+
+    @FXML
+    private StackPane companyListPanelPlaceholder;
+
+    @FXML
+    private StackPane deliveryListPanelPlaceholder;
+
+    @FXML
+    private StackPane resultDisplayPlaceholder;
+
+    @FXML
+    private StackPane statusbarPlaceholder;
+
+    /**
+     * Creates a {@code MainWindow} with the given {@code Stage} and {@code Logic}.
+     */
     public MainWindow(Stage primaryStage, Logic logic, Model model) {
         super(FXML, primaryStage);
+
+        // Set dependencies
         this.primaryStage = primaryStage;
         this.logic = logic;
         this.model = model;
 
+        // Configure the UI
         setWindowDefaultSize(logic.getGuiSettings());
         configureListTabs();
+
         setAccelerators();
+
         helpWindow = new HelpWindow();
     }
 
@@ -90,8 +88,28 @@ public class MainWindow extends UiPart<Stage> {
         setAccelerator(helpMenuItem, KeyCombination.valueOf("F1"));
     }
 
+    /**
+     * Sets the accelerator of a MenuItem.
+     * @param keyCombination the KeyCombination value of the accelerator
+     */
     private void setAccelerator(MenuItem menuItem, KeyCombination keyCombination) {
         menuItem.setAccelerator(keyCombination);
+
+        /*
+         * TODO: the code below can be removed once the bug reported here
+         * https://bugs.openjdk.java.net/browse/JDK-8131666
+         * is fixed in later version of SDK.
+         *
+         * According to the bug report, TextInputControl (TextField, TextArea) will
+         * consume function-key events. Because CommandBox contains a TextField, and
+         * ResultDisplay contains a TextArea, thus some accelerators (e.g F1) will
+         * not work when the focus is in them because the key event is consumed by
+         * the TextInputControl(s).
+         *
+         * For now, we add following event filter to capture such key events and open
+         * help window purposely so to support accelerators even when focus is
+         * in CommandBox or ResultDisplay.
+         */
         getRoot().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (event.getTarget() instanceof TextInputControl && keyCombination.match(event)) {
                 menuItem.getOnAction().handle(new ActionEvent());
@@ -100,6 +118,9 @@ public class MainWindow extends UiPart<Stage> {
         });
     }
 
+    /**
+     * Fills up all the placeholders of this window.
+     */
     void fillInnerParts() {
         companyListPanel = new CompanyListPanel(model.getFilteredCompanyList());
         companyListPanelPlaceholder.getChildren().add(companyListPanel.getRoot());
@@ -115,113 +136,32 @@ public class MainWindow extends UiPart<Stage> {
 
         CommandBox commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
-
-        initMap();
         syncSelectedTabWithMode();
     }
 
-    private void initMap() {
-        mapView = new WebView();
-        webEngine = mapView.getEngine();
-        URL mapUrl = getClass().getResource("/view/route-map.html");
-        if (mapUrl != null) {
-            webEngine.load(mapUrl.toExternalForm());
-        } else {
-            logger.warning("route-map.html not found in resources");
-        }
-        mapPlaceholder.getChildren().add(mapView);
-    }
-
-    @FXML
-    private void handlePlanRoutes() {
-        List<Delivery> deliveries = model.getFilteredDeliveryList()
-                .stream()
-                .collect(Collectors.toList());
-
-        if (deliveries.isEmpty()) {
-            routeStatusLabel.setText("No deliveries to route. Add some deliveries first.");
-            return;
-        }
-
-        planRoutesButton.setDisable(true);
-        routeStatusLabel.setText("Planning routes... please wait.");
-
-        Task<RouteResult> task = new Task<>() {
-            @Override
-            protected RouteResult call() throws Exception {
-                return routerService.planRoutes(deliveries, DEFAULT_NUM_VEHICLES);
-            }
-        };
-
-        task.setOnSucceeded(e -> {
-            RouteResult result = task.getValue();
-            drawRoutesOnMap(result);
-            planRoutesButton.setDisable(false);
-
-            int totalStops = result.routes.stream().mapToInt(r -> r.stops.size()).sum();
-            String status = String.format("Done! %d vehicles, %d stops assigned.",
-                    result.routes.size(), totalStops);
-            if (!result.unassigned.isEmpty()) {
-                status += String.format(" (%d deliveries could not be assigned)",
-                        result.unassigned.size());
-            }
-            routeStatusLabel.setText(status);
-            listTabPane.getSelectionModel().select(ROUTES_TAB_INDEX);
-        });
-
-        task.setOnFailed(e -> {
-            planRoutesButton.setDisable(false);
-            String err = task.getException().getMessage();
-            routeStatusLabel.setText("Failed: " + err);
-            logger.warning("Route planning failed: " + err);
-            webEngine.executeScript("showError('" + escapeJs(err) + "')");
-        });
-
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
-    }
-
-    private void drawRoutesOnMap(RouteResult result) {
-        JSONArray routesJson = new JSONArray();
-        for (RouteResult.VehicleRoute vehicle : result.routes) {
-            JSONObject vObj = new JSONObject();
-            vObj.put("vehicleId", vehicle.vehicleId);
-            JSONArray stopsArr = new JSONArray();
-            for (RouteResult.Stop stop : vehicle.stops) {
-                JSONObject sObj = new JSONObject();
-                sObj.put("address", stop.address);
-                sObj.put("lat", stop.lat);
-                sObj.put("lon", stop.lon);
-                sObj.put("arrivalTime", stop.arrivalTimeFormatted);
-                stopsArr.put(sObj);
-            }
-            vObj.put("stops", stopsArr);
-            routesJson.put(vObj);
-        }
-        String json = escapeJs(routesJson.toString());
-        webEngine.executeScript("drawRoutes('" + json + "')");
-    }
-
-    private String escapeJs(String s) {
-        return s.replace("\\", "\\\\")
-                .replace("'", "\\'")
-                .replace("\n", "\\n")
-                .replace("\r", "");
-    }
-
+    /**
+     * Keeps the visible tab in sync with the current parser mode.
+     */
     private void configureListTabs() {
         listTabPane.getSelectionModel().selectedIndexProperty().addListener((unused, oldValue, newValue) -> {
-            if (newValue == null) return;
+            if (newValue == null) {
+                return;
+            }
             model.setCompanyPackage(newValue.intValue() == 0);
         });
         syncSelectedTabWithMode();
     }
 
+    /**
+     * Selects the tab that matches the current command mode.
+     */
     private void syncSelectedTabWithMode() {
         listTabPane.getSelectionModel().select(model.getCompanyPackage() ? 0 : 1);
     }
 
+    /**
+     * Sets the default size based on {@code guiSettings}.
+     */
     private void setWindowDefaultSize(GuiSettings guiSettings) {
         primaryStage.setHeight(guiSettings.getWindowHeight());
         primaryStage.setWidth(guiSettings.getWindowWidth());
@@ -231,6 +171,9 @@ public class MainWindow extends UiPart<Stage> {
         }
     }
 
+    /**
+     * Opens the help window or focuses on it if it's already opened.
+     */
     @FXML
     public void handleHelp() {
         if (!helpWindow.isShowing()) {
@@ -244,6 +187,9 @@ public class MainWindow extends UiPart<Stage> {
         primaryStage.show();
     }
 
+    /**
+     * Closes the application.
+     */
     @FXML
     private void handleExit() {
         GuiSettings guiSettings = new GuiSettings(primaryStage.getWidth(), primaryStage.getHeight(),
@@ -261,14 +207,27 @@ public class MainWindow extends UiPart<Stage> {
         return deliveryListPanel;
     }
 
+    /**
+     * Executes the command and returns the result.
+     *
+     * @see seedu.address.logic.Logic#execute(String)
+     */
     private CommandResult executeCommand(String commandText) throws CommandException, ParseException {
         try {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
-            if (commandResult.isShowHelp()) handleHelp();
-            if (commandResult.isExit()) handleExit();
+
+            if (commandResult.isShowHelp()) {
+                handleHelp();
+            }
+
+            if (commandResult.isExit()) {
+                handleExit();
+            }
+
             syncSelectedTabWithMode();
+
             return commandResult;
         } catch (CommandException | ParseException e) {
             logger.info("An error occurred while executing command: " + commandText);

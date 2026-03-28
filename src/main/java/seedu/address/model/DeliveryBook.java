@@ -2,8 +2,10 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
@@ -84,6 +86,23 @@ public class DeliveryBook implements ReadOnlyDeliveryBook {
     public void setDelivery(Delivery target, Delivery editedDelivery) {
         requireNonNull(editedDelivery);
         deliveries.setDelivery(target, editedDelivery);
+    }
+
+    /**
+     * Sorts deliveries by the given comparator.
+     */
+    public void sortDeliveries(Comparator<Delivery> comparator) {
+        requireNonNull(comparator);
+        deliveries.sort(comparator);
+    }
+
+    /**
+     * Sorts only deliveries matching the predicate by the given comparator.
+     */
+    public void sortDeliveries(Predicate<Delivery> predicate, Comparator<Delivery> comparator) {
+        requireNonNull(predicate);
+        requireNonNull(comparator);
+        deliveries.sortMatching(predicate, comparator);
     }
 
     /**

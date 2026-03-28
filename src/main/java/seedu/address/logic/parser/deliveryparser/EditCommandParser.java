@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
@@ -20,6 +21,7 @@ import seedu.address.logic.parser.ArgumentTokenizer;
 import seedu.address.logic.parser.Parser;
 import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -35,7 +37,8 @@ public class EditCommandParser implements Parser<EditCommand> {
     public EditCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_ADDRESS, PREFIX_TAG);
+                ArgumentTokenizer.tokenize(args, PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_DEADLINE, PREFIX_ADDRESS,
+                        PREFIX_TAG);
 
         Index index;
 
@@ -45,7 +48,7 @@ public class EditCommandParser implements Parser<EditCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE), pe);
         }
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_ADDRESS);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_DEADLINE, PREFIX_ADDRESS);
 
         EditCommand.EditDeliveryDescriptor editDeliveryDescriptor = new EditDeliveryDescriptor();
 
@@ -53,7 +56,12 @@ public class EditCommandParser implements Parser<EditCommand> {
             editDeliveryDescriptor.setProduct(ParserUtil.parseProduct(argMultimap.getValue(PREFIX_PRODUCT).get()));
         }
         if (argMultimap.getValue(PREFIX_COMPANY).isPresent()) {
-            editDeliveryDescriptor.setCompany(ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get()));
+            CompanyNameContainsKeywordsPredicate company =
+                    ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
+            editDeliveryDescriptor.setCompany(company);
+        }
+        if (argMultimap.getValue(PREFIX_DEADLINE).isPresent()) {
+            editDeliveryDescriptor.setDeadline(ParserUtil.parseDeadline(argMultimap.getValue(PREFIX_DEADLINE).get()));
         }
         if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
             editDeliveryDescriptor.setAddress(

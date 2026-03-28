@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.model.ReadOnlyDeliveryBook;
+import seedu.address.model.company.Company;
 
 /**
  * Represents a storage for {@link seedu.address.model.DeliveryBook}.
@@ -23,12 +25,14 @@ public interface DeliveryBookStorage {
      *
      * @throws DataLoadingException if loading the data from storage failed.
      */
-    Optional<ReadOnlyDeliveryBook> readDeliveryBook() throws DataLoadingException;
+    Optional<ReadOnlyDeliveryBook> readDeliveryBook(ObservableList<Company> existingCompanies)
+            throws DataLoadingException;
 
     /**
      * @see #getDeliveryBookFilePath()
      */
-    Optional<ReadOnlyDeliveryBook> readDeliveryBook(Path filePath) throws DataLoadingException;
+    Optional<ReadOnlyDeliveryBook> readDeliveryBook(Path filePath, ObservableList<Company> existingCompanies)
+            throws DataLoadingException;
 
     /**
      * Saves the given {@link ReadOnlyDeliveryBook} to the storage.

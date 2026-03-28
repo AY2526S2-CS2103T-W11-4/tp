@@ -16,6 +16,10 @@ public class CompanyNameContainsKeywordsPredicate implements Predicate<Company> 
         this.keywords = keywords;
     }
 
+    public List<String> getKeywords() {
+        return List.copyOf(keywords);
+    }
+
     @Override
     public boolean test(Company company) {
         return keywords.stream()

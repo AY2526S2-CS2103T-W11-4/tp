@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import seedu.address.commons.core.Config;
 import seedu.address.commons.core.LogsCenter;
@@ -23,8 +24,9 @@ import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyDeliveryBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.util.SampleAddressDataUtil;
-import seedu.address.model.util.SampleDeliveryDataUtil;
+import seedu.address.model.company.Company;
+import seedu.address.model.util.SampleData;
+import seedu.address.model.util.SampleDataUtil;
 import seedu.address.storage.AddressBookStorage;
 import seedu.address.storage.DeliveryBookStorage;
 import seedu.address.storage.JsonAddressBookStorage;
@@ -86,29 +88,46 @@ public class MainApp extends Application {
         Optional<ReadOnlyDeliveryBook> deliveryBookOptional;
         ReadOnlyAddressBook initialAddressData;
         ReadOnlyDeliveryBook initialDeliveryData;
+
+        SampleData sampleData = SampleDataUtil.getSampleDataUtil();
+        boolean isSampleAddress = false;
+
+        assert sampleData != null : "sampleData should not be null";
+
         try {
             addressBookOptional = storage.readAddressBook();
             if (!addressBookOptional.isPresent()) {
                 logger.info("Creating a new data file " + storage.getAddressBookFilePath()
                         + " populated with a sample AddressBook.");
+                isSampleAddress = true;
             }
-            initialAddressData = addressBookOptional.orElseGet(SampleAddressDataUtil::getSampleAddressBook);
+            initialAddressData = addressBookOptional.orElseGet(sampleData::getSampleAddressBook);
+            assert initialAddressData != null : "AddressBook should not be null";
         } catch (DataLoadingException e) {
             logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
                     + " Will be starting with an empty AddressBook.");
             initialAddressData = new AddressBook();
         }
 
-        try {
-            deliveryBookOptional = storage.readDeliveryBook();
-            if (!deliveryBookOptional.isPresent()) {
-                logger.info("Creating a new data file " + storage.getDeliveryBookFilePath());
+        ObservableList<Company> existingCompanies = initialAddressData.getCompanyList();
+
+        if (!isSampleAddress) {
+            try {
+                deliveryBookOptional = storage.readDeliveryBook(existingCompanies);
+                if (!deliveryBookOptional.isPresent()) {
+                    logger.info("Creating a new data file " + storage.getDeliveryBookFilePath()
+                            + " Will be starting with an empty DeliveryBook.");
+                }
+                initialDeliveryData = deliveryBookOptional.orElseGet(() -> new DeliveryBook());
+            } catch (DataLoadingException e) {
+                logger.warning("Data file at " + storage.getDeliveryBookFilePath() + " could not be loaded."
+                        + " Will be starting with an empty DeliveryBook.");
+                initialDeliveryData = new DeliveryBook();
             }
-            initialDeliveryData = deliveryBookOptional.orElseGet(SampleDeliveryDataUtil::getSampleDeliveryBook);
-        } catch (DataLoadingException e) {
-            logger.warning("Data file at " + storage.getDeliveryBookFilePath() + " could not be loaded."
-                    + " Will be starting with an empty DeliveryBook.");
-            initialDeliveryData = new DeliveryBook();
+        } else {
+            logger.info("Creating a new data file " + storage.getDeliveryBookFilePath()
+                    + " populated with a sample DeliveryBook.");
+            initialDeliveryData = sampleData.getSampleDeliveryBook();
         }
 
         return new ModelManager(initialAddressData, initialDeliveryData, userPrefs);

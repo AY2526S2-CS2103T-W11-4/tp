@@ -9,7 +9,7 @@ import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.util.SampleAddressDataUtil;
+import seedu.address.model.util.SampleDataUtil;
 
 /**
  * A utility class to help with building Company objects.
@@ -61,7 +61,7 @@ public class CompanyBuilder {
      * Parses the {@code tags} into a {@code Set<Tag>} and set it to the {@code Company} that we are building.
      */
     public CompanyBuilder withTags(String ... tags) {
-        this.tags = SampleAddressDataUtil.getTagSet(tags);
+        this.tags = SampleDataUtil.getTagSet(tags);
         return this;
     }
 

@@ -8,9 +8,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
+import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.DeliveryBook;
 import seedu.address.model.ReadOnlyDeliveryBook;
+import seedu.address.model.company.Company;
 import seedu.address.model.delivery.Delivery;
 
 /**
@@ -49,10 +51,10 @@ class JsonSerializableDeliveryBook {
      *
      * @throws IllegalValueException if there were any data constraints violated.
      */
-    public DeliveryBook toModelType() throws IllegalValueException {
+    public DeliveryBook toModelType(ObservableList<Company> existingCompanies) throws IllegalValueException {
         DeliveryBook addressBook = new DeliveryBook();
         for (JsonAdaptedDelivery jsonAdaptedDelivery : deliveries) {
-            Delivery delivery = jsonAdaptedDelivery.toModelType();
+            Delivery delivery = jsonAdaptedDelivery.toModelType(existingCompanies);
             if (addressBook.hasDelivery(delivery)) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_DELIVERY);
             }

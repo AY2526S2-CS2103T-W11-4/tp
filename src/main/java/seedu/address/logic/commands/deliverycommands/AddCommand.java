@@ -1,13 +1,11 @@
 package seedu.address.logic.commands.deliverycommands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
-import java.util.Objects;
 import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
@@ -17,7 +15,6 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.company.Company;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
-import seedu.address.model.delivery.Address;
 import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
@@ -35,13 +32,11 @@ public class AddCommand extends Command {
             + PREFIX_PRODUCT + "PRODUCT "
             + PREFIX_COMPANY + "COMPANY "
             + PREFIX_DEADLINE + "DEADLINE "
-            + PREFIX_ADDRESS + "ADDRESS "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_PRODUCT + "Laptop "
             + PREFIX_COMPANY + "Dell "
             + PREFIX_DEADLINE + "2026-03-25 14:30 "
-            + PREFIX_ADDRESS + "311, Clementi Ave 2, #02-25 "
             + PREFIX_TAG + "urgent";
 
     public static final String MESSAGE_SUCCESS = "New delivery added: %1$s";
@@ -50,18 +45,16 @@ public class AddCommand extends Command {
     private final Product product;
     private final CompanyNameContainsKeywordsPredicate name;
     private final Deadline deadline;
-    private Address address;
     private final Set<Tag> tagList;
 
     /**
      * Creates an AddCommand to add the specified {@code Delivery}.
      */
     public AddCommand(Product product, CompanyNameContainsKeywordsPredicate name,
-                      Deadline deadline, Address address, Set<Tag> tagList) {
+                      Deadline deadline, Set<Tag> tagList) {
         this.product = product;
         this.name = name;
         this.deadline = deadline;
-        this.address = address;
         this.tagList = tagList;
     }
 
@@ -74,11 +67,8 @@ public class AddCommand extends Command {
             throw new CommandException("Company not found");
         }
 
-        if (this.address == null) {
-            this.address = new Address(company.getAddress().toString());
-        }
 
-        Delivery toAdd = new Delivery(this.product, company, this.deadline, this.address, this.tagList);
+        Delivery toAdd = new Delivery(this.product, company, this.deadline, this.tagList);
 
         if (model.hasDelivery(toAdd)) {
             throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);
@@ -102,7 +92,6 @@ public class AddCommand extends Command {
         return product.equals(otherAddCommand.product)
                 && name.equals(otherAddCommand.name)
                 && deadline.equals(otherAddCommand.deadline)
-                && Objects.equals(address, otherAddCommand.address)
                 && tagList.equals(otherAddCommand.tagList);
     }
 
@@ -112,7 +101,6 @@ public class AddCommand extends Command {
                 .add("product", product)
                 .add("company", name)
                 .add("deadline", deadline)
-                .add("address", address)
                 .add("tag", tagList)
                 .toString();
     }

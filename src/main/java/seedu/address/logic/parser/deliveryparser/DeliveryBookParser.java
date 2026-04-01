@@ -14,6 +14,7 @@ import seedu.address.logic.commands.deliverycommands.ClearCommand;
 import seedu.address.logic.commands.deliverycommands.DeleteCommand;
 import seedu.address.logic.commands.deliverycommands.EditCommand;
 import seedu.address.logic.commands.deliverycommands.FindCommand;
+import seedu.address.logic.commands.deliverycommands.ListCommand;
 import seedu.address.logic.commands.deliverycommands.MarkCommand;
 import seedu.address.logic.commands.deliverycommands.SortCommand;
 import seedu.address.logic.commands.deliverycommands.SwitchCommand;
@@ -71,6 +72,9 @@ public class DeliveryBookParser {
 
         case FindCommand.COMMAND_WORD:
             return new FindCommandParser().parse(arguments);
+
+        case ListCommand.COMMAND_WORD:
+            return new ListCommand();
 
         case MarkCommand.COMMAND_WORD:
             return new MarkCommandParser().parse(arguments);

@@ -65,7 +65,7 @@ public class DeliveryRouterService {
         // Step 2: geocode all delivery addresses
         List<String> addresses = new ArrayList<>();
         for (Delivery d : deliveries) {
-            addresses.add(d.getAddress().value);
+            addresses.add(d.getCompany().getAddress().value);
         }
         List<Coordinate> deliveryCoords = geocodingService.geocodeAll(addresses);
 

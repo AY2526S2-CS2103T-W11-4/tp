@@ -20,7 +20,6 @@ import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
-import seedu.address.model.delivery.Address;
 import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
@@ -38,11 +37,11 @@ public class SortCommandTest {
     @Test
     public void execute_companyDeliveriesSortedByDeadline_success() throws Exception {
         Delivery laterDell = new Delivery(new Product("Laptop"), DELL,
-                new Deadline("2026-03-26 10:00"), new Address("10 Anson Road"), Collections.emptySet());
+                new Deadline("2026-03-26 10:00"), Collections.emptySet());
         Delivery earlierDell = new Delivery(new Product("Printer"), DELL,
-                new Deadline("2026-03-25 09:00"), new Address("11 Anson Road"), Collections.emptySet());
+                new Deadline("2026-03-25 09:00"), Collections.emptySet());
         Delivery acerDelivery = new Delivery(new Product("Monitor"), ACER,
-                new Deadline("2026-03-24 08:00"), new Address("12 Anson Road"), Collections.emptySet());
+                new Deadline("2026-03-24 08:00"), Collections.emptySet());
 
         Model model = new ModelManager(new seedu.address.model.AddressBook(), new DeliveryBook(), new UserPrefs());
         model.addDelivery(laterDell);

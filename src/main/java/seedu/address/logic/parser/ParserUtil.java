@@ -85,24 +85,6 @@ public class ParserUtil {
     }
 
     /**
-     * Parses a {@code String address} into an {@code Address}.
-     * Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code address} is invalid.
-     */
-    public static seedu.address.model.delivery.Address parseDeliveryAddress(String address) throws ParseException {
-        if (address != null) {
-            String trimmedAddress = address.trim();
-            if (!Address.isValidAddress(trimmedAddress)) {
-                throw new ParseException(Address.MESSAGE_CONSTRAINTS);
-            }
-            return new seedu.address.model.delivery.Address(trimmedAddress);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Parses a {@code String email} into an {@code Email}.
      * Leading and trailing whitespaces will be trimmed.
      *

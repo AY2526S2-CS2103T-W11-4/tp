@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.company.Company;
-import seedu.address.model.delivery.Address;
 import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
@@ -28,7 +27,6 @@ class JsonAdaptedDelivery {
     private final String product;
     private final String company;
     private final String deadline;
-    private final String address;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
     /**
@@ -38,12 +36,10 @@ class JsonAdaptedDelivery {
     public JsonAdaptedDelivery(@JsonProperty("product") String product,
                                @JsonProperty("company") String company,
                                @JsonProperty("deadline") String deadline,
-                               @JsonProperty("address") String address,
                                @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.product = product;
         this.company = company;
         this.deadline = deadline;
-        this.address = address;
         if (tags != null) {
             this.tags.addAll(tags);
         }
@@ -56,7 +52,6 @@ class JsonAdaptedDelivery {
         product = source.getProduct().productName;
         company = source.getCompany().getName().toString();
         deadline = source.getDeadline().toStorageString();
-        address = source.getAddress().value;
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
@@ -104,16 +99,8 @@ class JsonAdaptedDelivery {
         }
         final Deadline modelDeadline = new Deadline(deadline);
 
-        if (address == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
-        }
-        if (!Address.isValidAddress(address)) {
-            throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
-        }
-        final Address modelAddress = new Address(address);
-
         final Set<Tag> modelTags = new HashSet<>(companyTags);
-        return new Delivery(modelProduct, modelCompany, modelDeadline, modelAddress, modelTags);
+        return new Delivery(modelProduct, modelCompany, modelDeadline, modelTags);
     }
 
 }

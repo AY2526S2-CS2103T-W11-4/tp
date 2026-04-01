@@ -18,7 +18,6 @@ import seedu.address.model.company.Company;
 import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
-import seedu.address.model.delivery.Address;
 import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
@@ -32,11 +31,10 @@ public class JsonAdaptedDeliveryTest {
             getTagSet("test"));
     private static final Delivery VALID_DELIVERY = new Delivery(new Product("Laptop"),
             VALID_COMPANY,
-            new Deadline("2026-03-25 14:30"), new Address("10 Anson Road"),
+            new Deadline("2026-03-25 14:30"),
             Collections.singleton(new Tag("fragile")));
     private static final String VALID_PRODUCT = VALID_DELIVERY.getProduct().toString();
     private static final String VALID_COMPANY_STRING = VALID_COMPANY.getName().toString();
-    private static final String VALID_ADDRESS = VALID_DELIVERY.getAddress().toString();
     private static final List<JsonAdaptedTag> VALID_TAGS = VALID_DELIVERY.getTags().stream()
             .map(JsonAdaptedTag::new)
             .collect(Collectors.toList());
@@ -53,7 +51,7 @@ public class JsonAdaptedDeliveryTest {
     public void toModelType_nullDeadline_throwsIllegalValueException() {
         JsonAdaptedDelivery delivery =
                 new JsonAdaptedDelivery(VALID_PRODUCT, VALID_COMPANY_STRING, null,
-                        VALID_ADDRESS, VALID_TAGS);
+                        VALID_TAGS);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, Deadline.class.getSimpleName());
         assertThrows(IllegalValueException.class, expectedMessage, () -> delivery.toModelType(EXISTING_COMPANIES));
     }
@@ -62,7 +60,7 @@ public class JsonAdaptedDeliveryTest {
     public void toModelType_invalidDeadline_throwsIllegalValueException() {
         JsonAdaptedDelivery delivery =
                 new JsonAdaptedDelivery(VALID_PRODUCT, VALID_COMPANY_STRING, "2026/03/25 14:30",
-                        VALID_ADDRESS, VALID_TAGS);
+                        VALID_TAGS);
         assertThrows(IllegalValueException.class,
                 Deadline.MESSAGE_CONSTRAINTS, () -> delivery.toModelType(EXISTING_COMPANIES));
     }

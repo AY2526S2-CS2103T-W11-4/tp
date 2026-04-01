@@ -53,7 +53,7 @@ public class Messages {
     }
 
     /**
-     * Formats the {@code company} for display to the user.
+     * Formats the {@code Delivery} for display to the user.
      */
     public static String format(Delivery delivery) {
         final StringBuilder builder = new StringBuilder();
@@ -63,8 +63,6 @@ public class Messages {
                 .append(delivery.getCompany())
                 .append("; Deadline: ")
                 .append(delivery.getDeadline())
-                .append("; Address: ")
-                .append(delivery.getAddress())
                 .append("; Tags: ");
         delivery.getTags().forEach(builder::append);
         return builder.toString();

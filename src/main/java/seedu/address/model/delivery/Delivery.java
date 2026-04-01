@@ -23,18 +23,16 @@ public class Delivery {
     private final Deadline deadline;
 
     // Data fields
-    private final Address address;
     private final Set<Tag> tags = new HashSet<>();
 
     /**
      * Every field must be present and not null.
      */
-    public Delivery(Product product, Company company, Deadline deadline, Address address, Set<Tag> tags) {
-        requireAllNonNull(product, company, deadline, address, tags);
+    public Delivery(Product product, Company company, Deadline deadline, Set<Tag> tags) {
+        requireAllNonNull(product, company, deadline, tags);
         this.product = product;
         this.company = company;
         this.deadline = deadline;
-        this.address = address;
         this.tags.addAll(tags);
     }
 
@@ -48,10 +46,6 @@ public class Delivery {
 
     public Deadline getDeadline() {
         return deadline;
-    }
-
-    public Address getAddress() {
-        return address;
     }
 
     /**
@@ -96,14 +90,13 @@ public class Delivery {
         return product.equals(otherDelivery.product)
                 && company.equals(otherDelivery.company)
                 && deadline.equals(otherDelivery.deadline)
-                && address.equals(otherDelivery.address)
                 && tags.equals(otherDelivery.tags);
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(product, company, deadline, address, tags);
+        return Objects.hash(product, company, deadline, tags);
     }
 
     @Override
@@ -112,7 +105,6 @@ public class Delivery {
                 .add("product", product)
                 .add("company", company)
                 .add("deadline", deadline)
-                .add("address", address)
                 .add("tags", tags)
                 .toString();
     }

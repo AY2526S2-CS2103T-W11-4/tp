@@ -18,7 +18,6 @@ import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
-import seedu.address.model.delivery.Address;
 import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
@@ -48,10 +47,9 @@ public class AddCommandParser implements Parser<AddCommand> {
         Deadline deadline = ParserUtil.parseDeadline(argMultimap.getValue(PREFIX_DEADLINE).get());
         CompanyNameContainsKeywordsPredicate company =
                 ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
-        Address address = ParserUtil.parseDeliveryAddress(argMultimap.getValue(PREFIX_ADDRESS).get());
         Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
 
-        return new AddCommand(product, company, deadline, address, tagList);
+        return new AddCommand(product, company, deadline, tagList);
     }
 
     /**

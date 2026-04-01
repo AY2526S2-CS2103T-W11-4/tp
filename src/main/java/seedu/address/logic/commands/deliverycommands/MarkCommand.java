@@ -55,7 +55,6 @@ public class MarkCommand extends Command {
                 deliveryToMark.getProduct(),
                 deliveryToMark.getCompany(),
                 deliveryToMark.getDeadline(),
-                deliveryToMark.getAddress(),
                 newTags
         );
 

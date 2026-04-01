@@ -56,7 +56,6 @@ public class UnmarkCommand extends Command {
                 deliveryToUnmark.getProduct(),
                 deliveryToUnmark.getCompany(),
                 deliveryToUnmark.getDeadline(),
-                deliveryToUnmark.getAddress(),
                 newTags
         );
 

@@ -32,6 +32,7 @@ import seedu.address.model.company.Company;
 import seedu.address.storage.JsonAddressBookStorage;
 import seedu.address.storage.JsonDeliveryBookStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
+import seedu.address.storage.JsonUserStorage;
 import seedu.address.storage.StorageManager;
 import seedu.address.testutil.CompanyBuilder;
 
@@ -52,8 +53,10 @@ public class LogicManagerTest {
         JsonDeliveryBookStorage deliveryBookStorage =
                 new JsonDeliveryBookStorage(temporaryFolder.resolve("deliveryBook.json"));
         JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(temporaryFolder.resolve("userPrefs.json"));
+        JsonUserStorage userStorage = new JsonUserStorage(temporaryFolder.resolve("userStorage.json"));
         model.setCompanyPackage(true);
-        StorageManager storage = new StorageManager(addressBookStorage, deliveryBookStorage, userPrefsStorage);
+        StorageManager storage = new StorageManager(addressBookStorage, deliveryBookStorage,
+                userPrefsStorage, userStorage);
         logic = new LogicManager(model, storage);
     }
 
@@ -167,8 +170,11 @@ public class LogicManagerTest {
 
         JsonUserPrefsStorage userPrefsStorage =
                 new JsonUserPrefsStorage(temporaryFolder.resolve("ExceptionUserPrefs.json"));
+
+        JsonUserStorage userStorage = new JsonUserStorage(temporaryFolder.resolve("ExceptionUserStorage.json"));
         model.setCompanyPackage(true);
-        StorageManager storage = new StorageManager(addressBookStorage, deliveryBookStorage, userPrefsStorage);
+        StorageManager storage = new StorageManager(addressBookStorage, deliveryBookStorage,
+                userPrefsStorage, userStorage);
 
         logic = new LogicManager(model, storage);
 

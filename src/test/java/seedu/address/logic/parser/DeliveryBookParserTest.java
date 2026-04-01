@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.deliverycommands.EditCommand;
 import seedu.address.logic.commands.deliverycommands.EditCommand.EditDeliveryDescriptor;
+import seedu.address.logic.commands.deliverycommands.ListCommand;
 import seedu.address.logic.parser.deliveryparser.DeliveryBookParser;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Deadline;
@@ -16,6 +17,11 @@ import seedu.address.model.delivery.Deadline;
 public class DeliveryBookParserTest {
 
     private final DeliveryBookParser parser = new DeliveryBookParser();
+
+    @Test
+    public void parseCommand_list() throws Exception {
+        assertEquals(new ListCommand(), parser.parseCommand("list"));
+    }
 
     @Test
     public void parseCommand_editDeadline() throws Exception {

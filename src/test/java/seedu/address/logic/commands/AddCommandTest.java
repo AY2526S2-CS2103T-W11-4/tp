@@ -27,6 +27,7 @@ import seedu.address.model.ReadOnlyDeliveryBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.company.Company;
 import seedu.address.model.delivery.Delivery;
+import seedu.address.model.user.User;
 import seedu.address.testutil.CompanyBuilder;
 
 public class AddCommandTest {
@@ -219,6 +220,16 @@ public class AddCommandTest {
 
         @Override
         public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public User getUser() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setUser(User user) {
             throw new AssertionError("This method should not be called.");
         }
     }

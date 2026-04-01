@@ -1,5 +1,6 @@
 package seedu.address.ui;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 
 import javafx.fxml.FXML;
@@ -55,5 +56,18 @@ public class DeliveryCard extends UiPart<Region> {
         delivery.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+
+        boolean isDelivered = delivery.getTags().stream()
+                .anyMatch(tag -> tag.tagName.equalsIgnoreCase("delivered"));
+
+        boolean isOverdue = delivery.getDeadline().getValue().isBefore(LocalDateTime.now());
+
+        if (isDelivered) {
+            cardPane.setStyle("-fx-background-color: rgba(0,255,0,0.2);");
+        } else if (isOverdue) {
+            cardPane.setStyle("-fx-background-color: rgba(255,0,0,0.2);");
+        } else {
+            // Does not change the UI
+        }
     }
 }

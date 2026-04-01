@@ -16,7 +16,6 @@ import seedu.address.model.company.Company;
 import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
-import seedu.address.model.delivery.Address;
 import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
@@ -34,11 +33,11 @@ public class DeliveryListCommandTest {
     @Test
     public void execute_listShowsAllDeliveriesSortedByDeadline_success() throws Exception {
         Delivery latest = new Delivery(new Product("Laptop"), DELL,
-                new Deadline("2026-03-26 10:00"), new Address("10 Anson Road"), getTagSet());
+                new Deadline("2026-03-26 10:00"), getTagSet());
         Delivery earliest = new Delivery(new Product("Monitor"), ACER,
-                new Deadline("2026-03-24 08:00"), new Address("12 Anson Road"), getTagSet());
+                new Deadline("2026-03-24 08:00"), getTagSet());
         Delivery middle = new Delivery(new Product("Printer"), DELL,
-                new Deadline("2026-03-25 09:00"), new Address("11 Anson Road"), getTagSet());
+                new Deadline("2026-03-25 09:00"), getTagSet());
 
         Model model = new ModelManager(new seedu.address.model.AddressBook(), new DeliveryBook(), new UserPrefs());
         model.addDelivery(latest);

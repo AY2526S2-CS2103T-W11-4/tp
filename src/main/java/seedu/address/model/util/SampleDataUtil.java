@@ -45,19 +45,15 @@ public class SampleDataUtil {
         Delivery[] deliveries = new Delivery[] {
             new Delivery(new Product("iPhone"), apple,
                 new Deadline("2025-03-29 14:30"),
-                new seedu.address.model.delivery.Address("78 Airport Blvd, #02-234"),
                 getTagSet("fragile")),
             new Delivery(new Product("laptop"), dell,
                 new Deadline(DATETIME.plusHours(7).format(FORMAT)),
-                new seedu.address.model.delivery.Address("Changi Business Park Central 1"),
                 getTagSet("delayed")),
             new Delivery(new Product("tablet"), samsung,
                 new Deadline(DATETIME.plusHours(1).format(FORMAT)),
-                new seedu.address.model.delivery.Address("313 Orchard Rd"),
                 getTagSet("fragile")),
             new Delivery(new Product("printer"), hp,
                 new Deadline(DATETIME.plusHours(3).format(FORMAT)),
-                new seedu.address.model.delivery.Address("750 Chai Chee Road, #01-01"),
                 getTagSet("heavy")),
         };
 

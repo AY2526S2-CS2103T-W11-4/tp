@@ -2,6 +2,8 @@ package seedu.address.storage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -22,7 +24,7 @@ import seedu.address.model.delivery.Delivery;
 class JsonSerializableDeliveryBook {
 
     public static final String MESSAGE_DUPLICATE_DELIVERY = "deliveries list contains duplicate delivery(s).";
-
+    private static final Logger logger = Logger.getLogger(JsonSerializableDeliveryBook.class.getName());
     private final List<JsonAdaptedDelivery> deliveries = new ArrayList<>();
 
     /**
@@ -54,11 +56,19 @@ class JsonSerializableDeliveryBook {
     public DeliveryBook toModelType(ObservableList<Company> existingCompanies) throws IllegalValueException {
         DeliveryBook addressBook = new DeliveryBook();
         for (JsonAdaptedDelivery jsonAdaptedDelivery : deliveries) {
-            Delivery delivery = jsonAdaptedDelivery.toModelType(existingCompanies);
-            if (addressBook.hasDelivery(delivery)) {
-                throw new IllegalValueException(MESSAGE_DUPLICATE_DELIVERY);
+            try {
+                Delivery delivery = jsonAdaptedDelivery.toModelType(existingCompanies);
+
+                if (addressBook.hasDelivery(delivery)) {
+                    logger.warning(MESSAGE_DUPLICATE_DELIVERY);
+                    continue;
+                }
+
+                addressBook.addDelivery(delivery);
+
+            } catch (IllegalValueException e) {
+                logger.log(Level.WARNING, "Skipping invalid delivery", e);
             }
-            addressBook.addDelivery(delivery);
         }
         return addressBook;
     }

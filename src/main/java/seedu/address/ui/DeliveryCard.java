@@ -57,7 +57,7 @@ public class DeliveryCard extends UiPart<Region> {
         product.setText(delivery.getProduct().productName);
         company.setText(delivery.getCompany().getName().toString());
         deadline.setText("Deadline: " + delivery.getDeadline());
-        address.setText(delivery.getAddress().value);
+        address.setText(delivery.getCompany().getAddress().value);
         selectDeliveryCheckBox.setSelected(isSelected);
         selectDeliveryCheckBox.setOnAction(event ->
                 onSelectionChanged.accept(selectDeliveryCheckBox.isSelected()));

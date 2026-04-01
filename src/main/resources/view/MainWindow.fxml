@@ -3,6 +3,7 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Scene?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -71,6 +72,15 @@
                   <Insets top="10" right="10" bottom="10" left="10" />
                 </padding>
                 <Label text="Delivery Book" styleClass="cell_big_label" />
+                <Button fx:id="mapSelectedDeliveriesButton"
+                        text="Map Selected Deliveries"
+                        onAction="#handleShowSelectedRoutes"
+                        disable="true"
+                        styleClass="plan-routes-button">
+                  <VBox.margin>
+                    <Insets top="8" />
+                  </VBox.margin>
+                </Button>
                 <StackPane fx:id="deliveryListPanelPlaceholder" VBox.vgrow="ALWAYS">
                   <VBox.margin>
                     <Insets top="10" />

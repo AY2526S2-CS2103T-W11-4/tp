@@ -1,8 +1,10 @@
 package seedu.address.ui;
 
 import java.util.Comparator;
+import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -29,6 +31,8 @@ public class DeliveryCard extends UiPart<Region> {
     @FXML
     private HBox cardPane;
     @FXML
+    private CheckBox selectDeliveryCheckBox;
+    @FXML
     private Label product;
     @FXML
     private Label id;
@@ -44,7 +48,8 @@ public class DeliveryCard extends UiPart<Region> {
     /**
      * Creates a {@code DeliveryCard} with the given {@code Delivery} and index to display.
      */
-    public DeliveryCard(Delivery delivery, int displayedIndex) {
+    public DeliveryCard(Delivery delivery, int displayedIndex, boolean isSelected,
+                        Consumer<Boolean> onSelectionChanged) {
         super(FXML);
         this.delivery = delivery;
         id.setText(displayedIndex + ". ");
@@ -52,6 +57,9 @@ public class DeliveryCard extends UiPart<Region> {
         company.setText(delivery.getCompany().getName().toString());
         deadline.setText("Deadline: " + delivery.getDeadline());
         address.setText(delivery.getAddress().value);
+        selectDeliveryCheckBox.setSelected(isSelected);
+        selectDeliveryCheckBox.setOnAction(event ->
+                onSelectionChanged.accept(selectDeliveryCheckBox.isSelected()));
         delivery.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));

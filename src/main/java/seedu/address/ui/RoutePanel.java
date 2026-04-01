@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -72,14 +73,20 @@ public class RoutePanel extends UiPart<Region> {
 
     @FXML
     private void handlePlanRoutes() {
-        List<Delivery> deliveries = deliveryList.stream().collect(Collectors.toList());
+        planRoutesFor(deliveryList.stream().collect(Collectors.toList()));
+    }
 
+    /**
+     * Plans routes for the given deliveries and updates the route map.
+     */
+    public void planRoutesFor(List<Delivery> deliveries) {
         if (deliveries.isEmpty()) {
             routeStatusLabel.setText("No deliveries to route. Add some deliveries first.");
             return;
         }
 
         User user = model.getUser();
+        List<Delivery> deliveriesToRoute = new ArrayList<>(deliveries);
 
         planRoutesButton.setDisable(true);
         routeStatusLabel.setText("Planning routes for "
@@ -88,7 +95,7 @@ public class RoutePanel extends UiPart<Region> {
         Task<RouteResult> task = new Task<>() {
             @Override
             protected RouteResult call() throws Exception {
-                return routerService.planRoutes(deliveries, user);
+                return routerService.planRoutes(deliveriesToRoute, user);
             }
         };
 

@@ -12,6 +12,8 @@ import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 
+import java.util.List;
+
 /**
  * Parses input arguments and creates a new SortCommand object.
  */
@@ -30,10 +32,21 @@ public class SortCommandParser implements Parser<SortCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
         }
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_COMPANY);
-        CompanyNameContainsKeywordsPredicate company =
-                ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
-        return new SortCommand(company);
+        List<CompanyNameContainsKeywordsPredicate> companies = argMultimap.getAllValues(PREFIX_COMPANY).stream()
+                .map(x -> {
+                    try {
+                        return ParserUtil.parseCompany(x);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+
+        System.out.println(companies);
+        if (companies.isEmpty()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
+        }
+        return new SortCommand(companies);
     }
 
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {

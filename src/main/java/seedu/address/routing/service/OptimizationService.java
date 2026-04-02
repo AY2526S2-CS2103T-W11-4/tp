@@ -99,8 +99,8 @@ public class OptimizationService {
             int[] tw = timeWindows.get(i);
             job.put("time_windows", new JSONArray().put(
                     new JSONArray()
-                            .put(midnightToday + tw[0])
-                            .put(midnightToday + tw[1])));
+                            .put(tw[0])
+                            .put(tw[1])));
             job.put("service", serviceDurations.get(i));
             jobs.put(job);
         }

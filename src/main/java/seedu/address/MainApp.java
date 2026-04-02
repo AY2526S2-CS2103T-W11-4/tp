@@ -95,7 +95,6 @@ public class MainApp extends Application {
         ReadOnlyDeliveryBook initialDeliveryData;
 
         SampleData sampleData = SampleDataUtil.getSampleDataUtil();
-        boolean isSampleAddress = false;
 
         assert sampleData != null : "sampleData should not be null";
 
@@ -105,7 +104,6 @@ public class MainApp extends Application {
             if (!addressBookOptional.isPresent()) {
                 logger.info("Creating a new data file " + storage.getAddressBookFilePath()
                         + " populated with a sample AddressBook.");
-                isSampleAddress = true;
             }
             initialAddressData = addressBookOptional.orElseGet(sampleData::getSampleAddressBook);
             assert initialAddressData != null : "AddressBook should not be null";
@@ -118,23 +116,17 @@ public class MainApp extends Application {
         ObservableList<Company> existingCompanies = initialAddressData.getCompanyList();
 
         // Delivery book
-        if (!isSampleAddress) {
-            try {
-                deliveryBookOptional = storage.readDeliveryBook(existingCompanies);
-                if (!deliveryBookOptional.isPresent()) {
-                    logger.info("Creating a new data file " + storage.getDeliveryBookFilePath()
-                            + " Will be starting with an empty DeliveryBook.");
-                }
-                initialDeliveryData = deliveryBookOptional.orElseGet(DeliveryBook::new);
-            } catch (DataLoadingException e) {
-                logger.warning("Data file at " + storage.getDeliveryBookFilePath() + " could not be loaded."
-                        + " Will be starting with an empty DeliveryBook.");
-                initialDeliveryData = new DeliveryBook();
+        try {
+            deliveryBookOptional = storage.readDeliveryBook(existingCompanies);
+            if (!deliveryBookOptional.isPresent()) {
+                logger.info("Creating a new data file " + storage.getDeliveryBookFilePath()
+                        + " populated with a sample DeliveryBook.");
             }
-        } else {
-            logger.info("Creating a new data file " + storage.getDeliveryBookFilePath()
-                    + " populated with a sample DeliveryBook.");
-            initialDeliveryData = sampleData.getSampleDeliveryBook();
+            initialDeliveryData = deliveryBookOptional.orElseGet(sampleData::getSampleDeliveryBook);
+        } catch (DataLoadingException e) {
+            logger.warning("Data file at " + storage.getDeliveryBookFilePath() + " could not be loaded."
+                    + " Will be starting with an empty DeliveryBook.");
+            initialDeliveryData = new DeliveryBook();
         }
 
         // User

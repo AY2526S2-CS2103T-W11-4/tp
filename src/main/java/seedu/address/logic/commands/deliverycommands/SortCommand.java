@@ -60,11 +60,13 @@ public class SortCommand extends Command {
         model.sortDeliveriesByDeadline(matchesCompany);
         model.updateFilteredDeliveryList(matchesCompany);
         if (!empty.isEmpty()) {
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, companyName));
+            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY,
+                    String.join("", companyName)));
         }
 
         return new CommandResult(
-                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(), companyName));
+                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(),
+                        String.join("", companyName)));
     }
 
     @Override

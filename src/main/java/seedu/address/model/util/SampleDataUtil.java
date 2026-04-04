@@ -1,6 +1,8 @@
 package seedu.address.model.util;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,20 +42,25 @@ public class SampleDataUtil {
         Company test = new Company(new Name("test"), new Phone("91031282"), new Email("HP@example.com"),
                 new Address("750 Chai Chee Road, #01-01"), getTagSet("payment"));
 
-        Company[] companies = new Company[] {apple, dell, samsung, hp, test};
-
+        Company[] companies = new Company[] {apple, dell, samsung, hp};
+        String date;
+        if (LocalTime.now().isBefore(LocalTime.of(14, 30))) {
+            date = LocalDate.now().toString();
+        } else {
+            date = LocalDate.now().plusDays(1).toString();
+        }
         Delivery[] deliveries = new Delivery[] {
             new Delivery(new Product("iPhone"), apple,
-                new Deadline("2025-03-29 14:30"),
+                new Deadline(date + " 14:30"),
                 getTagSet("fragile")),
             new Delivery(new Product("laptop"), dell,
-                new Deadline(DATETIME.plusHours(7).format(FORMAT)),
-                getTagSet("delayed")),
+                new Deadline(date + " 14:30"),
+                getTagSet("test")),
             new Delivery(new Product("tablet"), samsung,
-                new Deadline(DATETIME.plusHours(1).format(FORMAT)),
+                new Deadline(date + " 14:30"),
                 getTagSet("fragile")),
             new Delivery(new Product("printer"), hp,
-                new Deadline(DATETIME.plusHours(3).format(FORMAT)),
+                new Deadline(date + " 14:30"),
                 getTagSet("heavy")),
         };
 

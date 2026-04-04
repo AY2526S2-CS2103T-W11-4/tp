@@ -120,7 +120,7 @@ public class MainApp extends Application {
             deliveryBookOptional = storage.readDeliveryBook(existingCompanies);
             if (!deliveryBookOptional.isPresent()) {
                 logger.info("Creating a new data file " + storage.getDeliveryBookFilePath()
-                        + " Will be starting with sample DeliveryBook.");
+                        + " populated with a sample DeliveryBook.");
             }
             initialDeliveryData = deliveryBookOptional.orElseGet(sampleData::getSampleDeliveryBook);
         } catch (DataLoadingException e) {

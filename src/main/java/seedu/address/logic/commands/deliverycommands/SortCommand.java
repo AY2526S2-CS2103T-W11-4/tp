@@ -3,6 +3,8 @@ package seedu.address.logic.commands.deliverycommands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
@@ -28,12 +30,12 @@ public class SortCommand extends Command {
     public static final String MESSAGE_SORT_SUCCESS = "Sorted %1$d delivery(s) for company: %2$s";
     public static final String MESSAGE_NO_DELIVERIES_FOR_COMPANY = "No deliveries found for company: %1$s";
 
-    private final CompanyNameContainsKeywordsPredicate name;
+    private final List<CompanyNameContainsKeywordsPredicate> name;
 
     /**
      * Creates a SortCommand to sort deliveries for the specified company.
      */
-    public SortCommand(CompanyNameContainsKeywordsPredicate name) {
+    public SortCommand(List<CompanyNameContainsKeywordsPredicate> name) {
         requireNonNull(name);
         this.name = name;
     }
@@ -41,21 +43,28 @@ public class SortCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        String companyName = getCompanyName();
-        Predicate<Delivery> matchesCompany =
-                delivery -> delivery.getCompany().getName().toString().equalsIgnoreCase(companyName);
-
-        boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
-                .anyMatch(matchesCompany);
-        if (!hasMatchingDelivery) {
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, companyName));
+        List<String> companyName = getCompanyName();
+        Predicate<Delivery> matchesCompany = delivery -> false;
+        List<String> empty = new ArrayList<>();
+        for (String name : companyName) {
+            Predicate<Delivery> match = delivery -> delivery.getCompany().getName().toString().equalsIgnoreCase(name);
+            boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
+                    .anyMatch(match);
+            if (!hasMatchingDelivery) {
+                empty.add(name);
+            }
+            matchesCompany = matchesCompany.or(match);
         }
-
         model.sortDeliveriesByDeadline(matchesCompany);
         model.updateFilteredDeliveryList(matchesCompany);
+        if (!empty.isEmpty()) {
+            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY,
+                    String.join(" ", companyName)));
+        }
 
         return new CommandResult(
-                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(), companyName));
+                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(),
+                        String.join(" ", companyName)));
     }
 
     @Override
@@ -79,7 +88,7 @@ public class SortCommand extends Command {
                 .toString();
     }
 
-    private String getCompanyName() {
-        return name.getKeywords().get(0);
+    private List<String> getCompanyName() {
+        return name.stream().map(x -> x.getKeywords().get(0)).toList();
     }
 }

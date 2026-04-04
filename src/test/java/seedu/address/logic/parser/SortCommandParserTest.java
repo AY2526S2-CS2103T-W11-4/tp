@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.Messages;
 import seedu.address.logic.commands.deliverycommands.SortCommand;
 import seedu.address.logic.parser.deliveryparser.SortCommandParser;
 import seedu.address.model.company.Company;
@@ -28,7 +27,7 @@ public class SortCommandParserTest {
     @Test
     public void parse_validArgs_returnsSortCommand() {
         assertParseSuccess(parser, " c/Dell",
-                new SortCommand(new CompanyNameContainsKeywordsPredicate(List.of("Dell"))));
+                new SortCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell")))));
     }
 
     @Test
@@ -37,9 +36,4 @@ public class SortCommandParserTest {
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
     }
 
-    @Test
-    public void parse_duplicateCompany_throwsParseException() {
-        assertParseFailure(parser, " c/Dell c/Acer",
-                Messages.getErrorMessageForDuplicatePrefixes(CliSyntax.PREFIX_COMPANY));
-    }
 }

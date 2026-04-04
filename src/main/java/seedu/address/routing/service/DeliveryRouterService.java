@@ -1,6 +1,8 @@
 package seedu.address.routing.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +20,6 @@ import seedu.address.routing.model.RouteResult;
  *   3. Call ORS optimization using User's vehicle profile
  */
 public class DeliveryRouterService {
-
-    // Default time window: 8am–6pm in seconds from midnight
-    private static final int DEFAULT_EARLIEST = 8 * 3600;
-    private static final int DEFAULT_LATEST = 18 * 3600;
 
     // Default service time per stop: 5 minutes
     private static final int DEFAULT_SERVICE_SECS = 300;
@@ -69,12 +67,28 @@ public class DeliveryRouterService {
         }
         List<Coordinate> deliveryCoords = geocodingService.geocodeAll(addresses);
 
-        // Step 3: build time windows + service durations (defaults for now)
+        // Step 3: build time windows + service durations
+        int earliest;
+        int latest;
+        boolean overdue = false;
+        List<Delivery> overdueDeliveries = new ArrayList<>();
         List<int[]> timeWindows = new ArrayList<>();
         List<Integer> serviceDurations = new ArrayList<>();
         for (int i = 0; i < deliveries.size(); i++) {
-            timeWindows.add(new int[]{DEFAULT_EARLIEST, DEFAULT_LATEST});
+            earliest = (int) (LocalDateTime.now().atZone(ZoneId.systemDefault())
+                    .toEpochSecond());
+            latest = (int) (deliveries.get(i).getDeadline().getValue().atZone(ZoneId.systemDefault())
+                    .toEpochSecond());
+            if (latest <= earliest) {
+                overdue = true;
+                overdueDeliveries.add(deliveries.get(i));
+            }
+            timeWindows.add(new int[]{earliest, latest});
             serviceDurations.add(DEFAULT_SERVICE_SECS);
+        }
+        if (overdue) {
+            throw new IOException("Overdue Deliveries, please update the deadline of:\n"
+                    + overdueDeliveries.stream().map(x -> x.toString() + "\n").toList());
         }
 
         // Step 4: optimize using user's vehicle profile

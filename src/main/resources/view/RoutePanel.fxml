@@ -16,7 +16,9 @@
   <Button fx:id="planRoutesButton"
           text="Plan Today's Routes"
           onAction="#handlePlanRoutes"
-          styleClass="plan-routes-button">
+          styleClass="plan-routes-button"
+          visible="false"
+          managed="false">
     <VBox.margin>
       <Insets top="8" bottom="4" />
     </VBox.margin>

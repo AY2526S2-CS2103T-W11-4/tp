@@ -85,7 +85,7 @@
                 </padding>
                 <Label text="Delivery Book" styleClass="cell_big_label" />
                 <Button fx:id="mapSelectedDeliveriesButton"
-                        text="Map Selected Deliveries"
+                        text="Plan Today's Route"
                         onAction="#handleShowSelectedRoutes"
                         disable="true"
                         styleClass="plan-routes-button">

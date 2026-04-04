@@ -48,7 +48,7 @@ public class SortCommandTest {
         model.addDelivery(earlierDell);
         model.addDelivery(acerDelivery);
 
-        SortCommand command = new SortCommand(new CompanyNameContainsKeywordsPredicate(List.of("Dell")));
+        SortCommand command = new SortCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell"))));
         CommandResult result = command.execute(model);
 
         assertEquals(String.format(SortCommand.MESSAGE_SORT_SUCCESS, 2, "Dell"),
@@ -62,7 +62,7 @@ public class SortCommandTest {
     @Test
     public void execute_missingCompanyDelivery_throwsCommandException() {
         Model model = new ModelManager(new seedu.address.model.AddressBook(), new DeliveryBook(), new UserPrefs());
-        SortCommand command = new SortCommand(new CompanyNameContainsKeywordsPredicate(List.of("Dell")));
+        SortCommand command = new SortCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell"))));
         String expectedMessage = String.format(SortCommand.MESSAGE_NO_DELIVERIES_FOR_COMPANY, "Dell");
 
         assertThrows(CommandException.class, expectedMessage, () -> command.execute(model));

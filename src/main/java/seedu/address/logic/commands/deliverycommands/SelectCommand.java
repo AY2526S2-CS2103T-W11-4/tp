@@ -14,14 +14,15 @@ import seedu.address.model.Model;
 import seedu.address.model.delivery.Delivery;
 
 /**
- * Toggles which deliveries are selected in the filtered list (same behaviour as the checkboxes).
+ * Selects deliveries at the given indices in the filtered list (sets selection to true; idempotent).
  */
 public class SelectCommand extends Command {
 
     public static final String COMMAND_WORD = "select";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Toggles selection for deliveries at the given indices in the displayed list (like checkboxes).\n"
+            + ": Selects deliveries at the given indices in the displayed list (sets checked to true).\n"
+            + "Repeating the same index keeps it selected. Use checkboxes to unselect individual items.\n"
             + "Parameters: INDEX [INDEX]... | none\n"
             + "Example: " + COMMAND_WORD + " 1\n"
             + "Example: " + COMMAND_WORD + " 1 3\n"
@@ -29,18 +30,18 @@ public class SelectCommand extends Command {
 
     public static final String MESSAGE_CLEAR_SUCCESS = "Cleared delivery selection.";
 
-    public static final String MESSAGE_TOGGLE_SUCCESS = "Toggled selection for %1$d index(es). "
+    public static final String MESSAGE_SELECT_SUCCESS = "Selected %1$d index(es). "
             + "Currently %2$d delivery(s) selected.";
 
     private final boolean clearAll;
-    private final List<Index> indicesToToggle;
+    private final List<Index> indicesToSelect;
 
     /**
-     * @param clearAll if true, {@code indicesToToggle} is ignored and selection is cleared
+     * @param clearAll if true, {@code indicesToSelect} is ignored and selection is cleared
      */
-    public SelectCommand(boolean clearAll, List<Index> indicesToToggle) {
+    public SelectCommand(boolean clearAll, List<Index> indicesToSelect) {
         this.clearAll = clearAll;
-        this.indicesToToggle = indicesToToggle == null ? List.of() : List.copyOf(indicesToToggle);
+        this.indicesToSelect = indicesToSelect == null ? List.of() : List.copyOf(indicesToSelect);
     }
 
     @Override
@@ -53,17 +54,18 @@ public class SelectCommand extends Command {
         }
 
         List<Delivery> shown = model.getFilteredDeliveryList();
-        for (Index index : indicesToToggle) {
+        for (Index index : indicesToSelect) {
             if (index.getZeroBased() >= shown.size()) {
                 throw new CommandException(Messages.MESSAGE_INVALID_DELIVERY_DISPLAYED_INDEX);
             }
         }
-        for (Index index : indicesToToggle) {
-            model.toggleDeliverySelection(index);
+        for (Index index : indicesToSelect) {
+            Delivery delivery = shown.get(index.getZeroBased());
+            model.setDeliverySelected(delivery, true);
         }
 
         int count = model.getSelectedDeliveriesInDisplayOrder().size();
-        return new CommandResult(String.format(MESSAGE_TOGGLE_SUCCESS, indicesToToggle.size(), count));
+        return new CommandResult(String.format(MESSAGE_SELECT_SUCCESS, indicesToSelect.size(), count));
     }
 
     @Override
@@ -75,19 +77,19 @@ public class SelectCommand extends Command {
             return false;
         }
         SelectCommand o = (SelectCommand) other;
-        return clearAll == o.clearAll && indicesToToggle.equals(o.indicesToToggle);
+        return clearAll == o.clearAll && indicesToSelect.equals(o.indicesToSelect);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(clearAll, indicesToToggle);
+        return java.util.Objects.hash(clearAll, indicesToSelect);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("clearAll", clearAll)
-                .add("indicesToToggle", indicesToToggle)
+                .add("indicesToSelect", indicesToSelect)
                 .toString();
     }
 }

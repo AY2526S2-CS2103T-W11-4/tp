@@ -54,7 +54,7 @@ public class RouteCommandTest {
         CommandResult expected = new CommandResult(
                 String.format(RouteCommand.MESSAGE_SUCCESS, 1), false, false, List.of(selected));
         Model expectedModel = new ModelManager(model.getAddressBook(), model.getDeliveryBook(), new UserPrefs());
-        expectedModel.toggleDeliverySelection(INDEX_FIRST_PERSON);
+        expectedModel.setDeliverySelected(expectedModel.getFilteredDeliveryList().get(0), true);
 
         assertCommandSuccess(new RouteCommand(), model, expected, expectedModel);
     }

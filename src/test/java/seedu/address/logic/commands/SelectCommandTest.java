@@ -7,6 +7,7 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.model.util.SampleDataUtil.getTagSet;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +50,7 @@ public class SelectCommandTest {
     @Test
     public void execute_clear_success() {
         Model model = buildModelWithTwoDeliveries();
-        model.toggleDeliverySelection(INDEX_FIRST_PERSON);
+        model.setDeliverySelected(model.getFilteredDeliveryList().get(0), true);
         assertFalse(model.getSelectedDeliveriesInDisplayOrder().isEmpty());
 
         SelectCommand command = new SelectCommand(true, List.of());
@@ -60,21 +61,31 @@ public class SelectCommandTest {
     }
 
     @Test
-    public void execute_toggle_selectAndDeselect() {
+    public void execute_select_idempotent() {
         Model model = buildModelWithTwoDeliveries();
         List<Delivery> list = model.getFilteredDeliveryList();
 
         SelectCommand selectFirst = new SelectCommand(false, List.of(INDEX_FIRST_PERSON));
-        Model afterFirst = new ModelManager(model.getAddressBook(), model.getDeliveryBook(), new UserPrefs());
-        afterFirst.toggleDeliverySelection(INDEX_FIRST_PERSON);
+        Model expectedOneSelected = new ModelManager(model.getAddressBook(), model.getDeliveryBook(), new UserPrefs());
+        expectedOneSelected.setDeliverySelected(expectedOneSelected.getFilteredDeliveryList().get(0), true);
         assertCommandSuccess(selectFirst, model,
-                String.format(SelectCommand.MESSAGE_TOGGLE_SUCCESS, 1, 1), afterFirst);
+                String.format(SelectCommand.MESSAGE_SELECT_SUCCESS, 1, 1), expectedOneSelected);
         assertEquals(List.of(list.get(0)), model.getSelectedDeliveriesInDisplayOrder());
 
         assertCommandSuccess(selectFirst, model,
-                String.format(SelectCommand.MESSAGE_TOGGLE_SUCCESS, 1, 0),
-                new ModelManager(model.getAddressBook(), model.getDeliveryBook(), new UserPrefs()));
-        assertTrue(model.getSelectedDeliveriesInDisplayOrder().isEmpty());
+                String.format(SelectCommand.MESSAGE_SELECT_SUCCESS, 1, 1), expectedOneSelected);
+        assertEquals(List.of(list.get(0)), model.getSelectedDeliveriesInDisplayOrder());
+    }
+
+    @Test
+    public void execute_select_accumulates() throws Exception {
+        Model model = buildModelWithTwoDeliveries();
+        List<Delivery> list = model.getFilteredDeliveryList();
+
+        new SelectCommand(false, List.of(INDEX_FIRST_PERSON)).execute(model);
+        new SelectCommand(false, List.of(INDEX_SECOND_PERSON)).execute(model);
+
+        assertEquals(List.of(list.get(0), list.get(1)), model.getSelectedDeliveriesInDisplayOrder());
     }
 
     @Test

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -45,8 +46,9 @@ public class SortCommand extends Command {
         requireNonNull(model);
         List<String> companyName = getCompanyName();
         Predicate<Delivery> matchesCompany = delivery -> false;
-        List<String> empty = new ArrayList<>();
+        List<String> empty= new ArrayList<>();
         for (String name : companyName) {
+            System.out.println(name);
             Predicate<Delivery> match = delivery -> delivery.getCompany().getName().toString().equalsIgnoreCase(name);
             boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
                     .anyMatch(match);
@@ -57,9 +59,8 @@ public class SortCommand extends Command {
         }
         model.sortDeliveriesByDeadline(matchesCompany);
         model.updateFilteredDeliveryList(matchesCompany);
-        if (!empty.isEmpty()) {
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY,
-                    String.join(" ", companyName)));
+        if (!empty.isEmpty()){
+            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, companyName));
         }
 
         return new CommandResult(

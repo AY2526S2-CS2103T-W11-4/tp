@@ -14,6 +14,8 @@ import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 
+import java.util.List;
+
 /**
  * Parses input arguments and creates a new SortCommand object.
  */

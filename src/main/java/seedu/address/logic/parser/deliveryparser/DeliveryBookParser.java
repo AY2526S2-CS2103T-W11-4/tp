@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.Command;
+import seedu.address.logic.commands.SetCommand;
 import seedu.address.logic.commands.deliverycommands.AddCommand;
 import seedu.address.logic.commands.deliverycommands.ClearCommand;
 import seedu.address.logic.commands.deliverycommands.DeleteCommand;
@@ -23,6 +24,7 @@ import seedu.address.logic.commands.deliverycommands.SwitchCommand;
 import seedu.address.logic.commands.deliverycommands.UnmarkCommand;
 import seedu.address.logic.commands.uicommand.ExitCommand;
 import seedu.address.logic.commands.uicommand.HelpCommand;
+import seedu.address.logic.parser.SetCommandParser;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
@@ -101,6 +103,9 @@ public class DeliveryBookParser {
 
         case HelpCommand.COMMAND_WORD:
             return new HelpCommand();
+
+        case SetCommand.COMMAND_WORD:
+            return new SetCommandParser().parse(arguments);
 
         default:
             logger.finer("This user input caused a ParseException: " + userInput);

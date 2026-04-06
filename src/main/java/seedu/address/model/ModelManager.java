@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -43,6 +45,7 @@ public class ModelManager implements Model {
     private final FilteredList<Delivery> filteredDeliveries;
     private final ObservableSet<Delivery> deliverySelection = FXCollections.observableSet(new LinkedHashSet<>());
     private boolean isCompanyPackage;
+    private final StringProperty userAddress = new SimpleStringProperty();
 
     /**
      * Initializes a ModelManager with the given addressBook, deliveryBook, userPrefs and user.
@@ -61,6 +64,7 @@ public class ModelManager implements Model {
         this.filteredCompanies = new FilteredList<>(this.addressBook.getCompanyList());
         this.filteredDeliveries = new FilteredList<>(this.deliveryBook.getDeliveryList());
         this.filteredDeliveries.addListener((ListChangeListener<Delivery>) c -> pruneDeliverySelectionToFilteredList());
+        userAddress.set("Start address: " + user.getDepotAddress());
     }
 
     /**
@@ -287,8 +291,14 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public StringProperty getUserAddress() {
+        return userAddress;
+    }
+
+    @Override
     public void setUser(User user) {
         requireNonNull(user);
+        userAddress.set("Start address: " + user.getDepotAddress());
         this.user = user;
     }
 

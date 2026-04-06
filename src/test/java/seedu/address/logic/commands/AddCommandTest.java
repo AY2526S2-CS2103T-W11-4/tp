@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import seedu.address.commons.core.GuiSettings;
@@ -253,6 +254,11 @@ public class AddCommandTest {
 
         @Override
         public User getUser() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public StringProperty getUserAddress() {
             throw new AssertionError("This method should not be called.");
         }
 

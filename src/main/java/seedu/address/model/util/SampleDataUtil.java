@@ -1,8 +1,6 @@
 package seedu.address.model.util;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,35 +30,28 @@ public class SampleDataUtil {
     public static SampleData getSampleDataUtil() {
         Company apple = new Company(new Name("Apple"), new Phone("87438807"), new Email("apple@example.com"),
                 new Address("78 Airport Blvd, #02-234"),
-                getTagSet("important"));
+                getTagSet("VIP"));
         Company dell = new Company(new Name("Dell"), new Phone("99272758"), new Email("dell@example.com"),
-                new Address("Changi Business Park Central 1"), getTagSet("partner"));
+                new Address("Changi Business Park Central 1"), getTagSet("COD"));
         Company samsung = new Company(new Name("Samsung"), new Phone("93210283"), new Email("samsung@example.com"),
-                new Address("313 Orchard Rd"), getTagSet("priority"));
+                new Address("313 Orchard Rd"), getTagSet("VIP"));
         Company hp = new Company(new Name("HP Inc"), new Phone("91031282"), new Email("HP@example.com"),
-                new Address("750 Chai Chee Road, #01-01"), getTagSet("payment"));
-        Company test = new Company(new Name("test"), new Phone("91031282"), new Email("HP@example.com"),
-                new Address("750 Chai Chee Road, #01-01"), getTagSet("payment"));
+                new Address("750 Chai Chee Road, #01-01"), getTagSet("COD"));
 
         Company[] companies = new Company[] {apple, dell, samsung, hp};
-        String date;
-        if (LocalTime.now().isBefore(LocalTime.of(14, 30))) {
-            date = LocalDate.now().toString();
-        } else {
-            date = LocalDate.now().plusDays(1).toString();
-        }
+
         Delivery[] deliveries = new Delivery[] {
             new Delivery(new Product("iPhone"), apple,
-                new Deadline(date + " 14:30"),
+                new Deadline("2026-03-29 14:30"),
                 getTagSet("fragile")),
             new Delivery(new Product("laptop"), dell,
-                new Deadline(date + " 14:30"),
-                getTagSet("test")),
+                new Deadline(DATETIME.plusDays(1).format(FORMAT)),
+                getTagSet("delayed")),
             new Delivery(new Product("tablet"), samsung,
-                new Deadline(date + " 14:30"),
-                getTagSet("fragile")),
+                new Deadline(DATETIME.plusHours(1).format(FORMAT)),
+                getTagSet("urgent")),
             new Delivery(new Product("printer"), hp,
-                new Deadline(date + " 14:30"),
+                new Deadline(DATETIME.plusHours(3).format(FORMAT)),
                 getTagSet("heavy")),
         };
 

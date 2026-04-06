@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Predicate;
 
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import seedu.address.commons.core.GuiSettings;
@@ -75,7 +76,14 @@ public interface Model {
     User getUser();
 
     /**
+     * Returns StringProperty of the user's depot address.
+     */
+    StringProperty getUserAddress();
+
+    /**
      * Replaces the current user with {@code user}.
      */
     void setUser(User user);
+
+
 }

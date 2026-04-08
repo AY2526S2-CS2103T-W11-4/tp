@@ -32,10 +32,16 @@ import seedu.address.model.util.SampleDataUtil;
 public class ModelManager implements Model {
 
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
-    private static final Comparator<Delivery> DELIVERY_DEADLINE_COMPARATOR = Comparator
+    private static final Comparator<Delivery> DELIVERY_DEFAULT_COMPARATOR = Comparator
             .comparing((Delivery delivery) -> delivery.getDeadline().getValue())
             .thenComparing(delivery -> delivery.getCompany().getName().toString().toLowerCase())
             .thenComparing(delivery -> delivery.getProduct().productName.toLowerCase());
+    private static final Comparator<Delivery> DELIVERY_DEADLINE_COMPARATOR = Comparator
+            .comparing((Delivery delivery) -> delivery.getDeadline().getValue());
+    private static final Comparator<Delivery> DELIVERY_PRODUCT_COMPARATOR = Comparator
+            .comparing(delivery -> delivery.getProduct().productName.toLowerCase());
+    private static final Comparator<Delivery> DELIVERY_COMPANY_COMPARATOR = Comparator
+            .comparing(delivery -> delivery.getCompany().getName().toString().toLowerCase());
 
     private final AddressBook addressBook;
     private final DeliveryBook deliveryBook;
@@ -46,7 +52,7 @@ public class ModelManager implements Model {
     private final ObservableSet<Delivery> deliverySelection = FXCollections.observableSet(new LinkedHashSet<>());
     private boolean isCompanyPackage;
     private final StringProperty userAddress = new SimpleStringProperty();
-
+    private Comparator<Delivery> currentComparator = DELIVERY_DEFAULT_COMPARATOR;
     /**
      * Initializes a ModelManager with the given addressBook, deliveryBook, userPrefs and user.
      */
@@ -211,6 +217,24 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public void sortDeliveriesByDefault(Predicate<Delivery> predicate) {
+        requireNonNull(predicate);
+        deliveryBook.sortDeliveries(predicate, DELIVERY_DEFAULT_COMPARATOR);
+    }
+
+    @Override
+    public void sortDeliveriesByProduct(Predicate<Delivery> predicate) {
+        requireNonNull(predicate);
+        deliveryBook.sortDeliveries(predicate, DELIVERY_PRODUCT_COMPARATOR);
+    }
+
+    @Override
+    public void sortDeliveriesByCompany(Predicate<Delivery> predicate) {
+        requireNonNull(predicate);
+        deliveryBook.sortDeliveries(predicate, DELIVERY_COMPANY_COMPARATOR);
+    }
+
+    @Override
     public void sortDeliveriesByDeadline(Predicate<Delivery> predicate) {
         requireNonNull(predicate);
         deliveryBook.sortDeliveries(predicate, DELIVERY_DEADLINE_COMPARATOR);
@@ -232,6 +256,7 @@ public class ModelManager implements Model {
     public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
         requireNonNull(predicate);
         filteredDeliveries.setPredicate(predicate);
+        deliveryBook.sortDeliveries(currentComparator);
     }
 
     @Override

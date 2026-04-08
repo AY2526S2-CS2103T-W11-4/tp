@@ -1,25 +1,22 @@
 package seedu.address.logic.commands.deliverycommands;
 
-import static java.util.Objects.requireNonNull;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
-
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.model.Model;
 
-/**
- * Lists all deliveries and sorts them by deadline, earliest first.
- */
-public class ListCommand extends Command {
+import static java.util.Objects.requireNonNull;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
 
-    public static final String COMMAND_WORD = "list";
+public class UnfilterCommand extends Command {
+    public static final String COMMAND_WORD = "unfilter";
 
-    public static final String MESSAGE_SUCCESS = "Listed all deliveries sorted by deadline";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": unfilters";
+
+    public static final String MESSAGE_SUCCESS = "Unfiltered all deliveries";
 
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        model.sortDeliveriesByDefault(PREDICATE_SHOW_ALL_DELIVERIES);
         model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
         return new CommandResult(MESSAGE_SUCCESS);
     }

@@ -42,9 +42,14 @@ public interface Model {
     void setDeliveryBook(ReadOnlyDeliveryBook deliveryBook);
     ReadOnlyDeliveryBook getDeliveryBook();
     boolean hasDelivery(Delivery delivery);
+
+
     void deleteDelivery(Delivery target);
     void addDelivery(Delivery delivery);
     void setDelivery(Delivery delivery, Delivery editedDelivery);
+    void sortDeliveriesByDefault(Predicate<Delivery> predicate);
+    void sortDeliveriesByProduct(Predicate<Delivery> predicate);
+    void sortDeliveriesByCompany(Predicate<Delivery> predicate);
     void sortDeliveriesByDeadline(Predicate<Delivery> predicate);
     ObservableList<Delivery> getFilteredDeliveryList();
     void updateFilteredDeliveryList(Predicate<Delivery> predicate);

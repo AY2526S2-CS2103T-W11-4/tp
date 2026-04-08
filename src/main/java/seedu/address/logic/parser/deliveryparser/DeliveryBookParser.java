@@ -10,17 +10,7 @@ import java.util.regex.Pattern;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.SetCommand;
-import seedu.address.logic.commands.deliverycommands.AddCommand;
-import seedu.address.logic.commands.deliverycommands.ClearCommand;
-import seedu.address.logic.commands.deliverycommands.DeleteCommand;
-import seedu.address.logic.commands.deliverycommands.EditCommand;
-import seedu.address.logic.commands.deliverycommands.FilterCommand;
-import seedu.address.logic.commands.deliverycommands.ListCommand;
-import seedu.address.logic.commands.deliverycommands.MarkCommand;
-import seedu.address.logic.commands.deliverycommands.RouteCommand;
-import seedu.address.logic.commands.deliverycommands.SelectCommand;
-import seedu.address.logic.commands.deliverycommands.SwitchCommand;
-import seedu.address.logic.commands.deliverycommands.UnmarkCommand;
+import seedu.address.logic.commands.deliverycommands.*;
 import seedu.address.logic.commands.uicommand.ExitCommand;
 import seedu.address.logic.commands.uicommand.HelpCommand;
 import seedu.address.logic.parser.SetCommandParser;
@@ -79,6 +69,9 @@ public class DeliveryBookParser {
         case MarkCommand.COMMAND_WORD:
             return new MarkCommandParser().parse(arguments);
 
+        case UnmarkCommand.COMMAND_WORD:
+            return new UnmarkCommandParser().parse(arguments);
+
         case RouteCommand.COMMAND_WORD:
             return new RouteCommandParser().parse(arguments);
 
@@ -88,8 +81,11 @@ public class DeliveryBookParser {
         case FilterCommand.COMMAND_WORD:
             return new FilterCommandParser().parse(arguments);
 
-        case UnmarkCommand.COMMAND_WORD:
-            return new UnmarkCommandParser().parse(arguments);
+        case UnfilterCommand.COMMAND_WORD:
+            return new UnfilterCommand();
+
+        case SortCommand.COMMAND_WORD:
+            return new SortCommandParser().parse(arguments);
 
         case SwitchCommand.COMMAND_WORD:
             return new SwitchCommand();

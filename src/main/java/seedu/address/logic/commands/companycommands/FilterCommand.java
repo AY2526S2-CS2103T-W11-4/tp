@@ -1,4 +1,4 @@
-package seedu.address.logic.commands.deliverycommands;
+package seedu.address.logic.commands.companycommands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.*;
@@ -28,7 +28,7 @@ public class FilterCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filters deliveries by parameters,\n"
             + "Parameters (Varargs): " + PREFIX_PRODUCT + "PRODUCT " + PREFIX_COMPANY + "COMPANY "
             + PREFIX_DEADLINE + "DEADLINE\n"
-            + "Example: " + COMMAND_WORD + " " + PREFIX_COMPANY + "Dell" + PREFIX_PRODUCT +"Laptop";
+            + "Example: " + COMMAND_WORD + " " + PREFIX_COMPANY + "Dell" + PREFIX_PRODUCT + "Laptop";
 
     public static final String MESSAGE_SORT_SUCCESS = "Filtered %1$d delivery(s): %2$s";
     public static final String MESSAGE_NO_DELIVERIES = "No deliveries found: %1$s";
@@ -44,8 +44,6 @@ public class FilterCommand extends Command {
                          List<CompanyNameContainsKeywordsPredicate> companyName,
                          List<LocalDate[]> timeRange) {
         requireNonNull(productName);
-        requireNonNull(companyName);
-        requireNonNull(timeRange);
         this.productName = productName;
         this.companyName = companyName;
         this.timeRange = timeRange;
@@ -99,7 +97,7 @@ public class FilterCommand extends Command {
         model.sortDeliveriesByDeadline(matches);
         model.updateFilteredDeliveryList(matches);
         if (!empty.isEmpty()) {
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES, this.getParameterString()));
+            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES, String.join(" ", companyName)));
         }
 
         return new CommandResult(
@@ -113,13 +111,12 @@ public class FilterCommand extends Command {
             return true;
         }
 
-        if (!(other instanceof FilterCommand otherFilterCommand)) {
+        if (!(other instanceof FilterCommand)) {
             return false;
         }
 
-        return productName.equals(otherFilterCommand.productName)
-                && companyName.equals(otherFilterCommand.companyName)
-                && timeRange.equals(otherFilterCommand.timeRange);
+        FilterCommand otherFilterCommand = (FilterCommand) other;
+        return productName.equals(otherFilterCommand.productName);
     }
 
     @Override

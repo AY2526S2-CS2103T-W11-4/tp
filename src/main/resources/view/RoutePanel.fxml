@@ -6,12 +6,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-  <padding>
-    <Insets top="10" right="10" bottom="10" left="10" />
-  </padding>
+<VBox styleClass="route-pane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
 
-  <Label text="Route Planner" styleClass="cell_big_label" />
+  <Label text="ROUTE PLANNER" styleClass="section-title" />
 
   <Button fx:id="planRoutesButton"
           text="Plan Today's Routes"
@@ -24,12 +21,13 @@
     </VBox.margin>
   </Button>
 
-  <Label fx:id="routeStatusLabel" text="" styleClass="cell_small_label">
+  <Label fx:id="routeStatusLabel" text="" styleClass="route-status">
     <VBox.margin>
-      <Insets bottom="8" />
+      <Insets top="4" bottom="10" />
     </VBox.margin>
   </Label>
 
   <!-- Map fills remaining vertical space -->
-  <StackPane fx:id="mapPlaceholder" VBox.vgrow="ALWAYS" />
+  <StackPane fx:id="mapPlaceholder" styleClass="map-container" VBox.vgrow="ALWAYS" />
+
 </VBox>

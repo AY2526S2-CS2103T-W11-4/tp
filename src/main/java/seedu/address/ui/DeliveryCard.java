@@ -71,9 +71,11 @@ public class DeliveryCard extends UiPart<Region> {
         boolean isOverdue = delivery.getDeadline().getValue().isBefore(LocalDateTime.now());
 
         if (isDelivered) {
-            cardPane.setStyle("-fx-background-color: rgba(0,255,0,0.2);");
+            // Subtle success tint — theme green at low opacity
+            cardPane.setStyle("-fx-background-color: rgba(21,128,61,0.07);");
         } else if (isOverdue) {
-            cardPane.setStyle("-fx-background-color: rgba(255,0,0,0.2);");
+            // Subtle error tint — theme red at low opacity
+            cardPane.setStyle("-fx-background-color: rgba(185,28,28,0.07);");
         } else {
             // Does not change the UI
         }

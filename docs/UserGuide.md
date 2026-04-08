@@ -4,7 +4,7 @@
 
 MyCelia is a command-line-driven desktop application for B2B delivery coordinators. Manage your business contacts and track outgoing deliveries — all from a single keyboard-driven interface. No clicking around. Just type and go.
 
-![MyCelia Main Window](images/main-window.png)
+<img src="images/ui-overview.png" width="700" alt="MyCelia Main Window" />
 
 ---
 
@@ -35,68 +35,70 @@ That's it. MyCelia creates its data files on first launch and loads sample data 
 
 MyCelia can be used entirely by keyboard, but several actions are also accessible through the UI directly.
 
-### UI Tabs and Buttons
+### Navigation Bar
 
-**Action tabs:**
+<img src="images/navigation-bar.png" width="500" alt="Navigation Bar" />
 
-![UI Tabs and Buttons](images/action-tabs.png)
+At the top of the window is a pill toggle bar with navigation buttons:
 
-|Tab|What it does|
+|Button|What it does|
 |-|-|
-|**Help**|Opens the help window — same as typing `help`|
-|**Exit**|Saves all data and closes MyCelia — same as typing `exit`|
+|**Companies**|Switch to the Company Book — same as typing `switch` from the Delivery Book|
+|**Deliveries**|Switch to the Delivery Book — same as typing `switch` from the Company Book|
+|**Routes**|Switch to the Routes tab to view route plans|
+|**Help**|Open the help window — same as typing `help`|
 
-**Command terminal**:
+### Command Terminal
 
-![UI Tabs and Buttons](images/command-terminal.png)
+<img src="images/command-terminal.png" width="600" alt="Command Terminal" />
 
 |Box|What it does|
 |-|-|
-|**Input**|Allows you to type in commands|
-|**Response**|Displays response by system in response to commands|
+|**Input**|Type commands here. A hint line below shows the expected format as you type, and a dropdown suggests matching commands.|
+|**Response**|Displays the system's response to your last command|
 
-
-
-**Book tabs**:
-
-![UI Tabs and Buttons](images/book-tabs.png)
-
-|Tab|What it does|
-|-|-|
-|**Companies**|Switches to the Company Book — same as typing `switch` from the Delivery Book|
-|**Deliveries**|Switches to the Delivery Book — same as typing `switch` from the Company Book|
+Switching tabs clears the command input, since commands are tab-specific.
 
 Every UI action has an equivalent command. Use whichever feels faster for your workflow.
 
 ### Help Window
 
-![Help Window](images/help-window.png)
+<img src="images/help-window.png" width="500" alt="Help Window" />
 
 The help window provides a link to this user guide.
 
 ### Company Book View
 
-![Company Book](images/company-book.png)
+<img src="images/company-book.png" width="600" alt="Company Book" />
 
 The Company Book view shows all your business contacts. Each entry displays the company name, phone number, email, address, and any tags assigned to it. Below is the location the data is saved.
 
 ### Delivery Book View
 
-![Delivery Book](images/delivery-book.png)
+<img src="images/delivery-book.png" width="600" alt="Delivery Book" />
 
-The Delivery Book view shows all logged deliveries. Deliveries marked as delivered will display a `delivered` tag. Below is the location the data is saved.
+The Delivery Book view shows all logged deliveries. Deliveries marked as delivered will display a `delivered` tag. You can check individual deliveries using their checkboxes to select them for route planning. A **Plan Today's Route** button at the top of the list becomes active when at least one delivery is selected — clicking it opens the Routes tab and plans the route. Below is the location the data is saved.
+
+### Routes View
+
+<img src="images/routes-view.png" width="700" alt="Routes View" />
+
+The Routes view displays an interactive map with the optimised route for selected deliveries. Switch to it using the **Routes** pill button, or trigger it automatically via the `route` command or the **Plan Today's Route** button.
 
 ---
 
 ## Commands
 
-### Navigating Between Books
+### Global Commands
 
-|Command|What it does|
-|-|-|
-|`switch`|Toggle between Company Book and Delivery Book|
-|`help`|Open the help window|
-|`exit`|Save and close|
+These commands work in both the Company Book and Delivery Book.
+
+|Command|Format|What it does|
+|-|-|-|
+|`switch`|`switch`|Toggle between Company Book and Delivery Book|
+|`set`|`set a/ADDRESS`|Set your delivery origin address (used as the starting point for route planning)|
+|`help`|`help`|Open the help window|
+|`exit`|`exit`|Save and close|
 
 ---
 
@@ -136,8 +138,12 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 |Delete|`delete INDEX`|`delete 2`|
 |Mark delivered|`mark INDEX`|`mark 1`|
 |Unmark|`unmark INDEX`|`unmark 1`|
+|Select for routing|`select INDEX [INDEX]...`|`select 1 3 5`|
+|Clear selection|`select none`|`select none`|
+|Plan route|`route`|`route`|
 |Find|`find KEYWORD \[MORE\_KEYWORDS]...`|`find printer laptop`|
-|Sort by deadline|`sort c/COMPANY`|`sort c/Acme Supplies`|
+|List all|`list`|`list`|
+|Sort company by deadline|`sort c/COMPANY`|`sort c/Acme Supplies`|
 |Clear all|`clear`|`clear`|
 
 **Delivery prefixes:**
@@ -150,7 +156,12 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 |`a/`|Delivery address|Yes|
 |`t/`|Tag (repeatable)|No|
 
-Deliveries are sorted by deadline in ascending order, so the earliest deadline appears first.
+**Notes on specific commands:**
+
+- **`list`** — shows all deliveries and re-sorts the entire list by deadline (earliest first). Use this to reset after a `find` or `sort` filter.
+- **`sort c/COMPANY`** — filters to a specific company's deliveries and sorts them by deadline. The company name must match exactly (case-insensitive). Use `list` to return to the full view.
+- **`select INDEX [INDEX]...`** — checks the deliveries at those indices for route planning. Repeating an index has no effect. Use `select none` to clear the entire selection. Individual deliveries can also be checked/unchecked via their checkboxes in the list.
+- **`route`** — opens the Routes tab and plans the optimised route for all currently selected deliveries. Requires at least one delivery to be selected. Equivalent to clicking **Plan Today's Route**.
 
 ---
 
@@ -173,7 +184,8 @@ src/
 │   ├── logic/
 │   │   ├── commands/
 │   │   │   ├── companycommands/   # add, edit, delete, find, list, clear, switch
-│   │   │   ├── deliverycommands/  # add, edit, delete, mark, unmark, find, clear
+│   │   │   ├── deliverycommands/  # add, edit, delete, mark, unmark, find, list, clear, select, sort, route, switch
+│   │   │   ├── SetCommand.java    # set (shared — available in both modes)
 │   │   │   └── uicommand/         # help, exit
 │   │   └── parser/
 │   │       ├── companyparser/

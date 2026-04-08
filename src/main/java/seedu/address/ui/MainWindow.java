@@ -26,11 +26,13 @@ import seedu.address.model.Model;
 
 /**
  * The Main Window. Provides the basic application layout containing
- * a menu bar and space where other JavaFX elements can be placed.
+ * a top bar with pill toggle navigation and space where other JavaFX elements can be placed.
  */
 public class MainWindow extends UiPart<Stage> {
 
     private static final String FXML = "MainWindow.fxml";
+    private static final int COMPANIES_TAB_INDEX = 0;
+    private static final int DELIVERIES_TAB_INDEX = 1;
     private static final int ROUTES_TAB_INDEX = 2;
 
     private final Logger logger = LogsCenter.getLogger(getClass());
@@ -45,6 +47,7 @@ public class MainWindow extends UiPart<Stage> {
     private RoutePanel routePanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
+    private CommandBox commandBox;
 
     @FXML private StackPane commandBoxPlaceholder;
     @FXML private MenuItem helpMenuItem;
@@ -56,6 +59,11 @@ public class MainWindow extends UiPart<Stage> {
     @FXML private StackPane resultDisplayPlaceholder;
     @FXML private StackPane statusbarPlaceholder;
     @FXML private Label userAddressLabel;
+
+    // Pill toggle buttons
+    @FXML private Button pillCompanies;
+    @FXML private Button pillDeliveries;
+    @FXML private Button pillRoutes;
 
     /**
      * Creates a {@code MainWindow} with the given {@code Stage} and {@code Logic}.
@@ -94,13 +102,23 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
+        // Hide the TabPane's own header area — navigation is handled by the pill toggle
+        listTabPane.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            if (newSkin != null) {
+                javafx.scene.Node header = listTabPane.lookup(".tab-header-area");
+                if (header != null) {
+                    header.setManaged(false);
+                    header.setVisible(false);
+                }
+            }
+        });
+
         companyListPanel = new CompanyListPanel(model.getFilteredCompanyList());
         companyListPanelPlaceholder.getChildren().add(companyListPanel.getRoot());
 
         deliveryListPanel = new DeliveryListPanel(model.getFilteredDeliveryList(), model, this::updateMapButtonState);
         deliveryListPanelPlaceholder.getChildren().add(deliveryListPanel.getRoot());
 
-        // RoutePanel owns all routing logic — MainWindow just hosts it
         routePanel = new RoutePanel(model.getFilteredDeliveryList(), model);
         routePanelPlaceholder.getChildren().add(routePanel.getRoot());
 
@@ -110,12 +128,13 @@ public class MainWindow extends UiPart<Stage> {
         StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getAddressBookFilePath());
         statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
 
-        CommandBox commandBox = new CommandBox(this::executeCommand);
+        commandBox = new CommandBox(this::executeCommand, model);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
 
         userAddressLabel.textProperty().bind(model.getUserAddress());
 
         syncSelectedTabWithMode();
+        updatePillToggleState();
         updateMapButtonState();
     }
 
@@ -124,13 +143,52 @@ public class MainWindow extends UiPart<Stage> {
             if (newValue == null) {
                 return;
             }
-            model.setCompanyPackage(newValue.intValue() == 0);
+            int idx = newValue.intValue();
+            model.setCompanyPackage(idx == COMPANIES_TAB_INDEX);
+            updatePillToggleState();
+
+            // Clear command input on tab switch (commands are tab-dependent)
+            if (commandBox != null) {
+                commandBox.clear();
+            }
         });
         syncSelectedTabWithMode();
     }
 
     private void syncSelectedTabWithMode() {
-        listTabPane.getSelectionModel().select(model.getCompanyPackage() ? 0 : 1);
+        listTabPane.getSelectionModel().select(model.getCompanyPackage() ? COMPANIES_TAB_INDEX : DELIVERIES_TAB_INDEX);
+    }
+
+    /**
+     * Updates the pill toggle button styles to reflect the currently active tab.
+     */
+    private void updatePillToggleState() {
+        int selectedIndex = listTabPane.getSelectionModel().getSelectedIndex();
+        Button[] pills = { pillCompanies, pillDeliveries, pillRoutes };
+        for (int i = 0; i < pills.length; i++) {
+            if (pills[i] == null) {
+                continue;
+            }
+            pills[i].getStyleClass().removeAll("pill-button", "pill-button-active");
+            pills[i].getStyleClass().add(i == selectedIndex ? "pill-button-active" : "pill-button");
+        }
+    }
+
+    @FXML
+    private void handlePillCompanies() {
+        listTabPane.getSelectionModel().select(COMPANIES_TAB_INDEX);
+        model.setCompanyPackage(true);
+    }
+
+    @FXML
+    private void handlePillDeliveries() {
+        listTabPane.getSelectionModel().select(DELIVERIES_TAB_INDEX);
+        model.setCompanyPackage(false);
+    }
+
+    @FXML
+    private void handlePillRoutes() {
+        listTabPane.getSelectionModel().select(ROUTES_TAB_INDEX);
     }
 
     private void setWindowDefaultSize(GuiSettings guiSettings) {
@@ -143,7 +201,7 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
-     * Creates help window
+     * Creates help window.
      */
     @FXML
     public void handleHelp() {
@@ -212,6 +270,7 @@ public class MainWindow extends UiPart<Stage> {
             } else {
                 syncSelectedTabWithMode();
             }
+            updatePillToggleState();
             updateMapButtonState();
             return commandResult;
         } catch (CommandException | ParseException e) {

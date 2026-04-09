@@ -72,7 +72,11 @@ public class LogsCenter {
         }
 
         // Brief pause to let Windows release the .lck file before deletion
-        try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ignored) {
+            //do nothing
+        }
 
         // Clean up stray log files written to working directory before relocation
         deleteStrayLogFiles(System.getProperty("user.dir"));
@@ -83,7 +87,9 @@ public class LogsCenter {
      * if they exist, to avoid leaving clutter in the JAR launch directory.
      */
     private static void deleteStrayLogFiles(String dir) {
-        if (dir == null) return;
+        if (dir == null) {
+            return;
+        }
         // FileHandler rotation produces addressbook.log.0, .1, .2 etc
         // Also try plain name in case rotation hasn't kicked in
         for (int i = 0; i < MAX_FILE_COUNT; i++) {

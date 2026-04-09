@@ -39,7 +39,7 @@ class Bootstrapper {
     static void run() {
         logger.info("=== BOOTSTRAP START ===");
 
-        File appDir  = resolveAppDir();
+        File appDir = resolveAppDir();
         File dataDir = new File(appDir, "data");
 
         logger.info("App directory: " + appDir.getAbsolutePath());
@@ -73,9 +73,9 @@ class Bootstrapper {
      * Builds the default preferences JSON with absolute paths to data files.
      */
     private static String buildDefaultPrefs(File dataDir) {
-        String addr     = new File(dataDir, "addressbook.json") .getAbsolutePath().replace("\\", "/");
+        String addr = new File(dataDir, "addressbook.json").getAbsolutePath().replace("\\", "/");
         String delivery = new File(dataDir, "deliverybook.json").getAbsolutePath().replace("\\", "/");
-        String user     = new File(dataDir, "user.json")        .getAbsolutePath().replace("\\", "/");
+        String user = new File(dataDir, "user.json").getAbsolutePath().replace("\\", "/");
         return "{\n"
             + "  \"guiSettings\" : {\n"
             + "    \"windowWidth\" : 1200.0,\n"
@@ -85,7 +85,7 @@ class Bootstrapper {
             + "      \"y\" : 100\n"
             + "    }\n"
             + "  },\n"
-            + "  \"addressBookFilePath\" : \"" + addr     + "\",\n"
+            + "  \"addressBookFilePath\" : \"" + addr + "\",\n"
             + "  \"deliveryBookFilePath\" : \"" + delivery + "\",\n"
             + "  \"userFilePath\" : \"" + user + "\"\n"
             + "}";
@@ -114,7 +114,9 @@ class Bootstrapper {
 
         if (candidate != null) {
             try {
-                if (!candidate.exists()) candidate.mkdirs();
+                if (!candidate.exists()) {
+                    candidate.mkdirs();
+                }
                 File test = new File(candidate, ".write_test");
                 test.createNewFile();
                 test.delete();

@@ -7,6 +7,7 @@ skinparam classBackgroundColor UI_COLOR
 package UI <<Rectangle>>{
 Class "<<interface>>\nUi" as Ui
 Class "{abstract}\nUiPart" as UiPart
+Class RoutePanel
 Class UiManager
 Class MainWindow
 Class HelpWindow
@@ -15,6 +16,8 @@ Class CompanyListPanel
 Class CompanyCard
 Class StatusBarFooter
 Class CommandBox
+Class DeliveryListPanel
+Class DeliveryCard
 }
 
 package Model <<Rectangle>> {
@@ -35,10 +38,13 @@ MainWindow *-down-> "1" ResultDisplay
 MainWindow *-down-> "1" CompanyListPanel
 MainWindow *-down-> "1" StatusBarFooter
 MainWindow --> "0..1" HelpWindow
+MainWindow *-down-> "1" DeliveryListPanel
+MainWindow *-down-> "1" RoutePanel
 
 CompanyListPanel -down-> "*" CompanyCard
+DeliveryListPanel -down-> "*" DeliveryCard
 
-MainWindow -left-|> UiPart
+MainWindow --|> UiPart
 
 ResultDisplay --|> UiPart
 CommandBox --|> UiPart
@@ -46,15 +52,17 @@ CompanyListPanel --|> UiPart
 CompanyCard --|> UiPart
 StatusBarFooter --|> UiPart
 HelpWindow --|> UiPart
+RoutePanel --|> UiPart
+DeliveryCard --|> UiPart
 
-CompanyCard ..> Model
+DeliveryCard ...> Model
+CompanyCard ...> Model
 UiManager -right-> Logic
-MainWindow -left-> Logic
+MainWindow -right-> Logic
 
 CompanyListPanel -[hidden]left- HelpWindow
 HelpWindow -[hidden]left- CommandBox
 CommandBox -[hidden]left- ResultDisplay
 ResultDisplay -[hidden]left- StatusBarFooter
-
 MainWindow -[hidden]-|> UiPart
 @enduml

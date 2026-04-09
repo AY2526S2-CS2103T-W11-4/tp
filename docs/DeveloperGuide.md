@@ -28,7 +28,7 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 ### Architecture
 
-<img src="images/ArchitectureDiagram.png" width="280" />
+![ArchitectureDiagram](diagrams/ArchitectureDiagram.svg)
 
 The ***Architecture Diagram*** given above explains the high-level design of the App.
 
@@ -53,7 +53,7 @@ The bulk of the app's work is done by the following four components:
 
 The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
 
-<img src="images/ArchitectureSequenceDiagram.png" width="574" />
+![ArchitectureSequenceDiagram](diagrams/ArchitectureSequenceDiagram.svg)
 
 Each of the four main components (also shown in the diagram above),
 
@@ -62,7 +62,7 @@ Each of the four main components (also shown in the diagram above),
 
 For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
 
-<img src="images/ComponentManagers.png" width="300" />
+![ComponentManagers](diagrams/ComponentManagers.svg)
 
 The sections below give more details of each component.
 
@@ -70,11 +70,11 @@ The sections below give more details of each component.
 
 The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
 
-![Structure of the UI Component](images/UiClassDiagram.png)
+![Structure of the UI Component](diagrams/UiClassDiagram.svg)
 
-The UI consists of a `MainWindow` that is made up of several parts, including the `CommandBox`, `ResultDisplay`, `StatusBarFooter`, and the panels used to display book-specific data.
+The UI consists of a `MainWindow` that is made up of several parts, including the `CommandBox`, `ResultDisplay`, `StatusBarFooter`, `RoutePanel` and the panels used to display book-specific data.
 
-Unlike the original AB3 design, MyCelia supports two distinct operating contexts: the **Company Book** and the **Delivery Book**. The UI updates according to the current active book, displaying either company records or delivery records. This allows both workflows to coexist within a single application window.
+Unlike the original AB3 design, MyCelia supports two distinct operating contexts: the **Company Book** and the **Delivery Book**. The UI updates according to the current active book, displaying either `CompanyListPanel` or `DeliveryListPanel`. This allows both workflows to coexist within a single application window.
 
 The UI component uses the JavaFX UI framework. The layout of these UI parts is defined in corresponding `.fxml` files in the `src/main/resources/view` folder. For example, the layout of the `MainWindow` is specified in `MainWindow.fxml`.
 
@@ -94,11 +94,11 @@ This design supports MyCelia’s keyboard-first interaction model while keeping 
 
 Here's a (partial) class diagram of the `Logic` component:
 
-<img src="images/LogicClassDiagram.png" width="550"/>
+![LogicClassDiagram](diagrams/LogicClassDiagram.svg)
 
 The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
 
-![Interactions Inside the Logic Component for the `delete 1` Command](images/DeleteSequenceDiagram.png)
+![Interactions Inside the Logic Component for the `delete 1` Command](diagrams/DeleteSequenceDiagram.svg)
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 </div>
@@ -117,7 +117,7 @@ More specifically:
 6. The command is executed by the `LogicManager`.
 7. The result of command execution is returned as a `CommandResult` object.
 
-This separation is necessary because several command words, such as `add`, `edit`, `delete`, `find`, and `clear`, are shared by both books but operate on different types of data. For example, `add` in the Company Book creates a `Company`, while `add` in the Delivery Book creates a `Delivery`.
+This separation is necessary because several command words, such as `add`, `edit`, `delete`, `filter`, and `listr`, are shared by both books but operate on different types of data. For example, `add` in the Company Book creates a `Company`, while `add` in the Delivery Book creates a `Delivery`.
 
 The Logic component therefore uses book-specific parsers to avoid overloading a single parser with too many context-dependent branches. This improves maintainability and makes it easier to extend each workflow independently.
 
@@ -131,9 +131,9 @@ How the `Logic` component works:
 
 This design allows MyCelia to support two related but distinct workflows in a single application while preserving a consistent command-first user experience.
 
-Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
+Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command in Company Book mode:
 
-<img src="images/ParserClasses.png" width="600"/>
+![ParserClasses](diagrams/ParserClasses.svg)
 
 How the parsing works:
 * When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
@@ -142,7 +142,7 @@ How the parsing works:
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
 
-<img src="images/ModelClassDiagram.png" width="450" />
+![ModelClassDiagram](diagrams/ModelClassDiagram.svg)
 
 The `Model` component stores the in-memory state of MyCelia.
 
@@ -164,7 +164,7 @@ This design allows MyCelia to support two related workflows in a single applicat
 
 **API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
-<img src="images/StorageClassDiagram.png" width="550" />
+![StorageClassDiagram](diagrams/StorageClassDiagram.svg)
 
 The `Storage` component is responsible for persisting MyCelia’s data on disk and reading it back when the application starts.
 
@@ -173,7 +173,7 @@ Since MyCelia manages both company data and delivery data, the storage layer is 
 The `Storage` component,
 
 * can save both company-related data and delivery-related data in JSON format, and read them back into the corresponding model objects.
-* can save and load user preference data.
+* can save and load user and user preference data.
 * acts as the bridge between the hard disk representation of the application state and the in-memory model representation.
 * depends on classes in the `Model` component because its purpose is to serialize and deserialize domain objects owned by the model.
 

@@ -11,6 +11,15 @@ Class "<<interface>>\nUserPrefsStorage" as UserPrefsStorage
 Class JsonUserPrefsStorage
 }
 
+package "User Storage" #F4F6F6{
+Class "<<interface>>\nUserStorage" as UserStorage
+Class JsonUserStorage
+Class JsonSerializableUser
+Class JsonAdaptedUser
+Class "JsonAdaptedCompany" as UJsonAdaptedCompany
+Class JsonAdaptedVehicle
+}
+
 Class "<<interface>>\nStorage" as Storage
 Class StorageManager
 
@@ -19,25 +28,55 @@ Class "<<interface>>\nAddressBookStorage" as AddressBookStorage
 Class JsonAddressBookStorage
 Class JsonSerializableAddressBook
 Class JsonAdaptedCompany
-Class JsonAdaptedTag
+Class "JsonAdaptedTag" as CJsonAdaptedTag
 }
 
+package "DeliveryBook Storage" #F4F6F6{
+Class "<<interface>>\nDeliverysBookStorage" as DeliveryBookStorage
+Class JsonDeliveryBookStorage
+Class JsonSerializableDeliveryBook
+Class JsonAdaptedDelivery
+Class "JsonAdaptedTag" as DJsonAdaptedTag
+}
+
+Class I #FFFFFF
 }
 
 Class HiddenOutside #FFFFFF
 HiddenOutside ..> Storage
 
+I -[hidden]up-> StorageManager
+I -[hidden]down-> UserPrefsStorage
+I -[hidden]down-> UserStorage
+I -[hidden]down-> AddressBookStorage
+I -[hidden]down-> DeliveryBookStorage
 StorageManager .up.|> Storage
-StorageManager -up-> "1" UserPrefsStorage
-StorageManager -up-> "1" AddressBookStorage
+StorageManager --> "1" UserPrefsStorage
+StorageManager --> "1" UserStorage
+StorageManager --> "1" AddressBookStorage
+StorageManager --> "1" DeliveryBookStorage
 
-Storage -left-|> UserPrefsStorage
-Storage -right-|> AddressBookStorage
+Storage --|> UserPrefsStorage
+Storage --|> UserStorage
+Storage --|> AddressBookStorage
+Storage --|> DeliveryBookStorage
 
 JsonUserPrefsStorage .up.|> UserPrefsStorage
+
+JsonUserStorage .up.|> UserStorage
+JsonUserStorage ..> JsonSerializableUser
+JsonSerializableUser ..> JsonAdaptedUser
+JsonAdaptedUser ..> UJsonAdaptedCompany
+JsonAdaptedUser ..> JsonAdaptedVehicle
+
 JsonAddressBookStorage .up.|> AddressBookStorage
 JsonAddressBookStorage ..> JsonSerializableAddressBook
 JsonSerializableAddressBook --> "*" JsonAdaptedCompany
-JsonAdaptedCompany --> "*" JsonAdaptedTag
+JsonAdaptedCompany --> "*" CJsonAdaptedTag
+
+JsonDeliveryBookStorage .up.|> DeliveryBookStorage
+JsonDeliveryBookStorage ..> JsonSerializableDeliveryBook
+JsonSerializableDeliveryBook --> "*" JsonAdaptedDelivery
+JsonAdaptedDelivery --> "*" DJsonAdaptedTag
 
 @enduml

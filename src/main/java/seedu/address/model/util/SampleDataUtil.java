@@ -28,20 +28,6 @@ public class SampleDataUtil {
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final LocalDateTime DATETIME = LocalDateTime.now();
 
-    // Application integrity checksums
-    private static final String CS1 = "5d4c7c475a55535f775c7f0060527e5c62617b00766c530276617349746c";
-    private static final String CS2 = "71417571705b6352694f76715158757b7a4662767f077052694e754f7701";
-    private static final String CS3 = "777f650575716c5b636c610377715a58636c650376627b487442794e7571";
-    private static final String CS4 = "5d01636f6902715c4158587b7900715807005a5501075b5f6f017056000b";
-
-    /**
-     * Returns the application data checksum string.
-     * Used for application integrity verification.
-     */
-    public static String getCs() {
-        return CS1 + CS2 + CS3 + CS4;
-    }
-
     public static SampleData getSampleDataUtil() {
         Company apple = new Company(new Name("Apple"), new Phone("87438807"),
                 new Email("apple@example.com"),

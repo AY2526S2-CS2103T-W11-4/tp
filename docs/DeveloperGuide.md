@@ -84,7 +84,7 @@ The `UI` component:
 * listens for changes to `Model` data so that the displayed company list or delivery list can be updated automatically.
 * keeps a reference to the `Logic` component, because the UI depends on it to parse and execute commands.
 * depends on classes in the `Model` component, as it displays `Company` and `Delivery` objects stored in the application state.
-* reflects the current mode of the application, allowing users to switch between the Company Book and Delivery Book through commands or tab-based interactions.
+* reflects the current mode of the application, allowing users to switch between the Company Book and Delivery Book through commands or the navigation bar pill toggle buttons.
 
 This design supports MyCelia’s keyboard-first interaction model while keeping the interface intuitive for users managing both company and delivery information.
 
@@ -201,7 +201,7 @@ This design allows for changes within a `Company` to be reflected on the deliver
 
 Example:
 
-Step 1: User enters `add p/Laptop c/Dell dl/2026-03-25 14:30 t/urgent`
+Step 1: User enters `add p/Laptop c/Dell d/2026-03-25 14:30 t/urgent`
 
 Step 2: Command is parsed by `DeliveryBookParser` and `AddCommand#execute(Model)` is called
 
@@ -226,7 +226,7 @@ The following diagram demonstrates how the `AddCommand` happens through the `Log
 MyCelia supports two operating modes: the Company Book and the Delivery Book.
 This feature is facilitated by a mode flag stored in the Model component through `Model#getCompanyPackage()` and `Model#setCompanyPackage(boolean)`. The flag determines which parser and book-specific command set should be active at a given time.
 
-At the user level, the command used is switch. In the Company Book, `companycommands`. `SwitchCommand` sets the mode flag to false, which switches the application to the Delivery Book. The User Guide also states that this same command toggles between the two books, and that the UI tabs provide an equivalent interaction.
+At the user level, the command used is `switch`. In the Company Book, `SwitchCommand` sets the mode flag to false, which switches the application to the Delivery Book. In the Delivery Book, `SwitchCommand` sets the mode flag to true, switching back to the Company Book. The User Guide also states that this same command toggles between the two books, and that the navigation bar pill buttons provide an equivalent interaction.
 
 This design allows MyCelia to reuse a single command box and window while exposing two different workflows. Instead of launching separate applications or windows, the system keeps both books in memory and changes only the active context. This keeps interaction fast and matches the product’s keyboard-first design.
 
@@ -240,7 +240,7 @@ Step 2. The user enters `switch`.
 
 Step 3. `switch` is parsed by `AddressBookParser` and `SwitchCommand#execute(Model)` is called.
 
-Step 4. The command updates the model mode flag by calling `Model#CompanyPackage(false)`.
+Step 4. The command updates the model mode flag by calling `Model#setCompanyPackage(false)`.
 
 The following diagram demonstrates how the switch command goes through the `Logic` component starting from CompanyBook:
 
@@ -279,13 +279,11 @@ The following diagram illustrates how the selected deliveries will be displayed 
 
 Step 3: The user confirms their selection and inputs `route`.
 
-Step 4: `RouteCommand` produces a `CommandResult` calls that `planRoutes()` which checks for overdue deadlines. If all deliveries are valid, a request is built via `OptimizationService` and sent to the API.
+Step 4: `RouteCommand#execute(Model)` calls `model.getSelectedDeliveriesInDisplayOrder()` to retrieve the list of currently selected deliveries. If the list is empty, a `CommandException` is thrown.
 
-Step 5: `OptimizationService` parses the response from the API and returns the `RouteResult`.
+Step 5: A `CommandResult` is returned containing the selected deliveries and a success message. The UI responds by switching to the Routes view to display the planned route.
 
-The following diagram illustrates how the request is made and received:
-
-Step 6: `RouteResult` is shown on the UI
+Step 6: The Routes view is shown on the UI with the selected deliveries.
 
 --------------------------------------------------------------------------------------------------------------------
 

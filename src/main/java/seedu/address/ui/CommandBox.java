@@ -29,6 +29,7 @@ import seedu.address.model.Model;
 public class CommandBox extends UiPart<Region> {
 
     public static final String ERROR_STYLE_CLASS = "error";
+    private static final String ERROR_HINT_STYLE_CLASS = "error-hint";
     private static final String FXML = "CommandBox.fxml";
 
     // Company mode: command -> parameter template
@@ -37,6 +38,10 @@ public class CommandBox extends UiPart<Region> {
     private static final Map<String, String> DELIVERY_COMMANDS = new LinkedHashMap<>();
     // Descriptions shown in autocomplete dropdown
     private static final Map<String, String> DESCRIPTIONS = new LinkedHashMap<>();
+    // Full MESSAGE_USAGE strings shown in error hint (company-side)
+    private static final Map<String, String> COMPANY_USAGE = new LinkedHashMap<>();
+    // Full MESSAGE_USAGE strings shown in error hint (delivery-side)
+    private static final Map<String, String> DELIVERY_USAGE = new LinkedHashMap<>();
 
     static {
         // Shared commands
@@ -82,6 +87,38 @@ public class CommandBox extends UiPart<Region> {
         DESCRIPTIONS.put("select", "Select deliveries for route planning");
         DESCRIPTIONS.put("sort", "Sort deliveries by company deadline");
         DESCRIPTIONS.put("route", "Plan route for selected deliveries");
+
+        // Company-side full usage strings
+        COMPANY_USAGE.put("add",
+                seedu.address.logic.commands.companycommands.AddCommand.MESSAGE_USAGE);
+        COMPANY_USAGE.put("edit",
+                seedu.address.logic.commands.companycommands.EditCommand.MESSAGE_USAGE);
+        COMPANY_USAGE.put("delete",
+                seedu.address.logic.commands.companycommands.DeleteCommand.MESSAGE_USAGE);
+        COMPANY_USAGE.put("filter",
+                seedu.address.logic.commands.companycommands.FilterCommand.MESSAGE_USAGE);
+        COMPANY_USAGE.put("set",
+                seedu.address.logic.commands.SetCommand.MESSAGE_USAGE);
+
+        // Delivery-side full usage strings
+        DELIVERY_USAGE.put("add",
+                seedu.address.logic.commands.deliverycommands.AddCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("edit",
+                seedu.address.logic.commands.deliverycommands.EditCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("delete",
+                seedu.address.logic.commands.deliverycommands.DeleteCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("filter",
+                seedu.address.logic.commands.deliverycommands.FilterCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("select",
+                seedu.address.logic.commands.deliverycommands.SelectCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("sort",
+                seedu.address.logic.commands.deliverycommands.SortCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("mark",
+                seedu.address.logic.commands.deliverycommands.MarkCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("unmark",
+                seedu.address.logic.commands.deliverycommands.UnmarkCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("set",
+                seedu.address.logic.commands.SetCommand.MESSAGE_USAGE);
     }
 
     private final CommandExecutor commandExecutor;
@@ -294,11 +331,29 @@ public class CommandBox extends UiPart<Region> {
             commandTextField.setText("");
         } catch (CommandException | ParseException e) {
             setStyleToIndicateCommandFailure();
+            String word = commandText.trim().split("\\s+", 2)[0].toLowerCase();
+            Map<String, String> usageMap = model.getCompanyPackage() ? COMPANY_USAGE : DELIVERY_USAGE;
+            if (e instanceof ParseException && usageMap.containsKey(word)) {
+                setHintToErrorUsage(usageMap.get(word));
+            } else {
+                hintLabel.setText("");
+                hintLabel.getStyleClass().remove(ERROR_HINT_STYLE_CLASS);
+            }
         }
     }
 
     private void setStyleToDefault() {
         commandTextField.getStyleClass().remove(ERROR_STYLE_CLASS);
+        hintLabel.getStyleClass().remove(ERROR_HINT_STYLE_CLASS);
+        refreshHint(commandTextField.getText());
+    }
+
+    private void setHintToErrorUsage(String usage) {
+        hintLabel.setText(usage);
+        ObservableList<String> styleClass = hintLabel.getStyleClass();
+        if (!styleClass.contains(ERROR_HINT_STYLE_CLASS)) {
+            styleClass.add(ERROR_HINT_STYLE_CLASS);
+        }
     }
 
     private void setStyleToIndicateCommandFailure() {

@@ -3,6 +3,10 @@
     -fx-text-fill: #B91C1C !important;
 }
 
+.error-hint {
+    -fx-text-fill: #FCA5A5 !important;
+}
+
 .list-cell:empty {
     -fx-background-color: #EFF6FF;
 }

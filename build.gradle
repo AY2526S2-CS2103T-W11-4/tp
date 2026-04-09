@@ -130,20 +130,48 @@ task obfuscate(type: JavaExec, dependsOn: shadowJar) {
         // @FXML methods called by reflection
         '-keepclassmembers', 'class * { @javafx.fxml.FXML *; }',
 
-        // Jackson deserializes JSON by field name
+        // Jackson deserializes JSON by field names — keep storage class members
         '-keepclassmembers', 'class seedu.address.storage.JsonAdapted* { *; }',
         '-keepclassmembers', 'class seedu.address.storage.JsonSerializable* { *; }',
 
-        // Keep all annotations
-        '-keepattributes', '*Annotation*',
+        // Keep all library classes completely intact — only seedu.address.** gets obfuscated
+        '-keep', 'class !seedu.address.** { *; }',
+
+        // Don't warn about incomplete class hierarchies in library code (e.g. netscape.javascript.JSObject)
+        '-dontwarn',
+        '-dontoptimize',
+
+        // Keep all annotation metadata and generic type signatures intact
+        '-keepattributes', '*Annotation*,AnnotationDefault,Signature',
 
         // Obfuscation options
+        '-allowaccessmodification',
         '-dontusemixedcaseclassnames',
         '-overloadaggressively',
-        '-allowaccessmodification',
 
         // Suppress warnings about optional JavaFX/WebKit/Jackson internals
         '-dontwarn',
         '-dontnote',
     ]
+}
+
+task compileBootstrapper(type: JavaCompile) {
+    group = 'build'
+    description = 'Compiles Bootstrapper.java'
+    source = fileTree('.').include('Bootstrapper.java')
+    classpath = files()
+    destinationDirectory = file('build/bootstrapper')
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
+task bootstrapJar(type: Jar, dependsOn: compileBootstrapper) {
+    group = 'build'
+    description = 'Builds the MyCelia bootstrapper JAR'
+    archiveFileName = 'MyCelia.jar'
+    destinationDirectory = file('build/libs')
+    from('build/bootstrapper')
+    manifest {
+        attributes 'Main-Class': 'Bootstrapper'
+    }
 }

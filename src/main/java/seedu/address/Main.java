@@ -25,15 +25,11 @@ public class Main {
     private static Logger logger = LogsCenter.getLogger(Main.class);
 
     public static void main(String[] args) {
+        // 1. Determine platform app data directory and set mycelia.appdir system property
+        Bootstrapper.run();
 
-        // As per https://github.com/openjdk/jfx/blob/master/doc-files/release-notes-16.md
-        // JavaFX 16 (or later) runtime logs a warning at startup if JavaFX classes are loaded from
-        // the classpath instead of a module.
-        // Our application does not use Java modules yet. Even if it did, modules are ignored when
-        // packed into a FAT Jar file (as we do), which means this warning will persist even then.
-        // The warning however, can be safely ignored. Thus, the following log informs
-        // the user (if looking at the log output) that the said warning appearing in the log
-        // can be ignored.
+        // 2. Relocate log file from working directory to app data directory
+        LogsCenter.relocateLogFile();
 
         logger.warning("The warning about Unsupported JavaFX configuration below (if any) can be ignored.");
         Application.launch(MainApp.class, args);

@@ -156,21 +156,6 @@ def proguardCommonArgs = { String inputJar, String outputJar ->
     ]
 }
 
-// ── Original path: fat jar -> ProGuard ────────────────────────────────────────
-
-task obfuscate(type: JavaExec, dependsOn: shadowJar) {
-    group = 'build'
-    description = 'Produces an obfuscated JAR via ProGuard from the normal fat jar'
-
-    classpath = configurations.proguard
-    mainClass = 'proguard.ProGuard'
-
-    args = proguardCommonArgs(
-        shadowJar.archiveFile.get().asFile.absolutePath,
-        file("build/libs/MyCelia-obfuscated.jar").absolutePath
-    )
-}
-
 // ── Bootstrapper tasks ────────────────────────────────────────────────────────
 
 task compileBootstrapper(type: JavaCompile) {
@@ -192,6 +177,38 @@ task bootstrapJar(type: Jar, dependsOn: compileBootstrapper) {
     manifest {
         attributes 'Main-Class': 'Bootstrapper'
     }
+}
+
+// Auto-copy stub KeyDeriver if real one is missing (for teammates without git-crypt)
+task ensureKeyDeriver {
+    def real = file('src/main/java/seedu/address/routing/security/KeyDeriver.java')
+    def stub = file('src/main/java/seedu/address/routing/security/KeyDeriverStub.java')
+    doFirst {
+        if (!real.exists() && stub.exists()) {
+            copy {
+                from stub
+                into real.parentFile
+                rename { 'KeyDeriver.java' }
+            }
+            println "KeyDeriver.java not found — copied stub. Routing will use ors.key file."
+        }
+    }
+}
+compileJava.dependsOn ensureKeyDeriver
+
+// ── Original path: fat jar -> ProGuard ────────────────────────────────────────
+
+task obfuscate(type: JavaExec, dependsOn: shadowJar) {
+    group = 'build'
+    description = 'Produces an obfuscated JAR via ProGuard from the normal fat jar'
+
+    classpath = configurations.proguard
+    mainClass = 'proguard.ProGuard'
+
+    args = proguardCommonArgs(
+        shadowJar.archiveFile.get().asFile.absolutePath,
+        file("build/libs/MyCelia-obfuscated.jar").absolutePath
+    )
 }
 
 // ── New path: thin jar -> ProGuard -> Aidsfuscator -> Shadow ─────────────────
@@ -310,7 +327,20 @@ task aidsfuscate(dependsOn: runAidsfuscator) {
     description = 'Runs ProGuard(thin) -> Aidsfuscator'
 }
 
-task fullObfuscatedRelease(dependsOn: shadowProguardAidsJar) {
+task packageRelease(dependsOn: shadowProguardAidsJar) {
     group = 'build'
     description = 'Runs jar -> ProGuard(thin) -> Aidsfuscator -> Shadow'
+
+    doFirst {
+        def keyDeriver = file('src/main/java/seedu/address/routing/security/KeyDeriver.java')
+        if (!keyDeriver.exists()) {
+            throw new GradleException("KeyDeriver.java not found — cannot build release JAR.")
+        }
+        def stubMarker = "UnsupportedOperationException"
+        if (keyDeriver.text.contains(stubMarker)) {
+            throw new GradleException(
+                "KeyDeriver.java appears to be the stub — real encrypted file required for release.\n"
+                + "Contact the maintainers to obtain the decrypted KeyDeriver.java.")
+        }
+    }
 }

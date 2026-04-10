@@ -59,6 +59,10 @@ class Bootstrapper {
                 throw new IOException("Could not create data directory: " + dataDir);
             }
             createIfMissing(new File(appDir, "preferences.json"), buildDefaultPrefs(dataDir));
+            createIfMissing(new File(appDir, "ors.key"),
+                    "# Place your ORS API key here (remove this line)\n"
+                            + "# Get a free key at https://openrouteservice.org/\n"
+                            + "# Example: eyJvcmciOiI1YjNjZTM1...\n");
         } catch (IOException e) {
             logger.warning("Bootstrap warning: " + e.getMessage());
         }

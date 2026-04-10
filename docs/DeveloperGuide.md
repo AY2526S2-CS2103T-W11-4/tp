@@ -293,6 +293,42 @@ Step 6: `RoutePanel` displays the `RouteResult` on the UI
 The following diagram illustrates the entire process when `planRoutes()` is called:
 ![RouterSequenceDiagram](diagrams/RouterSequenceDiagram.svg)
 
+### Routing API Key Security
+
+#### Overview
+
+MyCelia uses the [OpenRouteService (ORS)](https://openrouteservice.org/) API for geocoding and route optimisation. API requests require an authentication key. To prevent the key from being exposed in source code or intercepted from JVM memory, MyCelia uses a layered key resolution strategy with a secure subprocess execution model.
+
+#### Key resolution order
+
+When a routing request is made, `OrsHttpClient` attempts to resolve the API key in the following order:
+
+1. **`KeyDeriver` (release builds)** — The real `KeyDeriver.java` is encrypted with git-crypt and only available to maintainers. 
+
+2. **Local key file (development builds)** — If `KeyDeriver.java` is the stub (see below), `OrsHttpClient` falls back to reading the key from a plain text file at:
+   - Windows: `%APPDATA%\MyCelia\ors.key`
+   - macOS: `~/Library/Application Support/MyCelia/ors.key`
+   - Linux: `~/.local/share/MyCelia/ors.key`
+
+#### Development setup (for contributors)
+
+The real `KeyDeriver.java` is git-crypt encrypted and **not available in the public repository**. The repository ships a stub at `src/main/java/seedu/address/routing/security/KeyDeriverStub.java` instead. The Gradle build automatically copies this stub to `KeyDeriver.java` if the real file is absent, so the project compiles out of the box without any manual setup.
+
+For routing to work during development, contributors need a personal ORS API key:
+
+1. Register for a free key at [https://openrouteservice.org/](https://openrouteservice.org/)
+2. Create the file `ors.key` in your MyCelia app data directory (the path is printed in the error message if routing is attempted without one)
+3. Paste your API key as the only content of the file, with no extra whitespace
+
+The Bootstrapper creates an `ors.key` placeholder file with instructions on first launch.
+
+#### Release builds (for maintainers)
+
+Release builds use the real `KeyDeriver.java`, which is stored encrypted in a separate private repository. To obtain access for a release build, contact the project maintainers. The release pipeline (`./gradlew packageRelease`) expects the decrypted `KeyDeriver.java` to be present at build time.
+
+<div markdown="span" class="alert alert-warning">:warning: **Never commit a real ORS API key in plaintext** to any repository, public or private. Use only the `ors.key` file approach for development, and the encrypted `KeyDeriver.java` for releases.</div>
+
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**

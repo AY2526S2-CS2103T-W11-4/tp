@@ -28,6 +28,7 @@ import seedu.address.model.company.Company;
 import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
+import seedu.address.model.delivery.Delivery;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -83,6 +84,12 @@ public class EditCommand extends Command {
 
         if (!companyToEdit.isSameCompany(editedCompany) && model.hasCompany(editedCompany)) {
             throw new CommandException(MESSAGE_DUPLICATE_COMPANY);
+        }
+        for (Delivery d: model.getFilteredDeliveryList()) {
+            if (d.getCompany().equals(companyToEdit)) {
+                model.deleteDelivery(d);
+                model.addDelivery(new Delivery(d.getProduct(), editedCompany, d.getDeadline(), d.getTags()));
+            }
         }
 
         model.setCompany(companyToEdit, editedCompany);

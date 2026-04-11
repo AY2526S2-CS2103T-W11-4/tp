@@ -12,6 +12,7 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.company.Company;
+import seedu.address.model.delivery.Delivery;
 
 /**
  * Deletes a company identified using its displayed index from the address book.
@@ -43,6 +44,11 @@ public class DeleteCommand extends Command {
         }
 
         Company companyToDelete = lastShownList.get(targetIndex.getZeroBased());
+        for (Delivery d: model.getFilteredDeliveryList()) {
+            if (d.getCompany().equals(companyToDelete)) {
+                model.deleteDelivery(d);
+            }
+        }
         model.deleteCompany(companyToDelete);
         return new CommandResult(String.format(MESSAGE_DELETE_COMPANY_SUCCESS, Messages.format(companyToDelete)));
     }

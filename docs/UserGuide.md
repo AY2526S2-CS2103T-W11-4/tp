@@ -118,7 +118,8 @@ Manage your network of business contacts. These commands are active when you're 
 |Add|`add n/NAME p/PHONE e/EMAIL a/ADDRESS \[t/TAG]...`|`add n/Acme Supplies p/62223333 e/hi@acme.com a/10 Anson Road t/supplier`|
 |Edit|`edit INDEX \[n/NAME] \[p/PHONE] \[e/EMAIL] \[a/ADDRESS] \[t/TAG]...`|`edit 2 p/65559999 e/new@acme.com`|
 |Delete|`delete INDEX`|`delete 3`|
-|Find|`find KEYWORD \[MORE\_KEYWORDS]...`|`find acme tech logistics`|
+|Filter|`filter [c/NAME] [a/ADDRESS] [p/PHONE] [e/EMAIL] [t/TAG]...`|`filter c/Dell t/important`|
+|Clear filter|`unfilter`|`unfilter`|
 |List all|`list`|`list`|
 |Clear all|`clear`|`clear`|
 
@@ -131,6 +132,16 @@ Manage your network of business contacts. These commands are active when you're 
 |`e/`|Email address|Yes|
 |`a/`|Physical address|Yes|
 |`t/`|Tag (repeatable)|No|
+
+**Filter prefixes:**
+
+|Prefix|Meaning|
+|-|-|
+|`c/`|Company name contains keyword|
+|`a/`|Address contains keyword|
+|`p/`|Phone number contains digits|
+|`e/`|Email contains keyword|
+|`t/`|Tag matches keyword|
 
 #### Notes
 
@@ -159,8 +170,9 @@ The delivery is linked directly to the existing company record instead of storin
 |Select for routing|`select INDEX [INDEX]...`|`select 1 3 5`|
 |Clear selection|`select none`|`select none`|
 |Plan route|`route`|`route`|
-|Find|`find KEYWORD \[MORE\_KEYWORDS]...`|`find printer laptop`|
-|List all|`list`|`list`|
+|Filter|`filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...`|`filter c/Dell p/Laptop t/fragile`|
+|Reset filter|`unfilter`|`unfilter`|
+List all|`list`|`list`|
 |Sort company by deadline|`sort c/COMPANY`|`sort c/Acme Supplies`|
 |Clear all|`clear`|`clear`|
 
@@ -208,8 +220,8 @@ src/
 ├── main/java/seedu/address/
 │   ├── logic/
 │   │   ├── commands/
-│   │   │   ├── companycommands/   # add, edit, delete, find, list, clear, switch
-│   │   │   ├── deliverycommands/  # add, edit, delete, mark, unmark, find, list, clear, select, sort, route, switch
+│   │   │   ├── companycommands/   # add, edit, delete, list, clear, switch, filter, unfilter
+│   │   │   ├── deliverycommands/  # add, edit, delete, mark, unmark, list, clear, select, sort, route, switch, filter, unfilter
 │   │   │   ├── SetCommand.java    # set (shared — available in both modes)
 │   │   │   └── uicommand/         # help, exit
 │   │   └── parser/

@@ -32,7 +32,7 @@ public class DeliveryBookParserTest {
         descriptor.setDeadline(new Deadline("2026-03-26 09:00"));
 
         EditCommand command = (EditCommand) parser.parseCommand("edit "
-                + INDEX_FIRST_PERSON.getOneBased() + " dl/2026-03-26 09:00");
+                + INDEX_FIRST_PERSON.getOneBased() + " d/2026-03-26 09:00");
 
         assertEquals(new EditCommand(INDEX_FIRST_PERSON, descriptor), command);
     }

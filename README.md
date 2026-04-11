@@ -2,7 +2,7 @@
 
 MyCelia is a command-line-driven desktop application for B2B delivery coordinators. It extends the original AB3 into a focused dual-mode system for managing business contacts and outgoing deliveries in one place.
 
-![MyCelia Main Window](docs/images/main-window.png)
+![MyCelia Main Window](docs/images/ui-overview.png)
 
 ## Key Features
 

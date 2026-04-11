@@ -1,0 +1,42 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box RoutePanel MODEL_COLOR_T1
+participant ":RoutePanel" as RoutePanel MODEL_COLOR
+end box
+
+box OptimizationService LOGIC_COLOR_T1
+participant ":DeliveryRouterService" as DeliveryRouterService LOGIC_COLOR
+participant ":GeocodingService" as GeocodingService LOGIC_COLOR
+participant ":OptimizationService" as OptimizationService LOGIC_COLOR
+end box
+
+[-> RoutePanel : planRoutesFor()
+activate RoutePanel
+
+RoutePanel -> DeliveryRouterService : planRoutes()
+activate DeliveryRouterService
+
+DeliveryRouterService --> GeocodingService : geocodeAll(addresses)
+activate GeocodingService
+
+GeocodingService --> DeliveryRouterService : list<Coordinates>
+deactivate GeocodingService
+
+DeliveryRouterService -> OptimizationService : optimize()
+activate OptimizationService
+
+OptimizationService --> DeliveryRouterService : RouteResult
+deactivate OptimizationService
+
+DeliveryRouterService --> RoutePanel : RouteResult
+deactivate DeliveryRouterService
+
+RoutePanel --> RoutePanel : drawRoutesOnMap(RouteResult)
+activate RoutePanel
+deactivate RoutePanel
+
+[<--RoutePanel
+deactivate RoutePanel
+@enduml

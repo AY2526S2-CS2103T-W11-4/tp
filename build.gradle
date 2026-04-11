@@ -48,33 +48,41 @@ dependencies {
     implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'win'
     implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'mac'
     implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'linux'
+
     implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'win'
     implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'mac'
     implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'linux'
+
     implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'win'
     implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'mac'
     implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'linux'
+
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'win'
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'mac'
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'linux'
+
     implementation group: 'org.openjfx', name: 'javafx-media', version: javaFxVersion, classifier: 'win'
     implementation group: 'org.openjfx', name: 'javafx-media', version: javaFxVersion, classifier: 'mac'
     implementation group: 'org.openjfx', name: 'javafx-media', version: javaFxVersion, classifier: 'linux'
 
-    // JavaFX WebView (for Leaflet map rendering)
     implementation group: 'org.openjfx', name: 'javafx-web', version: javaFxVersion, classifier: 'win'
     implementation group: 'org.openjfx', name: 'javafx-web', version: javaFxVersion, classifier: 'mac'
     implementation group: 'org.openjfx', name: 'javafx-web', version: javaFxVersion, classifier: 'linux'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.0'
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.7.4'
-
-    // JSON parsing for ORS API responses
     implementation 'org.json:json:20231013'
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: jUnitVersion
-
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: jUnitVersion
+}
+
+configurations {
+    proguard
+}
+
+dependencies {
+    proguard 'com.guardsquare:proguard-base:7.7.0'
 }
 
 shadowJar {
@@ -85,4 +93,255 @@ defaultTasks 'clean', 'test'
 
 run {
     enableAssertions = true
+}
+
+ext {
+    appMainClass = 'seedu.address.Main'
+
+    aidsDir = file("tools/aidsfuscator")
+    aidsWorkspaceDir = file("${aidsDir}/workspace")
+    aidsLibsDir = file("${aidsDir}/libs")
+    aidsJarFile = file("${aidsDir}/aidsfuscator.jar")
+    aidsInputJarFile = file("${aidsDir}/in.jar")
+    aidsOutputJarFile = file("${aidsDir}/out.jar")
+
+    proguardThinJarFile = file("build/libs/MyCelia-proguard-thin.jar")
+    finalAidsProguardJarFile = file("build/libs/MyCelia-proguard-aidsfuscated.jar")
+
+    aidsJavaExe = project.findProperty("aidsfuscator.java") ?: "java"
+}
+
+def proguardCommonArgs = { String inputJar, String outputJar ->
+    def javaHome = System.getProperty("java.home")
+    return [
+        '-injars', inputJar,
+        '-outjars', outputJar,
+
+        '-libraryjars', "${javaHome}/jmods/java.base.jmod(!**.jar;!module-info.class)",
+        '-libraryjars', "${javaHome}/jmods/java.desktop.jmod(!**.jar;!module-info.class)",
+        '-libraryjars', "${javaHome}/jmods/java.logging.jmod(!**.jar;!module-info.class)",
+        '-libraryjars', "${javaHome}/jmods/java.xml.jmod(!**.jar;!module-info.class)",
+
+        // Entry point
+        '-keep', "class ${appMainClass} { public static void main(java.lang.String[]); }",
+
+        // JavaFX
+        '-keep', 'class seedu.address.MainApp { *; }',
+        '-keep', 'class seedu.address.ui.** { *; }',
+        '-keep', 'class * extends javafx.application.Application { *; }',
+        '-keepclassmembers', 'class * extends javafx.application.Application { public void start(javafx.stage.Stage); public void init(); public void stop(); }',
+        '-keepclassmembers', 'class * { @javafx.fxml.FXML *; }',
+
+        // Jackson / JSON
+        '-keepclassmembers', 'class seedu.address.storage.JsonAdapted* { *; }',
+        '-keepclassmembers', 'class seedu.address.storage.JsonSerializable* { *; }',
+        '-keep', 'class * extends com.fasterxml.jackson.databind.JsonDeserializer { *; }',
+        '-keep', 'class * extends com.fasterxml.jackson.databind.JsonSerializer { *; }',
+        '-keep', 'class * extends com.fasterxml.jackson.databind.deser.std.FromStringDeserializer { *; }',
+        '-keepclassmembers', 'class * extends com.fasterxml.jackson.databind.deser.std.FromStringDeserializer { protected java.lang.Object _deserialize(java.lang.String, com.fasterxml.jackson.databind.DeserializationContext); }',
+
+        // Framework-boundary packages
+        '-keep', 'class seedu.address.commons.** { *; }',
+
+        // Non-app classes stay intact
+        '-keep', 'class !seedu.address.** { *; }',
+
+        '-dontwarn',
+        '-keepattributes', '*Annotation*,AnnotationDefault,Signature',
+        '-allowaccessmodification',
+        '-repackageclasses',
+        '-dontusemixedcaseclassnames',
+        '-overloadaggressively',
+        '-dontnote',
+    ]
+}
+
+// ── Bootstrapper tasks ────────────────────────────────────────────────────────
+
+task compileBootstrapper(type: JavaCompile) {
+    group = 'build'
+    description = 'Compiles Bootstrapper.java'
+    source = fileTree('.').include('Bootstrapper.java')
+    classpath = files()
+    destinationDirectory = file('build/bootstrapper')
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
+task bootstrapJar(type: Jar, dependsOn: compileBootstrapper) {
+    group = 'build'
+    description = 'Builds the MyCelia bootstrapper JAR'
+    archiveFileName = 'MyCelia.jar'
+    destinationDirectory = file('build/libs')
+    from('build/bootstrapper')
+    manifest {
+        attributes 'Main-Class': 'Bootstrapper'
+    }
+}
+
+// Auto-copy stub KeyDeriver if real one is missing (for teammates without git-crypt)
+task ensureKeyDeriver {
+    def real = file('src/main/java/seedu/address/routing/security/KeyDeriver.java')
+    def stub = file('src/main/java/seedu/address/routing/security/KeyDeriverStub.java')
+    doFirst {
+        if (!real.exists() && stub.exists()) {
+            // Copy stub content but rename the class declaration
+            String content = stub.text.replace(
+                'public class KeyDeriverStub',
+                'public class KeyDeriver'
+            )
+            real.text = content
+            println "KeyDeriver.java not found — copied stub. Routing will use ors.key file."
+        }
+    }
+}
+compileJava.dependsOn ensureKeyDeriver
+
+// ── Original path: fat jar -> ProGuard ────────────────────────────────────────
+
+task obfuscate(type: JavaExec, dependsOn: shadowJar) {
+    group = 'build'
+    description = 'Produces an obfuscated JAR via ProGuard from the normal fat jar'
+
+    classpath = configurations.proguard
+    mainClass = 'proguard.ProGuard'
+
+    args = proguardCommonArgs(
+        shadowJar.archiveFile.get().asFile.absolutePath,
+        file("build/libs/MyCelia-obfuscated.jar").absolutePath
+    )
+}
+
+// ── New path: thin jar -> ProGuard -> Aidsfuscator -> Shadow ─────────────────
+
+task proguardThin(type: JavaExec, dependsOn: jar) {
+    group = 'build'
+    description = 'Runs ProGuard on the thin app jar'
+
+    classpath = configurations.proguard
+    mainClass = 'proguard.ProGuard'
+
+    args = proguardCommonArgs(
+        jar.archiveFile.get().asFile.absolutePath,
+        proguardThinJarFile.absolutePath
+    )
+}
+
+task prepareAidsfuscatorDirs {
+    group = 'build'
+    description = 'Creates the Aidsfuscator directory structure'
+    doLast {
+        aidsDir.mkdirs()
+        aidsWorkspaceDir.mkdirs()
+        aidsLibsDir.mkdirs()
+    }
+}
+
+task prepareAidsfuscatorInput(type: Copy, dependsOn: [prepareAidsfuscatorDirs, proguardThin]) {
+    group = 'build'
+    description = 'Copies the ProGuard thin jar to tools/aidsfuscator/in.jar'
+    from(proguardThinJarFile)
+    into(aidsDir)
+    rename { 'in.jar' }
+}
+
+task prepareAidsfuscatorLibs(type: Copy, dependsOn: prepareAidsfuscatorDirs) {
+    group = 'build'
+    description = 'Copies runtime dependency jars into tools/aidsfuscator/libs'
+    from(configurations.runtimeClasspath)
+    into(aidsLibsDir)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+task cleanAidsfuscatorOutputs {
+    group = 'build'
+    description = 'Deletes old Aidsfuscator outputs'
+    doLast {
+        delete aidsOutputJarFile
+        delete finalAidsProguardJarFile
+    }
+}
+
+task runAidsfuscator(type: Exec, dependsOn: [
+        prepareAidsfuscatorInput,
+        prepareAidsfuscatorLibs,
+        cleanAidsfuscatorOutputs
+]) {
+    group = 'build'
+    description = 'Runs Aidsfuscator on the ProGuard thin jar'
+
+    workingDir aidsDir
+
+    doFirst {
+        if (!aidsJarFile.exists()) {
+            throw new GradleException("Missing ${aidsJarFile}. Put aidsfuscator.jar in tools/aidsfuscator/")
+        }
+        if (!file("${aidsWorkspaceDir}/config.json").exists()) {
+            throw new GradleException("Missing tools/aidsfuscator/workspace/config.json")
+        }
+        if (!file("${aidsWorkspaceDir}/exclusions.json").exists()) {
+            throw new GradleException("Missing tools/aidsfuscator/workspace/exclusions.json")
+        }
+        if (!proguardThinJarFile.exists()) {
+            throw new GradleException("Expected ProGuard thin output at ${proguardThinJarFile}, but it was not found.")
+        }
+    }
+
+    commandLine(
+        aidsJavaExe,
+        '-jar',
+        aidsJarFile.absolutePath,
+        '--config=config.json',
+        '--exclusions=exclusions.json'
+    )
+}
+
+task shadowProguardAidsJar(
+        type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar,
+        dependsOn: runAidsfuscator
+) {
+    group = 'build'
+    description = 'Builds final fat jar from ProGuard -> Aids output plus runtime dependencies'
+
+    archiveFileName = 'MyCelia-proguard-aidsfuscated.jar'
+    destinationDirectory = file('build/libs')
+
+    from(zipTree(aidsOutputJarFile))
+    configurations = [project.configurations.runtimeClasspath]
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+
+    manifest {
+        attributes 'Main-Class': appMainClass
+    }
+
+    doFirst {
+        if (!aidsOutputJarFile.exists()) {
+            throw new GradleException("Expected Aidsfuscator output at ${aidsOutputJarFile}, but it was not found.")
+        }
+    }
+}
+
+task aidsfuscate(dependsOn: runAidsfuscator) {
+    group = 'build'
+    description = 'Runs ProGuard(thin) -> Aidsfuscator'
+}
+
+task packageRelease(dependsOn: shadowProguardAidsJar) {
+    group = 'build'
+    description = 'Runs jar -> ProGuard(thin) -> Aidsfuscator -> Shadow'
+
+    doFirst {
+        def keyDeriver = file('src/main/java/seedu/address/routing/security/KeyDeriver.java')
+        if (!keyDeriver.exists()) {
+            throw new GradleException("KeyDeriver.java not found — cannot build release JAR.")
+        }
+        def stubMarker = "UnsupportedOperationException"
+        if (keyDeriver.text.contains(stubMarker)) {
+            throw new GradleException(
+                "KeyDeriver.java appears to be the stub — real encrypted file required for release.\n"
+                + "Contact the maintainers to obtain the decrypted KeyDeriver.java.")
+        }
+    }
 }

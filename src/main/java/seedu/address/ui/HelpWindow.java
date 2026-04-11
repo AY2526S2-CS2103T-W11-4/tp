@@ -1,9 +1,12 @@
 package seedu.address.ui;
 
+import java.awt.Desktop;
+import java.net.URI;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -11,21 +14,19 @@ import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 
 /**
- * Controller for a help page
+ * Controller for the help window.
  */
 public class HelpWindow extends UiPart<Stage> {
 
-    public static final String USERGUIDE_URL = "https://se-education.org/addressbook-level3/UserGuide.html";
-    public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
+    public static final String USERGUIDE_URL =
+            "https://ay2526s2-cs2103t-w11-4.github.io/tp/UserGuide.html";
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
 
-    @FXML
-    private Button copyButton;
-
-    @FXML
-    private Label helpMessage;
+    @FXML private Button copyButton;
+    @FXML private Label helpMessage;
+    @FXML private Hyperlink userGuideLink;
 
     /**
      * Creates a new HelpWindow.
@@ -34,7 +35,7 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public HelpWindow(Stage root) {
         super(FXML, root);
-        helpMessage.setText(HELP_MESSAGE);
+        userGuideLink.setText(USERGUIDE_URL);
     }
 
     /**
@@ -46,21 +47,6 @@ public class HelpWindow extends UiPart<Stage> {
 
     /**
      * Shows the help window.
-     * @throws IllegalStateException
-     *     <ul>
-     *         <li>
-     *             if this method is called on a thread other than the JavaFX Application Thread.
-     *         </li>
-     *         <li>
-     *             if this method is called during animation or layout processing.
-     *         </li>
-     *         <li>
-     *             if this method is called on the primary stage.
-     *         </li>
-     *         <li>
-     *             if {@code dialogStage} is already showing.
-     *         </li>
-     *     </ul>
      */
     public void show() {
         logger.fine("Showing help page about the application.");
@@ -87,6 +73,18 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public void focus() {
         getRoot().requestFocus();
+    }
+
+    /**
+     * Opens the user guide URL in the system default browser.
+     */
+    @FXML
+    private void openUrl() {
+        try {
+            Desktop.getDesktop().browse(new URI(USERGUIDE_URL));
+        } catch (Exception e) {
+            logger.warning("Failed to open URL in browser: " + e.getMessage());
+        }
     }
 
     /**

@@ -28,7 +28,7 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 ### Architecture
 
-<img src="images/ArchitectureDiagram.png" width="280" />
+![ArchitectureDiagram](diagrams/ArchitectureDiagram.svg)
 
 The ***Architecture Diagram*** given above explains the high-level design of the App.
 
@@ -53,7 +53,7 @@ The bulk of the app's work is done by the following four components:
 
 The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
 
-<img src="images/ArchitectureSequenceDiagram.png" width="574" />
+![ArchitectureSequenceDiagram](diagrams/ArchitectureSequenceDiagram.svg)
 
 Each of the four main components (also shown in the diagram above),
 
@@ -62,7 +62,7 @@ Each of the four main components (also shown in the diagram above),
 
 For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
 
-<img src="images/ComponentManagers.png" width="300" />
+![ComponentManagers](diagrams/ComponentManagers.svg)
 
 The sections below give more details of each component.
 
@@ -70,18 +70,23 @@ The sections below give more details of each component.
 
 The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
 
-![Structure of the UI Component](images/UiClassDiagram.png)
+![Structure of the UI Component](diagrams/UiClassDiagram.svg)
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
+The UI consists of a `MainWindow` that is made up of several parts, including the `CommandBox`, `ResultDisplay`, `StatusBarFooter`, `RoutePanel` and the panels used to display book-specific data.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
+Unlike the original AB3 design, MyCelia supports two distinct operating contexts: the **Company Book** and the **Delivery Book**. The UI updates according to the current active book, displaying either `CompanyListPanel` or `DeliveryListPanel`. This allows both workflows to coexist within a single application window.
 
-The `UI` component,
+The UI component uses the JavaFX UI framework. The layout of these UI parts is defined in corresponding `.fxml` files in the `src/main/resources/view` folder. For example, the layout of the `MainWindow` is specified in `MainWindow.fxml`.
+
+The `UI` component:
 
 * executes user commands using the `Logic` component.
-* listens for changes to `Model` data so that the UI can be updated with the modified data.
-* keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
-* depends on some classes in the `Model` component, as it displays `Person` object residing in the `Model`.
+* listens for changes to `Model` data so that the displayed company list or delivery list can be updated automatically.
+* keeps a reference to the `Logic` component, because the UI depends on it to parse and execute commands.
+* depends on classes in the `Model` component, as it displays `Company` and `Delivery` objects stored in the application state.
+* reflects the current mode of the application, allowing users to switch between the Company Book and Delivery Book through commands or the navigation bar pill toggle buttons.
+
+This design supports MyCelia’s keyboard-first interaction model while keeping the interface intuitive for users managing both company and delivery information.
 
 ### Logic component
 
@@ -89,26 +94,46 @@ The `UI` component,
 
 Here's a (partial) class diagram of the `Logic` component:
 
-<img src="images/LogicClassDiagram.png" width="550"/>
+![LogicClassDiagram](diagrams/LogicClassDiagram.svg)
 
 The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
 
-![Interactions Inside the Logic Component for the `delete 1` Command](images/DeleteSequenceDiagram.png)
+![Interactions Inside the Logic Component for the `delete 1` Command](diagrams/DeleteSequenceDiagram.svg)
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 </div>
 
+The Logic component is responsible for parsing and executing user commands.
+
+In MyCelia, command parsing depends on the **currently active book**. Since the application supports both the **Company Book** and the **Delivery Book**, the Logic component routes user input to different parsers depending on the current mode stored in the `Model`.
+
+More specifically:
+
+1. When the user enters a command, the `LogicManager` receives the full command text.
+2. The `LogicManager` checks the current application mode from the `Model`.
+3. If the application is in Company Book mode, the input is passed to the company-side parser.
+4. If the application is in Delivery Book mode, the input is passed to the delivery-side parser.
+5. The selected parser creates the corresponding `Command` object.
+6. The command is executed by the `LogicManager`.
+7. The result of command execution is returned as a `CommandResult` object.
+
+This separation is necessary because several command words, such as `add`, `edit`, `delete`, `filter`, and `listr`, are shared by both books but operate on different types of data. For example, `add` in the Company Book creates a `Company`, while `add` in the Delivery Book creates a `Delivery`.
+
+The Logic component therefore uses book-specific parsers to avoid overloading a single parser with too many context-dependent branches. This improves maintainability and makes it easier to extend each workflow independently.
+
 How the `Logic` component works:
 
-1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
-   Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the `Model`) to achieve.
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
+* `LogicManager` acts as the main coordinator for command execution.
+* Parsing is delegated to a parser appropriate for the current mode.
+* The parser returns a concrete subclass of `Command`.
+* The command interacts with the `Model` during execution.
+* After execution, the `CommandResult` is returned back to the UI.
 
-Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
+This design allows MyCelia to support two related but distinct workflows in a single application while preserving a consistent command-first user experience.
 
-<img src="images/ParserClasses.png" width="600"/>
+Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command in Company Book mode:
+
+![ParserClasses](diagrams/ParserClasses.svg)
 
 How the parsing works:
 * When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
@@ -117,33 +142,42 @@ How the parsing works:
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
 
-<img src="images/ModelClassDiagram.png" width="450" />
+![ModelClassDiagram](diagrams/ModelClassDiagram.svg)
 
+The `Model` component stores the in-memory state of MyCelia.
+
+Unlike the original AB3 model, MyCelia manages two related sets of domain data: the **Company Book** and the **Delivery Book**. As a result, the `Model` component stores both `Company` objects and `Delivery` objects, together with their corresponding filtered lists for display and command execution.
 
 The `Model` component,
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-* stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-* stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
-* does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
+* stores all `Company` objects in the Company Book.
+* stores all `Delivery` objects in the Delivery Book.
+* stores the currently filtered company list as an unmodifiable `ObservableList<Company>`, so that the UI can automatically update when the displayed company data changes.
+* stores the currently filtered delivery list as an unmodifiable `ObservableList<Delivery>`, so that the UI can automatically update when the displayed delivery data changes.
+* stores a mode flag indicating whether the application is currently operating in Company Book mode or Delivery Book mode.
+* stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` object.
+* does not depend on the `UI`, `Logic`, or `Storage` components, since the model represents the domain state of the application independently of how it is displayed, parsed, or persisted.
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
-
-<img src="images/BetterModelClassDiagram.png" width="450" />
-
-</div>
-
+This design allows MyCelia to support two related workflows in a single application while keeping the company and delivery data logically separated.
 
 ### Storage component
 
 **API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
-<img src="images/StorageClassDiagram.png" width="550" />
+![StorageClassDiagram](diagrams/StorageClassDiagram.svg)
+
+The `Storage` component is responsible for persisting MyCelia’s data on disk and reading it back when the application starts.
+
+Since MyCelia manages both company data and delivery data, the storage layer is responsible for saving and loading both parts of the application state, in addition to user preferences.
 
 The `Storage` component,
-* can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
-* inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
-* depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
+
+* can save both company-related data and delivery-related data in JSON format, and read them back into the corresponding model objects.
+* can save and load user and user preference data.
+* acts as the bridge between the hard disk representation of the application state and the in-memory model representation.
+* depends on classes in the `Model` component because its purpose is to serialize and deserialize domain objects owned by the model.
+
+This design ensures that changes made to either the Company Book or the Delivery Book can be preserved across application restarts while keeping persistence concerns separate from the in-memory business logic.
 
 ### Common classes
 
@@ -167,7 +201,7 @@ This design allows for changes within a `Company` to be reflected on the deliver
 
 Example:
 
-Step 1: User enters `add p/Laptop c/Dell dl/2026-03-25 14:30 t/urgent`
+Step 1: User enters `add p/Laptop c/Dell d/2026-03-25 14:30 t/urgent`
 
 Step 2: Command is parsed by `DeliveryBookParser` and `AddCommand#execute(Model)` is called
 
@@ -192,7 +226,7 @@ The following diagram demonstrates how the `AddCommand` happens through the `Log
 MyCelia supports two operating modes: the Company Book and the Delivery Book.
 This feature is facilitated by a mode flag stored in the Model component through `Model#getCompanyPackage()` and `Model#setCompanyPackage(boolean)`. The flag determines which parser and book-specific command set should be active at a given time.
 
-At the user level, the command used is switch. In the Company Book, `companycommands`. `SwitchCommand` sets the mode flag to false, which switches the application to the Delivery Book. The User Guide also states that this same command toggles between the two books, and that the UI tabs provide an equivalent interaction.
+At the user level, the command used is `switch`. In the Company Book, `SwitchCommand` sets the mode flag to false, which switches the application to the Delivery Book. In the Delivery Book, `SwitchCommand` sets the mode flag to true, switching back to the Company Book. The User Guide also states that this same command toggles between the two books, and that the navigation bar pill buttons provide an equivalent interaction.
 
 This design allows MyCelia to reuse a single command box and window while exposing two different workflows. Instead of launching separate applications or windows, the system keeps both books in memory and changes only the active context. This keeps interaction fast and matches the product’s keyboard-first design.
 
@@ -206,7 +240,7 @@ Step 2. The user enters `switch`.
 
 Step 3. `switch` is parsed by `AddressBookParser` and `SwitchCommand#execute(Model)` is called.
 
-Step 4. The command updates the model mode flag by calling `Model#CompanyPackage(false)`.
+Step 4. The command updates the model mode flag by calling `Model#setCompanyPackage(false)`.
 
 The following diagram demonstrates how the switch command goes through the `Logic` component starting from CompanyBook:
 
@@ -229,7 +263,7 @@ Alternative 2: Split the app into two separate windows or two separate applicati
 ### Delivery routing
 #### Implementation
 
-MyCelia allows for user to query a Routing API to obtain an efficient travel plan for the chosen deliveries. This feature allows for users to view an optimized path they can take to finish their deliveries within their stipulated deadlines.
+MyCelia allows users to query a Routing API to obtain an efficient travel plan for the chosen deliveries. This feature allows for users to view an optimized path they can take to finish their deliveries within their stipulated deadlines.
 
 This is done using the `SelectCommand` which takes in the indexes of the chosen deliveries as argument. After selection, the `RouteCommand` is used to check the selected deliveries for their deadlines and addresses, ensuring both fields are valid before being sent as a request to the API.
 
@@ -241,17 +275,59 @@ Step 1: The user inputs `select 1 2 4` to select deliveries 1, 2 and 4 for routi
 
 Step 2: `Logic` executes the `SelectCommand` which shows the selected deliveries on the UI, allowing the user to check their selection.
 
-The following diagram illustrates how the selected deliveries will be displayed on the UI
+The following diagram illustrates how the select command goes through the `Logic` component:
+
+![SelectSequenceDiagram](diagrams/SelectSequenceDiagram.svg)
 
 Step 3: The user confirms their selection and inputs `route`.
 
-Step 4: `RouteCommand` produces a `CommandResult` calls that `planRoutes()` which checks for overdue deadlines. If all deliveries are valid, a request is built via `OptimizationService` and sent to the API.
+The following diagram illustrates how the select command goes through the `Logic` component:
+![RouteSequenceDiagram](diagrams/RouteSequenceDiagram.svg)
+
+Step 4: `RouteCommand` calls that `planRoutesFor()::RoutePanel` which checks for overdue deadlines and geocodes the addresses into coordinates using `GeocodingService`. If all deliveries are valid, a request is built via `OptimizationService` and sent to the API.
 
 Step 5: `OptimizationService` parses the response from the API and returns the `RouteResult`.
 
-The following diagram illustrates how the request is made and received:
+Step 6: `RoutePanel` displays the `RouteResult` on the UI
 
-Step 6: `RouteResult` is shown on the UI
+The following diagram illustrates the entire process when `planRoutes()` is called:
+![RouterSequenceDiagram](diagrams/RouterSequenceDiagram.svg)
+
+### Routing API Key Security
+
+#### Overview
+
+MyCelia uses the [OpenRouteService (ORS)](https://openrouteservice.org/) API for geocoding and route optimisation. API requests require an authentication key. To prevent the key from being exposed in source code or intercepted from JVM memory, MyCelia uses a layered key resolution strategy with a secure subprocess execution model.
+
+#### Key resolution order
+
+When a routing request is made, `OrsHttpClient` attempts to resolve the API key in the following order:
+
+1. **`KeyDeriver` (release builds)** — The real `KeyDeriver.java` is encrypted with git-crypt and only available to maintainers. 
+
+2. **Local key file (development builds)** — If `KeyDeriver.java` is the stub (see below), `OrsHttpClient` falls back to reading the key from a plain text file at:
+   - Windows: `%APPDATA%\MyCelia\ors.key`
+   - macOS: `~/Library/Application Support/MyCelia/ors.key`
+   - Linux: `~/.local/share/MyCelia/ors.key`
+
+#### Development setup (for contributors)
+
+The real `KeyDeriver.java` is git-crypt encrypted and **not available in the public repository**. The repository ships a stub at `src/main/java/seedu/address/routing/security/KeyDeriverStub.java` instead. The Gradle build automatically copies this stub to `KeyDeriver.java` if the real file is absent, so the project compiles out of the box without any manual setup.
+
+For routing to work during development, contributors need a personal ORS API key:
+
+1. Register for a free key at [https://openrouteservice.org/](https://openrouteservice.org/)
+2. Create the file `ors.key` in your MyCelia app data directory (the path is printed in the error message if routing is attempted without one)
+3. Paste your API key as the only content of the file, with no extra whitespace
+
+The Bootstrapper creates an `ors.key` placeholder file with instructions on first launch.
+
+#### Release builds (for maintainers)
+
+Release builds use the real `KeyDeriver.java`, which is stored encrypted in a separate private repository. To obtain access for a release build, contact the project maintainers. The release pipeline (`./gradlew packageRelease`) expects the decrypted `KeyDeriver.java` to be present at build time.
+
+<div markdown="span" class="alert alert-warning">:warning: **Never commit a real ORS API key in plaintext** to any repository, public or private. Use only the `ors.key` file approach for development, and the encrypted `KeyDeriver.java` for releases.</div>
+
 
 --------------------------------------------------------------------------------------------------------------------
 

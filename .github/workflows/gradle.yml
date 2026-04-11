@@ -21,9 +21,14 @@ jobs:
       - name: Merge to master
         run: git checkout --progress --force ${{ github.sha }}
 
+      - name: Use stub KeyDeriver for CI
+        run: |
+          rm -f src/main/java/seedu/address/routing/security/KeyDeriver.java
+        shell: bash
+
       - name: Run repository-wide tests
         if: runner.os == 'Linux'
-        working-directory:  ${{ github.workspace }}/.github
+        working-directory: ${{ github.workspace }}/.github
         run: ./run-checks.sh
 
       - name: Validate Gradle Wrapper

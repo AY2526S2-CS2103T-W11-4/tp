@@ -11,7 +11,9 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -27,8 +29,10 @@
         <URL value="@Extensions.css" />
       </stylesheets>
 
-      <VBox>
-        <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
+      <VBox styleClass="app-shell">
+
+        <!-- Hidden MenuBar — keeps F1 accelerator wiring intact -->
+        <MenuBar fx:id="menuBar" visible="false" managed="false">
           <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
           </Menu>
@@ -37,81 +41,79 @@
           </Menu>
         </MenuBar>
 
-        <StackPane VBox.vgrow="NEVER" fx:id="commandBoxPlaceholder" styleClass="pane-with-border">
-          <padding>
-            <Insets top="5" right="10" bottom="5" left="10" />
-          </padding>
-        </StackPane>
+        <!-- ── Top Bar ── -->
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="16">
+          <Label text="MyCelia" styleClass="app-title" />
 
-        <StackPane VBox.vgrow="NEVER" fx:id="resultDisplayPlaceholder" styleClass="pane-with-border"
-                   minHeight="80" prefHeight="80" maxHeight="80">
-          <padding>
-            <Insets top="5" right="10" bottom="5" left="10" />
-          </padding>
-        </StackPane>
+          <HBox fx:id="pillToggle" styleClass="pill-toggle" alignment="CENTER_LEFT">
+            <Button fx:id="pillCompanies" text="Companies" styleClass="pill-button-active"
+                    onAction="#handlePillCompanies" />
+            <Button fx:id="pillDeliveries" text="Deliveries" styleClass="pill-button"
+                    onAction="#handlePillDeliveries" />
+            <Button fx:id="pillRoutes" text="Routes" styleClass="pill-button"
+                    onAction="#handlePillRoutes" />
+          </HBox>
 
-        <VBox spacing="5" styleClass="pane-with-border">
-          <padding>
-            <Insets top="5" right="10" bottom="5" left="10" />
-          </padding>
-          <Label fx:id="userAddressLabel"
-                 wrapText="true"
-                 style="-fx-background-color: white; -fx-text-fill: black; -fx-padding: 8;"
-                 maxWidth="Infinity"
-                 VBox.vgrow="NEVER"/>
+          <Region HBox.hgrow="ALWAYS" />
+
+          <!-- Help in its own pill container — same height as nav pills -->
+          <HBox styleClass="pill-toggle" alignment="CENTER_LEFT">
+            <Button text="Help" onAction="#handleHelp" styleClass="pill-button" />
+          </HBox>
+
+          <Label fx:id="userAddressLabel" styleClass="user-address-label" />
+        </HBox>
+
+        <!-- ── Console Area: Command Input + Result Display ── -->
+        <VBox styleClass="console-area">
+          <StackPane VBox.vgrow="NEVER" fx:id="commandBoxPlaceholder" styleClass="command-box-pane" />
+          <StackPane VBox.vgrow="NEVER" fx:id="resultDisplayPlaceholder" styleClass="result-display-pane" />
         </VBox>
 
+        <!-- ── Tab Content Area ── -->
         <TabPane fx:id="listTabPane" VBox.vgrow="ALWAYS">
           <tabs>
-            <Tab closable="false" text="Companies">
-              <VBox styleClass="pane-with-border" minWidth="340" prefWidth="340">
-                <padding>
-                  <Insets top="10" right="10" bottom="10" left="10" />
-                </padding>
 
-                <Label text="Company Book" styleClass="cell_big_label" />
-                <StackPane fx:id="companyListPanelPlaceholder" VBox.vgrow="ALWAYS">
-                  <VBox.margin>
-                    <Insets top="10" />
-                  </VBox.margin>
-                </StackPane>
+            <Tab closable="false" text="Companies">
+              <VBox styleClass="content-pane" minWidth="340" prefWidth="340">
+                <padding>
+                  <Insets top="12" right="12" bottom="12" left="12" />
+                </padding>
+                <StackPane fx:id="companyListPanelPlaceholder" VBox.vgrow="ALWAYS" />
               </VBox>
             </Tab>
 
             <Tab closable="false" text="Deliveries">
-              <VBox styleClass="pane-with-border" minWidth="340" prefWidth="340">
+              <VBox styleClass="content-pane" minWidth="340" prefWidth="340">
                 <padding>
-                  <Insets top="10" right="10" bottom="10" left="10" />
+                  <Insets top="12" right="12" bottom="12" left="12" />
                 </padding>
-                <Label text="Delivery Book" styleClass="cell_big_label" />
                 <Button fx:id="mapSelectedDeliveriesButton"
                         text="Plan Today's Route"
                         onAction="#handleShowSelectedRoutes"
                         disable="true"
-                        styleClass="plan-routes-button">
+                        styleClass="action-button">
                   <VBox.margin>
-                    <Insets top="8" />
+                    <Insets bottom="10" />
                   </VBox.margin>
                 </Button>
-                <StackPane fx:id="deliveryListPanelPlaceholder" VBox.vgrow="ALWAYS">
-                  <VBox.margin>
-                    <Insets top="10" />
-                  </VBox.margin>
-                </StackPane>
+                <StackPane fx:id="deliveryListPanelPlaceholder" VBox.vgrow="ALWAYS" />
               </VBox>
             </Tab>
 
-            <!-- Routes tab: placeholder filled by RoutePanel in MainWindow.fillInnerParts() -->
             <Tab closable="false" text="Routes">
-              <StackPane fx:id="routePanelPlaceholder" styleClass="pane-with-border" />
+              <StackPane fx:id="routePanelPlaceholder" styleClass="content-pane" />
             </Tab>
+
           </tabs>
           <VBox.vgrow>
             <Priority fx:constant="ALWAYS" />
           </VBox.vgrow>
         </TabPane>
 
+        <!-- ── Status Bar ── -->
         <StackPane fx:id="statusbarPlaceholder" VBox.vgrow="NEVER" />
+
       </VBox>
     </Scene>
   </scene>

@@ -21,14 +21,14 @@ import seedu.address.routing.model.RouteResult;
  */
 public class DeliveryRouterService {
 
-    // Default service time per stop: 5 minutes
     private static final int DEFAULT_SERVICE_SECS = 300;
 
     private final GeocodingService geocodingService;
     private final OptimizationService optimizationService;
 
     /**
-     * Creates instance that contains the necessary routing features
+     * Creates a {@code DeliveryRouterService}.
+     * Initialises geocoding and optimisation services backed by a shared HTTP client.
      */
     public DeliveryRouterService() {
         OrsHttpClient client = new OrsHttpClient();
@@ -38,7 +38,11 @@ public class DeliveryRouterService {
 
     /**
      * Plans optimized routes for today's deliveries using the default sample user.
-     * Convenience overload for when no user has been set up yet.
+     * Convenience overload for when no user has been configured yet.
+     *
+     * @param deliveries the full delivery list from the model
+     * @return optimized {@link RouteResult}
+     * @throws IOException if geocoding or optimisation fails
      */
     public RouteResult planRoutes(List<Delivery> deliveries) throws IOException {
         return planRoutes(deliveries, SampleDataUtil.getSampleUser());
@@ -49,6 +53,8 @@ public class DeliveryRouterService {
      *
      * @param deliveries the full delivery list from the model
      * @param user       the logged-in user (provides depot address and vehicle profile)
+     * @return optimized {@link RouteResult} with road-following geometry
+     * @throws IOException if geocoding or optimisation fails, or if any delivery is overdue
      */
     public RouteResult planRoutes(List<Delivery> deliveries, User user) throws IOException {
         if (deliveries.isEmpty()) {
@@ -67,31 +73,28 @@ public class DeliveryRouterService {
         }
         List<Coordinate> deliveryCoords = geocodingService.geocodeAll(addresses);
 
-        // Step 3: build time windows + service durations
-        int earliest;
-        int latest;
-        boolean overdue = false;
+        // Step 3: build time windows using current time as earliest and deadline as latest
         List<Delivery> overdueDeliveries = new ArrayList<>();
         List<int[]> timeWindows = new ArrayList<>();
         List<Integer> serviceDurations = new ArrayList<>();
+
         for (int i = 0; i < deliveries.size(); i++) {
-            earliest = (int) (LocalDateTime.now().atZone(ZoneId.systemDefault())
-                    .toEpochSecond());
-            latest = (int) (deliveries.get(i).getDeadline().getValue().atZone(ZoneId.systemDefault())
-                    .toEpochSecond());
+            int earliest = (int) LocalDateTime.now().atZone(ZoneId.systemDefault()).toEpochSecond();
+            int latest = (int) deliveries.get(i).getDeadline().getValue()
+                    .atZone(ZoneId.systemDefault()).toEpochSecond();
             if (latest <= earliest) {
-                overdue = true;
                 overdueDeliveries.add(deliveries.get(i));
             }
             timeWindows.add(new int[]{earliest, latest});
             serviceDurations.add(DEFAULT_SERVICE_SECS);
         }
-        if (overdue) {
+
+        if (!overdueDeliveries.isEmpty()) {
             throw new IOException("Overdue Deliveries, please update the deadline of:\n"
                     + overdueDeliveries.stream().map(x -> x.toString() + "\n").toList());
         }
 
-        // Step 4: optimize using user's vehicle profile
+        // Step 4: optimise using user's vehicle profile
         return optimizationService.optimize(
                 vehicleCoords, deliveryCoords,
                 timeWindows, serviceDurations,

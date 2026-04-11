@@ -3,6 +3,7 @@ package seedu.address.model.delivery;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -54,6 +55,15 @@ public class Deadline {
         } catch (DateTimeParseException e) {
             return false;
         }
+    }
+
+    /**
+     * Returns true if deadline is within given range.
+     */
+    public boolean isInRange(LocalDate[] range) {
+        requireNonNull(range);
+        return value.isAfter(range[0].atStartOfDay()) && value.isBefore(range[1].atStartOfDay().plusDays(1))
+                || value.isAfter(range[1].atStartOfDay()) && value.isBefore(range[0].atStartOfDay().plusDays(1));
     }
 
     public LocalDateTime getValue() {

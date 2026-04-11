@@ -1,0 +1,48 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":DeliveryBookParser" as DeliveryBookParser LOGIC_COLOR
+participant "s:SelectCommand" as SelectCommand LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+[-> LogicManager : execute(select)
+activate LogicManager
+
+LogicManager -> DeliveryBookParser : parseCommand(select)
+activate DeliveryBookParser
+
+create SelectCommand
+DeliveryBookParser -> SelectCommand
+activate SelectCommand
+
+SelectCommand --> DeliveryBookParser
+deactivate SelectCommand
+
+DeliveryBookParser --> LogicManager : s
+deactivate DeliveryBookParser
+
+LogicManager -> SelectCommand : execute()
+activate SelectCommand
+
+loop for Delivery in selectedDeliveries
+SelectCommand -> Model : setDeliverySelected()
+activate Model
+
+Model --> SelectCommand
+deactivate Model
+end
+
+SelectCommand --> LogicManager : result
+deactivate SelectCommand
+SelectCommand -[hidden]-> LogicManager : result
+destroy SelectCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

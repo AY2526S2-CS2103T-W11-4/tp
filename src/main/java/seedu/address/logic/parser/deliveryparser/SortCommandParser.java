@@ -2,52 +2,43 @@ package seedu.address.logic.parser.deliveryparser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
 
+import java.util.Arrays;
 import java.util.List;
 
 import seedu.address.logic.commands.deliverycommands.SortCommand;
 import seedu.address.logic.parser.ArgumentMultimap;
-import seedu.address.logic.parser.ArgumentTokenizer;
 import seedu.address.logic.parser.Parser;
-import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 
 /**
- * Parses input arguments and creates a new SortCommand object.
+ * Parses input arguments and creates a new company SortCommand object.
  */
 public class SortCommandParser implements Parser<SortCommand> {
 
     /**
-     * Parses the given {@code String} of arguments in the context of the SortCommand
-     * and returns a SortCommand object for execution.
+     * Parses user input into command for execution.
      *
+     * @param userInput full user input string
+     * @return the command based on the user input
      * @throws ParseException if the user input does not conform the expected format
      */
-    public SortCommand parse(String args) throws ParseException {
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_COMPANY);
-
-        if (!arePrefixesPresent(argMultimap, PREFIX_COMPANY) || !argMultimap.getPreamble().isEmpty()) {
+    public SortCommand parse(String userInput) throws ParseException {
+        String[] prefixString = userInput.trim().split("\\s+");
+        if (!Arrays.stream(prefixString).allMatch(
+                x -> PREFIX_PRODUCT.equals(new Prefix(x))
+                || PREFIX_COMPANY.equals(new Prefix(x))
+                || PREFIX_DEADLINE.equals(new Prefix(x)))) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
         }
-
-        List<CompanyNameContainsKeywordsPredicate> companies = argMultimap.getAllValues(PREFIX_COMPANY).stream()
-                .map(x -> {
-                    try {
-                        return ParserUtil.parseCompany(x);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+        List<Prefix> prefixes = Arrays.stream(prefixString)
+                .map(Prefix::new)
                 .toList();
-
-        if (companies.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
-        }
-        return new SortCommand(companies);
+        return new SortCommand(prefixes);
     }
-
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
         for (Prefix prefix : prefixes) {
             if (!argumentMultimap.getValue(prefix).isPresent()) {

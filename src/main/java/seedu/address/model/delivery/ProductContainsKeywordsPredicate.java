@@ -16,6 +16,10 @@ public class ProductContainsKeywordsPredicate implements Predicate<Delivery> {
         this.keywords = keywords;
     }
 
+    public List<String> getKeywords() {
+        return List.copyOf(keywords);
+    }
+
     @Override
     public boolean test(Delivery delivery) {
         return keywords.stream()

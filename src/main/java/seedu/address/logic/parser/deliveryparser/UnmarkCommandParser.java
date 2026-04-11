@@ -9,7 +9,7 @@ import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
- * Parses input arguments and creates a new FindCommand object
+ * Parses input arguments and creates a new UnmarkCommand object
  */
 public class UnmarkCommandParser implements Parser<UnmarkCommand> {
 

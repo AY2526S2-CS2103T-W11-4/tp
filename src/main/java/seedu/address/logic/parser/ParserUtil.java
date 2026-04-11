@@ -2,6 +2,8 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +19,7 @@ import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
 import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Product;
+import seedu.address.model.delivery.ProductContainsKeywordsPredicate;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -115,6 +118,20 @@ public class ParserUtil {
     }
 
     /**
+     * Parses a {@code String product} into an {@code ProductContainsKeywordsPredicate}.
+     * @throws ParseException if the given {@code product} is invalid.
+     */
+    public static ProductContainsKeywordsPredicate parseProductName(String productName) throws ParseException {
+        requireNonNull(productName);
+        String trimmedProductName = productName.trim();
+        if (!trimmedProductName.matches("[^\\s].*")) {
+            throw new ParseException("Company should be a string that does not begin with a whitespace");
+        }
+        List<String> keyword = List.of(trimmedProductName);
+        return new ProductContainsKeywordsPredicate(keyword);
+    }
+
+    /**
      * Parses a {@code String product} into an {@code Product}.
      * Leading and trailing whitespaces will be trimmed.
      *
@@ -143,6 +160,23 @@ public class ParserUtil {
             throw new ParseException(Deadline.MESSAGE_CONSTRAINTS);
         }
         return new Deadline(trimmedDeadline);
+    }
+
+    /**
+     * Parses two {@code String date} into a {@code LocalDate[]}.
+     * @throws ParseException if the given {@code date} is invalid.
+     */
+    public static LocalDate[] parseTimeRange(String date1, String date2) throws ParseException {
+        requireNonNull(date1, date2);
+        String trimmedDate1 = date1.trim();
+        String trimmedDate2 = date2.trim();
+        LocalDate[] res;
+        try {
+            res = new LocalDate[] {LocalDate.parse(trimmedDate1), LocalDate.parse(trimmedDate2)};
+        } catch (DateTimeParseException e) {
+            throw new ParseException(Deadline.MESSAGE_CONSTRAINTS);
+        }
+        return res;
     }
 
     /**

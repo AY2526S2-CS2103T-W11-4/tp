@@ -19,7 +19,7 @@ public class ListCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        model.sortDeliveriesByDeadline(PREDICATE_SHOW_ALL_DELIVERIES);
+        model.sortDeliveriesByDefault(PREDICATE_SHOW_ALL_DELIVERIES);
         model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
         return new CommandResult(MESSAGE_SUCCESS);
     }

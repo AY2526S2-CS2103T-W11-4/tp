@@ -31,6 +31,9 @@ public class Product {
         productName = product;
     }
 
+    public String getName() {
+        return productName;
+    }
     /**
      * Returns true if a given string is a valid product.
      */

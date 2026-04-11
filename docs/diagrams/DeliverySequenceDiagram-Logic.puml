@@ -33,7 +33,7 @@ activate AddCommand
 AddCommand -> AddCommand : findMatchingCompany()
 activate AddCommand
 
-AddCommand -> Model : findCompany()
+AddCommand -> Model : getAddressBook()
 activate Model
 
 Model --> AddCommand

@@ -10,6 +10,7 @@ src/main/resources/docs/
 
 # Storage/log files
 /data/
+/tools/
 /config.json
 /preferences.json
 /*.log.*
@@ -21,3 +22,7 @@ src/test/data/sandbox/
 # MacOS custom attributes files created by Finder
 .DS_Store
 docs/_site/
+
+#Security
+/src/main/java/KeyEncoder.java
+/src/main/java/KeyEncoder.class

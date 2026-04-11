@@ -31,7 +31,7 @@ public class DeliveryListCommandTest {
             getTagSet("test"));
 
     @Test
-    public void execute_listShowsAllDeliveriesSortedByDeadline_success() throws Exception {
+    public void execute_filteredList_resetsToAllDeliveries() throws Exception {
         Delivery latest = new Delivery(new Product("Laptop"), DELL,
                 new Deadline("2026-03-26 10:00"), getTagSet());
         Delivery earliest = new Delivery(new Product("Monitor"), ACER,
@@ -43,14 +43,34 @@ public class DeliveryListCommandTest {
         model.addDelivery(latest);
         model.addDelivery(earliest);
         model.addDelivery(middle);
+        // apply a filter so only Dell deliveries are visible
         model.updateFilteredDeliveryList(delivery -> delivery.getCompany().equals(DELL));
+        assertEquals(2, model.getFilteredDeliveryList().size());
 
         ListCommand command = new ListCommand();
         CommandResult result = command.execute(model);
 
         assertEquals(ListCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
+        // list should show all 3 deliveries, sorted by deadline
         assertEquals(3, model.getFilteredDeliveryList().size());
         assertEquals(List.of(earliest, middle, latest), model.getFilteredDeliveryList());
         assertEquals(List.of(earliest, middle, latest), model.getDeliveryBook().getDeliveryList());
+    }
+
+    @Test
+    public void execute_unfilteredList_returnsSuccess() throws Exception {
+        Delivery d1 = new Delivery(new Product("Laptop"), DELL,
+                new Deadline("2026-03-26 10:00"), getTagSet());
+        Delivery d2 = new Delivery(new Product("Monitor"), ACER,
+                new Deadline("2026-03-24 08:00"), getTagSet());
+
+        Model model = new ModelManager(new seedu.address.model.AddressBook(), new DeliveryBook(), new UserPrefs());
+        model.addDelivery(d1);
+        model.addDelivery(d2);
+
+        CommandResult result = new ListCommand().execute(model);
+
+        assertEquals(ListCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
+        assertEquals(2, model.getFilteredDeliveryList().size());
     }
 }

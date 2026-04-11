@@ -37,7 +37,7 @@ public class RoutePanel extends UiPart<Region> {
 
     private final ObservableList<Delivery> deliveryList;
     private final Model model;
-    private final DeliveryRouterService routerService = new DeliveryRouterService();
+    private DeliveryRouterService routerService;
 
     private WebEngine webEngine;
 
@@ -54,6 +54,7 @@ public class RoutePanel extends UiPart<Region> {
         super(FXML);
         this.deliveryList = deliveryList;
         this.model = model;
+        this.routerService = new DeliveryRouterService();
         initMap();
     }
 

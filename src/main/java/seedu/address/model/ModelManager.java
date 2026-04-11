@@ -32,10 +32,16 @@ import seedu.address.model.util.SampleDataUtil;
 public class ModelManager implements Model {
 
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
-    private static final Comparator<Delivery> DELIVERY_DEADLINE_COMPARATOR = Comparator
+    private static final Comparator<Delivery> DELIVERY_DEFAULT_COMPARATOR = Comparator
             .comparing((Delivery delivery) -> delivery.getDeadline().getValue())
             .thenComparing(delivery -> delivery.getCompany().getName().toString().toLowerCase())
             .thenComparing(delivery -> delivery.getProduct().productName.toLowerCase());
+    private static final Comparator<Delivery> DELIVERY_DEADLINE_COMPARATOR = Comparator
+            .comparing((Delivery delivery) -> delivery.getDeadline().getValue());
+    private static final Comparator<Delivery> DELIVERY_PRODUCT_COMPARATOR = Comparator
+            .comparing(delivery -> delivery.getProduct().productName.toLowerCase());
+    private static final Comparator<Delivery> DELIVERY_COMPANY_COMPARATOR = Comparator
+            .comparing(delivery -> delivery.getCompany().getName().toString().toLowerCase());
 
     private final AddressBook addressBook;
     private final DeliveryBook deliveryBook;
@@ -43,9 +49,11 @@ public class ModelManager implements Model {
     private User user;
     private final FilteredList<Company> filteredCompanies;
     private final FilteredList<Delivery> filteredDeliveries;
-    private final ObservableSet<Delivery> deliverySelection = FXCollections.observableSet(new LinkedHashSet<>());
+    private final ObservableSet<Delivery> deliverySelection =
+            FXCollections.observableSet(new LinkedHashSet<>());
     private boolean isCompanyPackage;
     private final StringProperty userAddress = new SimpleStringProperty();
+    private Comparator<Delivery> currentComparator = DELIVERY_DEFAULT_COMPARATOR;
 
     /**
      * Initializes a ModelManager with the given addressBook, deliveryBook, userPrefs and user.
@@ -63,7 +71,8 @@ public class ModelManager implements Model {
         this.user = user;
         this.filteredCompanies = new FilteredList<>(this.addressBook.getCompanyList());
         this.filteredDeliveries = new FilteredList<>(this.deliveryBook.getDeliveryList());
-        this.filteredDeliveries.addListener((ListChangeListener<Delivery>) c -> pruneDeliverySelectionToFilteredList());
+        this.filteredDeliveries.addListener(
+                (ListChangeListener<Delivery>) c -> pruneDeliverySelection());
         userAddress.set("Start address: " + user.getDepotAddress());
     }
 
@@ -75,6 +84,9 @@ public class ModelManager implements Model {
         this(addressBook, deliveryBook, userPrefs, SampleDataUtil.getSampleUser());
     }
 
+    /**
+     * Creates a ModelManager with empty address book, delivery book and default user prefs.
+     */
     public ModelManager() {
         this(new AddressBook(), new DeliveryBook(), new UserPrefs());
     }
@@ -211,6 +223,24 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public void sortDeliveriesByDefault(Predicate<Delivery> predicate) {
+        requireNonNull(predicate);
+        deliveryBook.sortDeliveries(predicate, DELIVERY_DEFAULT_COMPARATOR);
+    }
+
+    @Override
+    public void sortDeliveriesByProduct(Predicate<Delivery> predicate) {
+        requireNonNull(predicate);
+        deliveryBook.sortDeliveries(predicate, DELIVERY_PRODUCT_COMPARATOR);
+    }
+
+    @Override
+    public void sortDeliveriesByCompany(Predicate<Delivery> predicate) {
+        requireNonNull(predicate);
+        deliveryBook.sortDeliveries(predicate, DELIVERY_COMPANY_COMPARATOR);
+    }
+
+    @Override
     public void sortDeliveriesByDeadline(Predicate<Delivery> predicate) {
         requireNonNull(predicate);
         deliveryBook.sortDeliveries(predicate, DELIVERY_DEADLINE_COMPARATOR);
@@ -232,6 +262,7 @@ public class ModelManager implements Model {
     public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
         requireNonNull(predicate);
         filteredDeliveries.setPredicate(predicate);
+        deliveryBook.sortDeliveries(currentComparator);
     }
 
     @Override
@@ -279,7 +310,11 @@ public class ModelManager implements Model {
         return ordered;
     }
 
-    private void pruneDeliverySelectionToFilteredList() {
+    /**
+     * Removes any deliveries from the selection set that are no longer
+     * present in the filtered list, keeping selection consistent with the current view.
+     */
+    private void pruneDeliverySelection() {
         deliverySelection.retainAll(new ArrayList<>(filteredDeliveries));
     }
 

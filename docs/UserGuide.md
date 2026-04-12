@@ -267,10 +267,10 @@ Examples:
 A company can have any number of tags, or none at all.
 </div>
 
-<details markdown="1">
-<summary markdown="1">What companies are considered duplicates?</summary>
+<details>
+<summary>What companies are considered duplicates?</summary>
 
-A company is considered a duplicate if it has the **same name and email** as an existing entry. Company names are case-insensitive for matching purposes.
+<p>A company is considered a duplicate if it has the <strong>same name and email</strong> as an existing entry. Company names are case-insensitive for matching purposes.</p>
 
 </details>
 
@@ -308,11 +308,9 @@ Examples:
 Specifying one or more `t/` fields replaces **all** existing tags — tags are not cumulative.
 </div>
 
-<details markdown="1">
-<summary markdown="1">How do I remove all tags from a company?</summary>
-
-Specify `edit INDEX t/` without any tag value. This clears all existing tags from the entry.
-
+<details>
+<summary>How do I remove all tags from a company?</summary>
+<p>Specify <code>edit INDEX t/</code> without any tag value. This clears all existing tags from the entry.</p>
 </details>
 
 For possible errors, refer to the [troubleshooting guide](#troubleshooting-edit-company) below.
@@ -471,11 +469,9 @@ Examples:
 Deadlines must follow the format `yyyy-MM-dd HH:mm`. Company matching is case-insensitive.
 </div>
 
-<details markdown="1">
-<summary markdown="1">What deliveries are considered duplicates?</summary>
-
-A delivery is a duplicate if it has the **same product, company, and deadline** as an existing delivery. Duplicate deliveries cannot be added.
-
+<details>
+<summary>What deliveries are considered duplicates?</summary>
+<p>A delivery is a duplicate if it has the <strong>same product, company, and deadline</strong> as an existing delivery. Duplicate deliveries cannot be added.</p>
 </details>
 
 For possible errors, refer to the [troubleshooting guide](#troubleshooting-add-delivery) below.

@@ -15,5 +15,5 @@
   </HBox>
 
   <!-- Row 2: ghost hint line -->
-  <Label fx:id="hintLabel" styleClass="command-hint" text="" wrapText="false" />
+  <Label fx:id="hintLabel" styleClass="command-hint" text="" wrapText="true" />
 </VBox>

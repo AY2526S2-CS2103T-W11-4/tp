@@ -176,8 +176,9 @@
     -fx-font-family: "Segoe UI", "SF Pro Text", "Inter", sans-serif;
     -fx-font-size: 10pt;
     -fx-text-fill: #4E6E9B;
-    -fx-min-height: 0;
-    -fx-pref-height: 0;
+    -fx-min-height: 40;
+    -fx-pref-height: 60;
+    -fx-max-height: 120;
 }
 
 /* TextAreaSkin internals — must all be transparent to avoid gray block */

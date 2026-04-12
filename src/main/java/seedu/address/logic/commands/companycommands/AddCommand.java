@@ -30,12 +30,12 @@ public class AddCommand extends Command {
             + PREFIX_ADDRESS + "ADDRESS "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " "
-            + PREFIX_NAME + "John Doe "
-            + PREFIX_PHONE + "98765432 "
-            + PREFIX_EMAIL + "johnd@example.com "
-            + PREFIX_ADDRESS + "311, Clementi Ave 2, #02-25 "
-            + PREFIX_TAG + "friends "
-            + PREFIX_TAG + "owesMoney";
+            + PREFIX_NAME + "Dell Technologies "
+            + PREFIX_PHONE + "18006249896 "
+            + PREFIX_EMAIL + "contact@dell.com "
+            + PREFIX_ADDRESS + "1 Dell Way, Round Rock, TX "
+            + PREFIX_TAG + "electronics "
+            + PREFIX_TAG + "supplier";
 
     public static final String MESSAGE_SUCCESS = "New company added: %1$s";
     public static final String MESSAGE_DUPLICATE_COMPANY = "This company already exists in the address book";

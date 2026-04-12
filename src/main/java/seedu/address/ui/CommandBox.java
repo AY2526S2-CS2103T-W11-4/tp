@@ -40,7 +40,8 @@ public class CommandBox extends UiPart<Region> {
         COMPANY_COMMANDS.put("add", "n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...");
         COMPANY_COMMANDS.put("edit", "INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...");
         COMPANY_COMMANDS.put("delete", "INDEX");
-        COMPANY_COMMANDS.put("find", "KEYWORD [MORE_KEYWORDS]...");
+        COMPANY_COMMANDS.put("filter", "[c/NAME] [a/ADDRESS] [p/PHONE] [e/EMAIL] [t/TAG]...");
+        COMPANY_COMMANDS.put("unfilter", "");
         COMPANY_COMMANDS.put("list", "");
         COMPANY_COMMANDS.put("clear", "");
         COMPANY_COMMANDS.put("switch", "");
@@ -48,15 +49,16 @@ public class CommandBox extends UiPart<Region> {
         COMPANY_COMMANDS.put("help", "");
         COMPANY_COMMANDS.put("exit", "");
 
-        DELIVERY_COMMANDS.put("add", "pr/PRODUCT c/COMPANY dl/DEADLINE a/ADDRESS [t/TAG]...");
-        DELIVERY_COMMANDS.put("edit", "INDEX [pr/PRODUCT] [c/COMPANY] [dl/DEADLINE] [a/ADDRESS] [t/TAG]...");
+        DELIVERY_COMMANDS.put("add", "p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...");
+        DELIVERY_COMMANDS.put("edit", "INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...");
         DELIVERY_COMMANDS.put("delete", "INDEX");
         DELIVERY_COMMANDS.put("mark", "INDEX");
         DELIVERY_COMMANDS.put("unmark", "INDEX");
         DELIVERY_COMMANDS.put("select", "INDEX [INDEX]... | none");
-        DELIVERY_COMMANDS.put("sort", "c/COMPANY");
+        DELIVERY_COMMANDS.put("sort", "[p/] [c/] [d/]");
         DELIVERY_COMMANDS.put("route", "");
-        DELIVERY_COMMANDS.put("find", "KEYWORD [MORE_KEYWORDS]...");
+        DELIVERY_COMMANDS.put("filter", "[p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...");
+        DELIVERY_COMMANDS.put("unfilter", "");
         DELIVERY_COMMANDS.put("list", "");
         DELIVERY_COMMANDS.put("clear", "");
         DELIVERY_COMMANDS.put("switch", "");
@@ -93,6 +95,8 @@ public class CommandBox extends UiPart<Region> {
                 seedu.address.logic.commands.deliverycommands.MarkCommand.MESSAGE_USAGE);
         DELIVERY_USAGE.put("unmark",
                 seedu.address.logic.commands.deliverycommands.UnmarkCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("route",
+                seedu.address.logic.commands.deliverycommands.RouteCommand.MESSAGE_USAGE);
         DELIVERY_USAGE.put("set",
                 seedu.address.logic.commands.SetCommand.MESSAGE_USAGE);
     }
@@ -118,6 +122,9 @@ public class CommandBox extends UiPart<Region> {
         });
 
         commandTextField.addEventFilter(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+
+        hintLabel.setWrapText(true);
+        hintLabel.setMinHeight(Region.USE_PREF_SIZE);
 
         refreshHint("");
     }
@@ -202,8 +209,7 @@ public class CommandBox extends UiPart<Region> {
             if (e instanceof ParseException && usageMap.containsKey(word)) {
                 setHintToErrorUsage(usageMap.get(word));
             } else {
-                hintLabel.setText("");
-                hintLabel.getStyleClass().remove(ERROR_HINT_STYLE_CLASS);
+                setHintToErrorUsage(e.getMessage());
             }
         }
     }

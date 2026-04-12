@@ -50,7 +50,8 @@ public class EditCommand extends Command {
             + PREFIX_DEADLINE + "2026-03-25 14:30";
 
     public static final String MESSAGE_EDIT_DELIVERY_SUCCESS = "Edited Delivery: %1$s";
-    public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
+    public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.\n"
+            + "Usage: edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...";
     public static final String MESSAGE_DUPLICATE_DELIVERY = "This Delivery already exists in the delivery book.";
 
     private final Index index;

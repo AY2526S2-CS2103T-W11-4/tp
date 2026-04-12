@@ -2,7 +2,7 @@ package seedu.address.logic.commands.companycommands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -26,9 +26,9 @@ public class FilterCommand extends Command {
     public static final String COMMAND_WORD = "filter";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filters companies by parameters,\n"
-            + "Parameters (Varargs): " + PREFIX_COMPANY + "NAME " + PREFIX_ADDRESS + "ADDRESS "
+            + "Parameters (Varargs): " + PREFIX_NAME + "NAME " + PREFIX_ADDRESS + "ADDRESS "
             + PREFIX_PHONE + "PHONE " + PREFIX_EMAIL + "EMAIL " + PREFIX_TAG + "TAG\n"
-            + "Example: " + COMMAND_WORD + " " + PREFIX_COMPANY + "Dell " + PREFIX_TAG + "important";
+            + "Example: " + COMMAND_WORD + " " + PREFIX_NAME + "Dell " + PREFIX_TAG + "important";
 
     public static final String MESSAGE_FILTER_SUCCESS = "Filtered %1$d company(s): %2$s";
     public static final String MESSAGE_NO_COMPANIES = "No companies found: %1$s";

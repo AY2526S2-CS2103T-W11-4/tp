@@ -1,9 +1,6 @@
 [![CI Status](https://github.com/se-edu/addressbook-level3/workflows/Java%20CI/badge.svg)](https://github.com/AY2526S2-CS2103T-W11-4/tp)
 
 ---
-layout: default
-title: User Guide
----
 * TOC
 {:toc}
 
@@ -28,8 +25,8 @@ Follow these steps to get MyCelia running:
 1. Ensure Java 17 or above is installed.
     * Full guide for installation [here](https://se-education.org/guides/tutorials/javaInstallation.html)
 
-   {: .important }
-   Mac users: Make sure to use this precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+> [!NOTE]  
+> Mac users: Make sure to use this precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
 2. Download the latest version of MyCelia [here](https://github.com/AY2526S2-CS2103T-W11-4/tp/releases).
     * Download the `.jar` file.
@@ -50,12 +47,17 @@ Click the `help` button at the top right of the app to get access to this [user 
 
 ---
 
-## What's Inside
+## Features
 
-MyCelia keeps track of two books simultaneously:
+### Before you begin
 
-* **Company Book** — your directory of business partners, suppliers, and clients
-* **Delivery Book** — your log of outgoing deliveries linked to those companies
+
+> MyCelia manages two separate books. Commands are **context-specific** — make sure you're in the right book before running a command.
+
+| Book | What it contains | 
+|------|-----------------|
+| **Company Book** | Your directory of business partners, suppliers, and clients | 
+| **Delivery Book** | Your log of outgoing deliveries linked to companies | 
 
 Switch between them with a single command or via the UI tabs. Everything saves automatically.
 
@@ -117,25 +119,78 @@ The Routes view displays an interactive map with the optimised route for selecte
 
 ---
 
+### Storage
+
+* All data saves automatically after every command — no manual save needed
+* Company records live in `addressbook.json`
+* Delivery records live in `deliverybook.json`
+* Both files are created in the same folder as the jar on first launch
+* To back up, copy both JSON files somewhere safe
+* To transfer to another machine, move the jar and both JSON files together
+
+---
+
 ## Commands
 
-### Notes about command format
+---
 
-* Words in `UPPER_CASE` are parameters to be supplied by the user.
-* Items in square brackets are optional.
-* Parameters can be provided in any order unless otherwise stated.
-* For commands that do not require parameters (e.g. `help`, `switch`, `exit`), any additional trailing input will be ignored.
+## Global Commands
 
-### Global Commands
+These commands work regardless of which book you are currently in.
 
-These commands work in both the Company Book and Delivery Book.
+### Toggling between books: `switch`
 
-|Command|Format|What it does|
-|-|-|-|
-|`switch`|`switch`|Toggle between Company Book and Delivery Book|
-|`set`|`set a/ADDRESS`|Set your delivery origin address (used as the starting point for route planning)|
-|`help`|`help`|Open the help window|
-|`exit`|`exit`|Save and close|
+Switches between the Company Book and the Delivery Book.
+
+Format:
+```
+switch
+```
+
+> [!TIP]
+> You can also switch books using the **Companies** or **Deliveries** buttons in the navigation bar.
+
+---
+
+### Setting the delivery origin address: `set`
+
+Sets the starting point used for route planning.
+
+Format:
+```
+set a/ADDRESS
+```
+
+Example:
+- `set a/10 Anson Road, Singapore 079903`
+
+> [!NOTE]
+> This address is used as the origin when `route` plans an optimised delivery route. Set it once and it persists across sessions.
+
+---
+
+### Viewing help: `help`
+
+Opens the help window, which links to this user guide.
+
+Format:
+```
+help
+```
+
+> [!TIP]
+> You can also open the help window by clicking the **Help** button in the navigation bar.
+
+---
+
+### Exiting the app: `exit`
+
+Saves all data and closes MyCelia.
+
+Format:
+```
+exit
+```
 
 ---
 
@@ -143,15 +198,16 @@ These commands work in both the Company Book and Delivery Book.
 
 Manage your network of business contacts. These commands are active when you're in the Company Book.
 
-|Command|Format|Example|
-|-|-|-|
-|Add|`add n/NAME p/PHONE e/EMAIL a/ADDRESS \[t/TAG]...`|`add n/Acme Supplies p/62223333 e/hi@acme.com a/10 Anson Road t/supplier`|
-|Edit|`edit INDEX \[n/NAME] \[p/PHONE] \[e/EMAIL] \[a/ADDRESS] \[t/TAG]...`|`edit 2 p/65559999 e/new@acme.com`|
-|Delete|`delete INDEX`|`delete 3`|
-|Filter|`filter [c/NAME] [a/ADDRESS] [p/PHONE] [e/EMAIL] [t/TAG]...`|`filter c/Dell t/important`|
-|Clear filter|`unfilter`|`unfilter`|
-|List all|`list`|`list`|
-|Clear all|`clear`|`clear`|
+| Command       | Format                                                                | Example                                                                   |
+|---------------|-----------------------------------------------------------------------|---------------------------------------------------------------------------|
+| Add           | `add n/NAME p/PHONE e/EMAIL a/ADDRESS \[t/TAG]...`                    | `add n/Acme Supplies p/62223333 e/hi@acme.com a/10 Anson Road t/supplier` |
+| Edit          | `edit INDEX \[n/NAME] \[p/PHONE] \[e/EMAIL] \[a/ADDRESS] \[t/TAG]...` | `edit 2 p/65559999 e/new@acme.com`                                        |
+| Delete        | `delete INDEX`                                                        | `delete 3`                                                                |
+| Filter        | `filter [c/NAME] [a/ADDRESS] [p/PHONE] [e/EMAIL] [t/TAG]...`          | `filter c/Dell t/important`                                               |
+| Clear filter  | `unfilter`                                                            | `unfilter`                                                                |
+| Sort by field | `sort [n/] [p/] [e/] [a/] [t/]`                                       | `sorts the companies by a specific field`                                 |
+| List all      | `list`                                                                | `list`                                                                    |
+| Clear all     | `clear`                                                               | `clear`                                                                   |
 
 **Company prefixes:**
 
@@ -173,12 +229,156 @@ Manage your network of business contacts. These commands are active when you're 
 |`e/`|Email contains keyword|
 |`t/`|Tag matches keyword|
 
-#### Notes
+> [!NOTE]
+> **Notes about the command format:**
+> - Words in `UPPER_CASE` are parameters to be supplied by the user.
+> - Items in square brackets such as `[t/TAG]` are optional.
+> - Parameters can be provided in any order unless otherwise stated.
 
-* Company names may contain only alphanumeric English characters and spaces.
-* Addresses currently support only standard English keyboard characters.
-* Tags may contain only alphanumeric English characters.
-* Specifying one or more `t/` fields in an `edit` command replaces all existing tags.
+---
+
+### Adding a company: `add`
+
+Adds a new business contact to the Company Book.
+
+Format:
+```
+add n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...
+```
+
+Examples:
+- `add n/Acme Supplies p/62223333 e/hi@acme.com a/10 Anson Road t/supplier`
+- `add n/Dell Singapore p/65551234 e/contact@dell.com a/1 Harbour Front Ave t/electronics t/important`
+
+> [!TIP]
+> A company can have any number of tags, or none at all.
+
+<details>
+<summary>What companies are considered duplicates?</summary>
+
+A company is considered a duplicate if it has the **same name and email** as an existing entry. Company names are case-insensitive for matching purposes.
+
+</details>
+
+For possible errors, refer to the [troubleshooting guide](#troubleshooting-add-company) below.
+
+---
+
+### Listing all companies: `list`
+
+Shows all companies in the Company Book.
+
+Format:
+```
+list
+```
+
+---
+
+### Editing a company: `edit`
+
+Edits an existing company entry by its index in the current list. Only the fields you specify will be updated.
+
+Format:
+```
+edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...
+```
+
+Examples:
+- `edit 2 p/65559999 e/new@acme.com` — updates phone and email
+- `edit 3 t/wholesale t/urgent` — replaces all existing tags
+
+> [!NOTE]
+> Specifying one or more `t/` fields replaces **all** existing tags — tags are not cumulative.
+
+<details>
+<summary>How do I remove all tags from a company?</summary>
+
+Specify `edit INDEX t/` without any tag value. This clears all existing tags from the entry.
+
+</details>
+
+For possible errors, refer to the [troubleshooting guide](#troubleshooting-edit-company) below.
+
+---
+
+### Filtering companies: `filter`
+
+Displays companies matching the given keyword(s) across one or more fields.
+
+Format:
+```
+filter [c/NAME] [a/ADDRESS] [p/PHONE] [e/EMAIL] [t/TAG]...
+```
+
+Examples:
+- `filter c/Dell t/important`
+- `filter a/Anson`
+
+> [!NOTE]
+> At least one prefix must be provided. Multiple prefixes narrow the results (AND logic).
+
+---
+
+### Clearing a filter: `unfilter`
+
+Resets the Company Book view to show all companies.
+
+Format:
+```
+unfilter
+```
+
+---
+
+### Deleting a company: `delete`
+
+Removes a company from the Company Book by its index.
+
+Format:
+```
+delete INDEX
+```
+
+Example:
+- `delete 3`
+
+> [!IMPORTANT]
+> Deleting a company automatically deletes its associated deliveries in the Delivery Book. 
+
+For possible errors, refer to the [troubleshooting guide](#troubleshooting-delete-company) below.
+
+---
+
+### Sorting all companies: `sort`
+
+Format:
+```
+sort [n/] [a/] [p/] [e/] [t/]
+```
+
+Displays companies in order, depending on which field selected
+
+Example:
+- `sort n/ t/`
+
+
+> [!NOTE]
+> The companies are sorted via lexicographical ordering of the fields selected. Doing `sort c/` will sort the companies via the alphabetical order of the names.
+
+---
+
+### Clearing all companies: `clear`
+
+Permanently removes all companies from the Company Book.
+
+Format:
+```
+clear
+```
+
+> [!CAUTION]
+> This action is permanent and cannot be undone. Use with caution.
 
 ---
 
@@ -186,25 +386,24 @@ Manage your network of business contacts. These commands are active when you're 
 
 Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from the Company Book.
 
-When adding or editing a delivery, the specified company must already exist in the Company Book.  
-If no matching company is found, the command will fail.  
-The delivery is linked directly to the existing company record instead of storing a separate company name string.
+> [!IMPORTANT]
+> The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
 
-|Command|Format|Example|
-|-|-|-|
-|Add|`add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...`|`add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`|
-|Delete|`delete INDEX`|`delete 2`|
-|Edit|`edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...`|`edit 1 d/2026-03-26 09:00 t/fragile`|
-|Mark delivered|`mark INDEX`|`mark 1`|
-|Unmark|`unmark INDEX`|`unmark 1`|
-|Select for routing|`select INDEX [INDEX]...`|`select 1 3 5`|
-|Clear selection|`select none`|`select none`|
-|Plan route|`route`|`route`|
-|Filter|`filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...`|`filter c/Dell p/Laptop t/fragile`|
-|Reset filter|`unfilter`|`unfilter`|
-List all|`list`|`list`|
-|Sort company by deadline|`sort c/COMPANY`|`sort c/Acme Supplies`|
-|Clear all|`clear`|`clear`|
+| Command               | Format                                                       |Example|
+|-----------------------|--------------------------------------------------------------|-|
+| Add                   | `add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...`              |`add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`|
+| Delete                | `delete INDEX`                                               |`delete 2`|
+| Edit                  | `edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...` |`edit 1 d/2026-03-26 09:00 t/fragile`|
+| Mark delivered        | `mark INDEX`                                                 |`mark 1`|
+| Unmark                | `unmark INDEX`                                               |`unmark 1`|
+| Select for routing    | `select INDEX [INDEX]...`                                    |`select 1 3 5`|
+| Clear selection       | `select none`                                                |`select none`|
+| Plan route            | `route`                                                      |`route`|
+| Filter                | `filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...`     |`filter c/Dell p/Laptop t/fragile`|
+| Reset filter          | `unfilter`                                                   |`unfilter`|
+ List all              | `list`                                                       |`list`|
+| Sort company by field | `sort [p/] [c/] [a/] [d/] [t/]`                              |`sort c/`|
+| Clear all             | `clear`                                                      |`clear`|
 
 **Delivery prefixes:**
 
@@ -215,35 +414,446 @@ List all|`list`|`list`|
 |`d/`|Deadline (`yyyy-MM-dd HH:mm`)|Yes for `add`, optional for `edit`|
 |`t/`|Tag (repeatable)|No|
 
-#### Notes
-
-* The company specified in `c/COMPANY` must already exist in the Company Book.
-* Company matching is case-insensitive.
-* Deadlines must follow the format `yyyy-MM-dd HH:mm`.
-* A duplicate delivery cannot be added.
-
-Deliveries are sorted by deadline in ascending order, so the earliest deadline appears first.
-**Notes on specific commands:**
-
-- **`list`** — shows all deliveries and re-sorts the entire list by deadline (earliest first). Use this to reset after a `find` or `sort` filter.
-- **`sort c/COMPANY`** — filters to a specific company's deliveries and sorts them by deadline. The company name must match exactly (case-insensitive). Use `list` to return to the full view.
-- **`select INDEX [INDEX]...`** — checks the deliveries at those indices for route planning. Repeating an index has no effect. Use `select none` to clear the entire selection. Individual deliveries can also be checked/unchecked via their checkboxes in the list.
-- **`route`** — opens the Routes tab and plans the optimised route for all currently selected deliveries. Requires at least one delivery to be selected. Equivalent to clicking **Plan Today's Route**.
+> [!NOTE]
+> **Notes about the command format:**
+> - Company matching is case-insensitive.
+> - Deadlines must follow the format `yyyy-MM-dd HH:mm`.
+> - A duplicate delivery cannot be added.
+> - Deliveries are sorted by deadline in ascending order, so the earliest deadline appears first.
 
 ---
 
-## How Storage Works
+### Adding a delivery: `add`
 
-* All data saves automatically after every command — no manual save needed
-* Company records live in `addressbook.json`
-* Delivery records live in `deliverybook.json`
-* Both files are created in the same folder as the jar on first launch
-* To back up, copy both JSON files somewhere safe
-* To transfer to another machine, move the jar and both JSON files together
+Logs a new outgoing delivery.
+
+Format:
+```
+add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...
+```
+
+Examples:
+- `add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`
+- `add p/Laptop c/Dell Singapore d/2026-04-01 09:00`
+
+> [!NOTE]
+> Deadlines must follow the format `yyyy-MM-dd HH:mm`. Company matching is case-insensitive.
+
+<details>
+<summary>What deliveries are considered duplicates?</summary>
+
+A delivery is a duplicate if it has the **same product, company, and deadline** as an existing delivery. Duplicate deliveries cannot be added.
+
+</details>
+
+For possible errors, refer to the [troubleshooting guide](#troubleshooting-add-delivery) below.
+
+---
+### Listing all deliveries: `list`
+
+Shows all deliveries and re-sorts the list by deadline (earliest first).
+
+Format:
+```
+list
+```
+
+> [!TIP]
+> Use `list` to reset the view after a `sort` command.
 
 ---
 
-## Built With
+### Editing a delivery: `edit`
+
+Edits an existing delivery by its index. Only the fields you specify will be updated.
+
+Format:
+```
+edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...
+```
+
+Examples:
+- `edit 1 d/2026-03-26 09:00 t/fragile`
+- `edit 2 c/Dell Singapore`
+
+For possible errors, refer to the [troubleshooting guide](#troubleshooting-edit-delivery) below.
+
+---
+
+### Marking a delivery as delivered: `mark`
+
+Marks a delivery as completed. A `delivered` tag will appear on the entry.
+
+Format:
+```
+mark INDEX
+```
+
+Example:
+- `mark 1`
+
+---
+
+### Unmarking a delivered delivery: `unmark`
+
+Removes the delivered status from a delivery.
+
+Format:
+```
+unmark INDEX
+```
+
+Example:
+- `unmark 1`
+
+---
+
+### Selecting deliveries for routing: `select`
+
+Checks one or more deliveries to include in route planning.
+
+Format:
+```
+select INDEX [INDEX]...
+select none
+```
+
+Examples:
+- `select 1 3 5` — selects deliveries at indices 1, 3, and 5
+- `select none` — clears all selections
+
+> [!NOTE]
+> Individual deliveries can also be checked or unchecked via their checkboxes in the list. Repeating an index in the same command has no effect.
+
+---
+
+### Planning a route: `route`
+
+Opens the Routes tab and plans the optimised delivery route for all currently selected deliveries.
+
+Format:
+```
+route
+```
+
+> [!IMPORTANT]
+> At least one delivery must be selected before running `route`. Equivalent to clicking **Plan Today's Route** in the UI after selecting deliveries.
+
+---
+
+### Sorting deliveries by company: `sort`
+
+Filters to a specific company's deliveries and sorts them by deadline.
+
+Format:
+```
+sort [p/] [c/] [d/] [t/]
+```
+
+Example:
+- `sort c/`
+
+> [!NOTE]
+> The deliveries are sorted via lexicographical ordering of the fields selected. Doing `sort c/` will sort the deliveries via the alphabetical order of the company's name.
+
+---
+
+### Filtering deliveries: `filter`
+
+Displays deliveries matching the given keyword(s).
+
+Format:
+```
+filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...
+```
+
+Example:
+- `filter c/Dell p/Laptop t/fragile`
+
+---
+
+### Resetting a filter: `unfilter`
+
+Resets the Delivery Book view to show all deliveries.
+
+Format:
+```
+unfilter
+```
+
+---
+### Deleting a delivery: `delete`
+
+Removes a delivery by its index.
+
+Format:
+```
+delete INDEX
+```
+
+Example:
+- `delete 2`
+
+For possible errors, refer to the [troubleshooting guide](#troubleshooting-delete-delivery) below.
+
+---
+
+### Clearing all deliveries: `clear`
+
+Permanently removes all deliveries from the Delivery Book.
+
+Format:
+```
+clear
+```
+
+> [!CAUTION]
+> This action is permanent and cannot be undone.
+
+---
+
+# FAQ
+
+<details>
+<summary>How do I back up my data?</summary>
+
+- Locate the folder where MyCelia's `.jar` file is stored.
+- Copy both `addressbook.json` and `deliverybook.json` to a safe location of your choice.
+
+Both files contain all your company and delivery data respectively.
+
+</details>
+
+<details>
+<summary>How do I edit my data directly?</summary>
+
+- Locate the folder where MyCelia's `.jar` file is stored.
+- Open `addressbook.json` or `deliverybook.json` in a text editor.
+
+> [!WARNING]
+> Follow the file format carefully. Files that do not conform to the required format will be considered invalid and MyCelia may not load them.
+
+`addressbook.json` — stores company details:
+
+```json
+{
+  "persons": [ {
+    "name": "NAME",
+    "phone": "PHONE",
+    "email": "EMAIL",
+    "address": "ADDRESS",
+    "tags": [ "TAGS" ]
+  } ]
+}
+```
+
+`deliverybook.json` — stores delivery details:
+
+```json
+{
+  "deliveries": [ {
+    "product": "PRODUCT",
+    "company": "COMPANY",
+    "deadline": "yyyy-MM-dd HH:mm",
+    "isDelivered": false,
+    "tags": [ "TAGS" ]
+  } ]
+}
+```
+
+</details>
+
+<details>
+<summary>I edited the data file directly and MyCelia has some missing data. What should I do?</summary>
+
+Try the following steps:
+
+1. **Restore from backup** — if you copied the JSON files before editing, replace the broken files with your backup copies.
+2. **Fix it** — if no backup exists, look through the json files and correct any fields which does not fit the format. Reboot MyCelia after fixing it.
+
+</details>
+
+<details>
+<summary>How do I transfer my data to another computer?</summary>
+
+1. [Install MyCelia](#quick-start) on the new computer.
+2. On your old computer, locate the folder containing the `.jar` file.
+3. Copy `addressbook.json` and `deliverybook.json` to an external drive or cloud storage.
+4. On the new computer, replace the newly created JSON files with the ones from your old computer.
+5. Relaunch MyCelia — your data should appear exactly as before.
+
+</details>
+
+<details>
+<summary>Why did my route planning fail to assign some deliveries?</summary>
+
+Route planning requires at least one delivery to be selected. Use `select INDEX` or check the delivery's checkbox in the list, then run `route` again.
+
+Also ensure your origin address has been set with `set a/ADDRESS`.
+
+</details>
+
+<details>
+<summary>Why did is my route planning taking so long?</summary>
+
+Route planning requires internet connection. If you have that it is taking too long, please switch to a better connection.
+
+</details>
+
+<details>
+<summary>Why does adding a delivery fail even though the company exists?</summary>
+
+Company matching is case-insensitive but must be an exact name match — no partial matches. Make sure the name in `c/COMPANY` matches the name stored in the Company Book exactly.
+
+Use `list` in the Company Book to verify the exact company name.
+
+</details>
+
+---
+
+# Troubleshooting
+
+> [!NOTE]
+> **Error** messages in red mean the command **did not succeed**.
+
+---
+
+## Global Commands
+
+### Troubleshooting `set`
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| No address prefix provided | `Invalid command format! ...` | Use the full format: `set a/ADDRESS`. |
+| Address field is empty | `Address cannot be empty.` | Provide a non-empty address after `a/`. |
+
+---
+
+## Company Book
+
+### Troubleshooting `add` company
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| Missing one or more required prefixes (`n/`, `p/`, `e/`, `a/`) | `Invalid command format! ...` | Include all required fields: `add n/... p/... e/... a/...`. |
+| Company with the same name and email already exists | `This company already exists in the Company Book.` | Check for an existing entry with `list` or `filter`. |
+| Invalid email format | `Email address must be valid.` | Ensure the email follows the format `user@domain.com`. |
+| Company name contains non-alphanumeric characters | `Company names may only contain alphanumeric characters and spaces.` | Remove any special characters from the name. |
+
+---
+
+### Troubleshooting `edit` company
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| No fields specified to edit | `At least one field to edit must be provided.` | Include at least one of `n/`, `p/`, `e/`, `a/`, or `t/`. |
+| Index is out of range | `The company index provided is invalid.` | Use `list` to check the valid index range. |
+| Edited name or email matches an existing company | `This company already exists in the Company Book.` | Choose a different name or email. |
+
+---
+
+### Troubleshooting `delete` company
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| No index provided | `Invalid command format! ...` | Provide the index: `delete INDEX`. |
+| Index is out of range | `The company index provided is invalid.` | Use `list` to check the valid index range. |
+
+---
+
+### Troubleshooting `filter` (Company Book)
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| No prefixes provided | `Invalid command format! ...` | Provide at least one filter prefix, e.g. `filter c/Dell`. |
+
+---
+
+### Troubleshooting `sort`
+
+| Scenario       | Message shown | How to fix                            |
+|----------------|--------------|---------------------------------------|
+| Invalid prefix | `Invalid command format! ...` | Use a valid prefix format: `sort n/`. |
+
+---
+
+## Delivery Book
+
+### Troubleshooting `add` delivery
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| Missing one or more required prefixes (`p/`, `c/`, `d/`) | `Invalid command format! ...` | Include all required fields: `add p/... c/... d/...`. |
+| Company does not exist in the Company Book | `Company not found in the Company Book.` | Add the company first using `add` in the Company Book. |
+| Deadline is in the wrong format | `Deadline must follow the format yyyy-MM-dd HH:mm.` | Use the correct format, e.g. `d/2026-03-25 14:30`. |
+| Duplicate delivery already exists | `This delivery already exists in the Delivery Book.` | Check for an existing entry with `list` or `filter`. |
+
+---
+
+### Troubleshooting `edit` delivery
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| No fields specified to edit | `At least one field to edit must be provided.` | Include at least one of `p/`, `c/`, `d/`, or `t/`. |
+| Index is out of range | `The delivery index provided is invalid.` | Use `list` to check the valid index range. |
+| Company specified does not exist | `Company not found in the Company Book.` | Ensure the company exists before linking it to a delivery. |
+| Deadline format is invalid | `Deadline must follow the format yyyy-MM-dd HH:mm.` | Use the correct format, e.g. `d/2026-04-01 09:00`. |
+
+---
+
+### Troubleshooting `delete` delivery
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| No index provided | `Invalid command format! ...` | Provide the index: `delete INDEX`. |
+| Index is out of range | `The delivery index provided is invalid.` | Use `list` to check the valid index range. |
+
+---
+
+### Troubleshooting `mark` / `unmark`
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| No index provided | `Invalid command format! ...` | Provide the index: `mark INDEX` or `unmark INDEX`. |
+| Index is out of range | `The delivery index provided is invalid.` | Use `list` to check the valid index range. |
+| Delivery is already marked as delivered | `This delivery is already marked as delivered.` | Use `unmark INDEX` if you need to reverse this. |
+| Delivery is not marked as delivered | `This delivery has not been marked as delivered.` | Use `mark INDEX` first. |
+
+---
+
+### Troubleshooting `select`
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| No index or `none` provided | `Invalid command format! ...` | Use `select INDEX [INDEX]...` or `select none`. |
+| One or more indices are out of range | `The delivery index provided is invalid.` | Use `list` to check the valid index range. |
+
+---
+
+### Troubleshooting `route`
+
+| Scenario                       | Message shown | How to fix                                                                 |
+|--------------------------------|--------------|----------------------------------------------------------------------------|
+| Overdue delivery selected      | `Overdue Deliveries, please update the deadline...` | Do not select the overdue delivery or edit it to have a different deadline |
+
+---
+
+### Troubleshooting `sort`
+
+| Scenario                | Message shown | How to fix                            |
+|-------------------------|--------------|---------------------------------------|
+| Invalid prefix provided | `Invalid command format! ...` | Use a valid prefix format: `sort c/`. |
+
+---
+
+### Troubleshooting `filter` (Delivery Book)
+
+| Scenario | Message shown | How to fix |
+|----------|--------------|------------|
+| No prefixes provided | `Invalid command format! ...` | Provide at least one filter prefix, e.g. `filter c/Dell`. |
+| Deadline filter is in the wrong format | `Deadline must follow the format yyyy-MM-dd HH:mm.` | Use the correct format, e.g. `d/2026-03-25 14:30`. |
+
+# Built With
 
 * Java 17
 * JavaFX

@@ -109,7 +109,9 @@ The Company Book view shows all your business contacts. Each entry displays the 
 
 <img src="images/delivery-book.png" width="600" alt="Delivery Book" />
 
-The Delivery Book view shows all logged deliveries. Deliveries marked as delivered will display a `delivered` tag. You can check individual deliveries using their checkboxes to select them for route planning. A **Plan Today's Route** button at the top of the list becomes active when at least one delivery is selected — clicking it opens the Routes tab and plans the route. Below is the location the data is saved.
+The Delivery Book view shows all logged deliveries. Deliveries marked as delivered will display a `delivered` tag and appear green. On the other hand, overdue deliveries will appear red.
+
+You can check individual deliveries using their checkboxes to select them for route planning. A **Plan Today's Route** button at the top of the list becomes active when at least one delivery is selected — clicking it opens the Routes tab and plans the route.
 
 ### Routes View
 
@@ -270,7 +272,7 @@ A company can have any number of tags, or none at all.
 <details>
 <summary>What companies are considered duplicates?</summary>
 
-<p>A company is considered a duplicate if it has the <strong>same name and email</strong> as an existing entry. Company names are case-insensitive for matching purposes.</p>
+<p>A company is considered a duplicate if it has the <strong>same name, phone, email and address</strong> as an existing entry. Company names are case-insensitive for matching purposes.</p>
 
 </details>
 
@@ -385,7 +387,7 @@ Example:
 
 <div class="note" markdown="1">
 📝 **Note:**
-> The companies are sorted via lexicographical ordering of the fields selected. Doing `sort c/` will sort the companies via the alphabetical order of the names.
+The companies are sorted via lexicographical ordering of the fields selected. Doing `sort n/` will sort the companies via the alphabetical order of the names.
 </div>
 
 ---
@@ -417,21 +419,21 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
 </div>
 
-| Command               | Format                                                       |Example|
-|-----------------------|--------------------------------------------------------------|-|
-| Add                   | `add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...`              |`add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`|
-| Delete                | `delete INDEX`                                               |`delete 2`|
-| Edit                  | `edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...` |`edit 1 d/2026-03-26 09:00 t/fragile`|
-| Mark delivered        | `mark INDEX`                                                 |`mark 1`|
-| Unmark                | `unmark INDEX`                                               |`unmark 1`|
-| Select for routing    | `select INDEX [INDEX]...`                                    |`select 1 3 5`|
-| Clear selection       | `select none`                                                |`select none`|
-| Plan route            | `route`                                                      |`route`|
-| Filter                | `filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...`     |`filter c/Dell p/Laptop t/fragile`|
-| Reset filter          | `unfilter`                                                   |`unfilter`|
- List all              | `list`                                                       |`list`|
-| Sort company by field | `sort [p/] [c/] [a/] [d/] [t/]`                              |`sort c/`|
-| Clear all             | `clear`                                                      |`clear`|
+| Command                | Format                                                       |Example|
+|------------------------|--------------------------------------------------------------|-|
+| Add                    | `add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...`              |`add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`|
+| Delete                 | `delete INDEX`                                               |`delete 2`|
+| Edit                   | `edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...` |`edit 1 d/2026-03-26 09:00 t/fragile`|
+| Mark delivered         | `mark INDEX`                                                 |`mark 1`|
+| Unmark                 | `unmark INDEX`                                               |`unmark 1`|
+| Select for routing     | `select INDEX [INDEX]...`                                    |`select 1 3 5`|
+| Clear selection        | `select none`                                                |`select none`|
+| Plan route             | `route`                                                      |`route`|
+| Filter                 | `filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...`     |`filter c/Dell p/Laptop t/fragile`|
+| Reset filter           | `unfilter`                                                   |`unfilter`|
+ List all               | `list`                                                       |`list`|
+| Sort delivery by field | `sort [p/] [c/] [a/] [d/] [t/]`                              |`sort c/`|
+| Clear all              | `clear`                                                      |`clear`|
 
 **Delivery prefixes:**
 
@@ -448,7 +450,6 @@ The company specified in `c/COMPANY` must already exist in the Company Book. If 
 - Company matching is case-insensitive.
 - Deadlines must follow the format `yyyy-MM-dd HH:mm`.
 - A duplicate delivery cannot be added.
-- Deliveries are sorted by deadline in ascending order, so the earliest deadline appears first.
 </div>
 
 ---

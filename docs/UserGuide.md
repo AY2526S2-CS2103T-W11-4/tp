@@ -576,6 +576,8 @@ route
 <div class="warning" markdown="1"> 
 ⚠️ **Important:**
 
+Please ensure you have a stable internet connection before using this feature. The process might take a while.
+
 At least one delivery must be selected before running `route`. Equivalent to clicking **Plan Today's Route** in the UI after selecting deliveries.
 </div>
 

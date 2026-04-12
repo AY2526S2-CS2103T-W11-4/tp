@@ -134,11 +134,11 @@ The Routes view displays an interactive map with the optimised route for selecte
 
 ---
 
-## Global Commands
+### Global Commands
 
 These commands work regardless of which book you are currently in.
 
-### Toggling between books: `switch`
+#### Toggling between books: `switch`
 
 Switches between the Company Book and the Delivery Book.
 
@@ -152,7 +152,7 @@ switch
 
 ---
 
-### Setting the delivery origin address: `set`
+#### Setting the delivery origin address: `set`
 
 Sets the starting point used for route planning.
 
@@ -169,7 +169,7 @@ Example:
 
 ---
 
-### Viewing help: `help`
+#### Viewing help: `help`
 
 Opens the help window, which links to this user guide.
 
@@ -183,7 +183,7 @@ help
 
 ---
 
-### Exiting the app: `exit`
+#### Exiting the app: `exit`
 
 Saves all data and closes MyCelia.
 
@@ -237,7 +237,7 @@ Manage your network of business contacts. These commands are active when you're 
 
 ---
 
-### Adding a company: `add`
+#### Adding a company: `add`
 
 Adds a new business contact to the Company Book.
 
@@ -264,7 +264,7 @@ For possible errors, refer to the [troubleshooting guide](#troubleshooting-add-c
 
 ---
 
-### Listing all companies: `list`
+#### Listing all companies: `list`
 
 Shows all companies in the Company Book.
 
@@ -275,7 +275,7 @@ list
 
 ---
 
-### Editing a company: `edit`
+#### Editing a company: `edit`
 
 Edits an existing company entry by its index in the current list. Only the fields you specify will be updated.
 
@@ -302,7 +302,7 @@ For possible errors, refer to the [troubleshooting guide](#troubleshooting-edit-
 
 ---
 
-### Filtering companies: `filter`
+#### Filtering companies: `filter`
 
 Displays companies matching the given keyword(s) across one or more fields.
 
@@ -320,7 +320,7 @@ Examples:
 
 ---
 
-### Clearing a filter: `unfilter`
+#### Clearing a filter: `unfilter`
 
 Resets the Company Book view to show all companies.
 
@@ -331,7 +331,7 @@ unfilter
 
 ---
 
-### Deleting a company: `delete`
+#### Deleting a company: `delete`
 
 Removes a company from the Company Book by its index.
 
@@ -350,7 +350,7 @@ For possible errors, refer to the [troubleshooting guide](#troubleshooting-delet
 
 ---
 
-### Sorting all companies: `sort`
+#### Sorting all companies: `sort`
 
 Format:
 ```
@@ -368,7 +368,7 @@ Example:
 
 ---
 
-### Clearing all companies: `clear`
+#### Clearing all companies: `clear`
 
 Permanently removes all companies from the Company Book.
 
@@ -423,7 +423,7 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 
 ---
 
-### Adding a delivery: `add`
+#### Adding a delivery: `add`
 
 Logs a new outgoing delivery.
 
@@ -449,7 +449,7 @@ A delivery is a duplicate if it has the **same product, company, and deadline** 
 For possible errors, refer to the [troubleshooting guide](#troubleshooting-add-delivery) below.
 
 ---
-### Listing all deliveries: `list`
+#### Listing all deliveries: `list`
 
 Shows all deliveries and re-sorts the list by deadline (earliest first).
 
@@ -463,7 +463,7 @@ list
 
 ---
 
-### Editing a delivery: `edit`
+#### Editing a delivery: `edit`
 
 Edits an existing delivery by its index. Only the fields you specify will be updated.
 
@@ -480,7 +480,7 @@ For possible errors, refer to the [troubleshooting guide](#troubleshooting-edit-
 
 ---
 
-### Marking a delivery as delivered: `mark`
+#### Marking a delivery as delivered: `mark`
 
 Marks a delivery as completed. A `delivered` tag will appear on the entry.
 
@@ -494,7 +494,7 @@ Example:
 
 ---
 
-### Unmarking a delivered delivery: `unmark`
+#### Unmarking a delivered delivery: `unmark`
 
 Removes the delivered status from a delivery.
 
@@ -508,7 +508,7 @@ Example:
 
 ---
 
-### Selecting deliveries for routing: `select`
+#### Selecting deliveries for routing: `select`
 
 Checks one or more deliveries to include in route planning.
 
@@ -527,7 +527,7 @@ Examples:
 
 ---
 
-### Planning a route: `route`
+#### Planning a route: `route`
 
 Opens the Routes tab and plans the optimised delivery route for all currently selected deliveries.
 
@@ -541,7 +541,7 @@ route
 
 ---
 
-### Sorting deliveries by company: `sort`
+#### Sorting deliveries by company: `sort`
 
 Filters to a specific company's deliveries and sorts them by deadline.
 
@@ -558,7 +558,7 @@ Example:
 
 ---
 
-### Filtering deliveries: `filter`
+#### Filtering deliveries: `filter`
 
 Displays deliveries matching the given keyword(s).
 
@@ -572,7 +572,7 @@ Example:
 
 ---
 
-### Resetting a filter: `unfilter`
+#### Resetting a filter: `unfilter`
 
 Resets the Delivery Book view to show all deliveries.
 
@@ -582,7 +582,7 @@ unfilter
 ```
 
 ---
-### Deleting a delivery: `delete`
+#### Deleting a delivery: `delete`
 
 Removes a delivery by its index.
 
@@ -598,7 +598,7 @@ For possible errors, refer to the [troubleshooting guide](#troubleshooting-delet
 
 ---
 
-### Clearing all deliveries: `clear`
+#### Clearing all deliveries: `clear`
 
 Permanently removes all deliveries from the Delivery Book.
 
@@ -612,7 +612,7 @@ clear
 
 ---
 
-# FAQ
+## FAQ
 
 <details>
 <summary>How do I back up my data?</summary>
@@ -711,16 +711,16 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-# Troubleshooting
+## Troubleshooting
 
 > [!NOTE]
 > **Error** messages in red mean the command **did not succeed**.
 
 ---
 
-## Global Commands
+### Global Commands
 
-### Troubleshooting `set`
+#### Troubleshooting `set`
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -729,9 +729,9 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-## Company Book
+### Company Book
 
-### Troubleshooting `add` company
+#### Troubleshooting `add` company
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -742,7 +742,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `edit` company
+#### Troubleshooting `edit` company
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -752,7 +752,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `delete` company
+#### Troubleshooting `delete` company
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -761,7 +761,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `filter` (Company Book)
+#### Troubleshooting `filter` (Company Book)
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -769,7 +769,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `sort`
+#### Troubleshooting `sort` (Company Book)
 
 | Scenario       | Message shown | How to fix                            |
 |----------------|--------------|---------------------------------------|
@@ -777,9 +777,9 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-## Delivery Book
+### Delivery Book
 
-### Troubleshooting `add` delivery
+#### Troubleshooting `add` delivery
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -790,7 +790,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `edit` delivery
+#### Troubleshooting `edit` delivery
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -801,7 +801,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `delete` delivery
+#### Troubleshooting `delete` delivery
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -810,7 +810,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `mark` / `unmark`
+#### Troubleshooting `mark` / `unmark`
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -821,7 +821,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `select`
+#### Troubleshooting `select`
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
@@ -830,7 +830,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `route`
+#### Troubleshooting `route`
 
 | Scenario                       | Message shown | How to fix                                                                 |
 |--------------------------------|--------------|----------------------------------------------------------------------------|
@@ -838,7 +838,7 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `sort`
+#### Troubleshooting `sort` (Delivery Book)
 
 | Scenario                | Message shown | How to fix                            |
 |-------------------------|--------------|---------------------------------------|
@@ -846,14 +846,14 @@ Use `list` in the Company Book to verify the exact company name.
 
 ---
 
-### Troubleshooting `filter` (Delivery Book)
+#### Troubleshooting `filter` (Delivery Book)
 
 | Scenario | Message shown | How to fix |
 |----------|--------------|------------|
 | No prefixes provided | `Invalid command format! ...` | Provide at least one filter prefix, e.g. `filter c/Dell`. |
 | Deadline filter is in the wrong format | `Deadline must follow the format yyyy-MM-dd HH:mm.` | Use the correct format, e.g. `d/2026-03-25 14:30`. |
 
-# Built With
+## Built With
 
 * Java 17
 * JavaFX

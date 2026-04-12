@@ -239,11 +239,12 @@ Manage your network of business contacts. These commands are active when you're 
 |`e/`|Email contains keyword|
 |`t/`|Tag matches keyword|
 
-> [!NOTE]
-> **Notes about the command format:**
-> - Words in `UPPER_CASE` are parameters to be supplied by the user.
-> - Items in square brackets such as `[t/TAG]` are optional.
-> - Parameters can be provided in any order unless otherwise stated.
+<div class="note" markdown="1">
+**📝Notes about the command format:**
+- Words in `UPPER_CASE` are parameters to be supplied by the user.
+- Items in square brackets such as `[t/TAG]` are optional.
+- Parameters can be provided in any order unless otherwise stated.
+</div>
 
 ---
 
@@ -301,8 +302,11 @@ Examples:
 - `edit 2 p/65559999 e/new@acme.com` — updates phone and email
 - `edit 3 t/wholesale t/urgent` — replaces all existing tags
 
-> [!NOTE]
-> Specifying one or more `t/` fields replaces **all** existing tags — tags are not cumulative.
+<div class="note" markdown="1">
+📝 **Note:**
+
+Specifying one or more `t/` fields replaces **all** existing tags — tags are not cumulative.
+</div>
 
 <details markdown="1">
 <summary markdown="1">How do I remove all tags from a company?</summary>
@@ -328,9 +332,11 @@ Examples:
 - `filter c/Dell t/important`
 - `filter a/Anson`
 
-> [!NOTE]
-> At least one prefix must be provided. Multiple prefixes narrow the results (AND logic).
+<div class="note" markdown="1">
+**📝 Note:**
 
+At least one prefix must be provided. Multiple prefixes narrow the results (AND logic).
+</div>
 ---
 
 #### Clearing a filter: `unfilter`
@@ -376,8 +382,10 @@ Example:
 - `sort n/ t/`
 
 
-> [!NOTE]
+<div class="note" markdown="1">
+📝 **Note:**
 > The companies are sorted via lexicographical ordering of the fields selected. Doing `sort c/` will sort the companies via the alphabetical order of the names.
+</div>
 
 ---
 
@@ -390,8 +398,11 @@ Format:
 clear
 ```
 
-> [!CAUTION]
-> This action is permanent and cannot be undone. Use with caution.
+<div class="warning" markdown="1">
+**⚠️ Important:**
+
+This action is permanent and cannot be undone. Use with caution.
+</div>
 
 ---
 
@@ -430,12 +441,14 @@ The company specified in `c/COMPANY` must already exist in the Company Book. If 
 |`d/`|Deadline (`yyyy-MM-dd HH:mm`)|Yes for `add`, optional for `edit`|
 |`t/`|Tag (repeatable)|No|
 
-> [!NOTE]
-> **Notes about the command format:**
-> - Company matching is case-insensitive.
-> - Deadlines must follow the format `yyyy-MM-dd HH:mm`.
-> - A duplicate delivery cannot be added.
-> - Deliveries are sorted by deadline in ascending order, so the earliest deadline appears first.
+<div class="note" markdown="1">
+📝 **Notes about the command format:**
+
+- Company matching is case-insensitive.
+- Deadlines must follow the format `yyyy-MM-dd HH:mm`.
+- A duplicate delivery cannot be added.
+- Deliveries are sorted by deadline in ascending order, so the earliest deadline appears first.
+</div>
 
 ---
 
@@ -452,8 +465,11 @@ Examples:
 - `add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`
 - `add p/Laptop c/Dell Singapore d/2026-04-01 09:00`
 
-> [!NOTE]
-> Deadlines must follow the format `yyyy-MM-dd HH:mm`. Company matching is case-insensitive.
+<div class="note" markdown="1">
+📝 **Note:**
+
+Deadlines must follow the format `yyyy-MM-dd HH:mm`. Company matching is case-insensitive.
+</div>
 
 <details markdown="1">
 <summary markdown="1">What deliveries are considered duplicates?</summary>
@@ -540,8 +556,11 @@ Examples:
 - `select 1 3 5` — selects deliveries at indices 1, 3, and 5
 - `select none` — clears all selections
 
-> [!NOTE]
-> Individual deliveries can also be checked or unchecked via their checkboxes in the list. Repeating an index in the same command has no effect.
+<div class="note" markdown="1">
+📝 **Note:**
+
+Individual deliveries can also be checked or unchecked via their checkboxes in the list. Repeating an index in the same command has no effect.
+</div>
 
 ---
 
@@ -574,8 +593,11 @@ sort [p/] [c/] [d/] [t/]
 Example:
 - `sort c/`
 
-> [!NOTE]
-> The deliveries are sorted via lexicographical ordering of the fields selected. Doing `sort c/` will sort the deliveries via the alphabetical order of the company's name.
+<div class="note" markdown="1">
+📝 **Note:**
+
+The deliveries are sorted via lexicographical ordering of the fields selected. Doing `sort c/` will sort the deliveries via the alphabetical order of the company's name.
+</div>
 
 ---
 
@@ -628,36 +650,38 @@ Format:
 clear
 ```
 
-> [!CAUTION]
+<div class="warning" markdown="1">
+**⚠️ Important:**
+
 > This action is permanent and cannot be undone.
+</div>
 
 ---
 
 ## FAQ
 
-<details markdown="1">
-<summary markdown="1">How do I back up my data?</summary>
-
-- Locate the folder where MyCelia's `.jar` file is stored.
-- Copy both `addressbook.json` and `deliverybook.json` to a safe location of your choice.
-
-Both files contain all your company and delivery data respectively.
-
+<details>
+<summary>How do I back up my data?</summary>
+<ul>
+<li>Locate the folder where MyCelia's <code>.jar</code> file is stored.</li>
+<li>Copy both <code>addressbook.json</code> and <code>deliverybook.json</code> to a safe location of your choice.</li>
+</ul>
+<p>Both files contain all your company and delivery data respectively.</p>
 </details>
 
-<details markdown="1">
-<summary markdown="1">How do I edit my data directly?</summary>
+<details>
+<summary>How do I edit my data directly?</summary>
+<ul>
+<li>Locate the folder where MyCelia's <code>.jar</code> file is stored.</li>
+<li>Open <code>addressbook.json</code> or <code>deliverybook.json</code> in a text editor.</li>
+</ul>
+<div class="warning" markdown="1">
+⚠️ **Warning**
 
-- Locate the folder where MyCelia's `.jar` file is stored.
-- Open `addressbook.json` or `deliverybook.json` in a text editor.
-
-> [!WARNING]
-> Follow the file format carefully. Files that do not conform to the required format will be considered invalid and MyCelia may not load them.
-
-`addressbook.json` — stores company details:
-
-```json
-{
+Follow the file format carefully. Files that do not conform to the required format will be considered invalid and MyCelia may not load them.
+</div>
+<p><code>addressbook.json</code> — stores company details:</p>
+<pre><code class="language-json">{
   "persons": [ {
     "name": "NAME",
     "phone": "PHONE",
@@ -665,13 +689,9 @@ Both files contain all your company and delivery data respectively.
     "address": "ADDRESS",
     "tags": [ "TAGS" ]
   } ]
-}
-```
-
-`deliverybook.json` — stores delivery details:
-
-```json
-{
+}</code></pre>
+<p><code>deliverybook.json</code> — stores delivery details:</p>
+<pre><code class="language-json">{
   "deliveries": [ {
     "product": "PRODUCT",
     "company": "COMPANY",
@@ -679,63 +699,55 @@ Both files contain all your company and delivery data respectively.
     "isDelivered": false,
     "tags": [ "TAGS" ]
   } ]
-}
-```
-
+}</code></pre>
 </details>
 
-<details markdown="1">
-<summary markdown="1">I edited the data file directly and MyCelia has some missing data. What should I do?</summary>
-
-Try the following steps:
-
-1. **Restore from backup** — if you copied the JSON files before editing, replace the broken files with your backup copies.
-2. **Fix it** — if no backup exists, look through the json files and correct any fields which does not fit the format. Reboot MyCelia after fixing it.
-
+<details>
+<summary>I edited the data file directly and MyCelia has some missing data. What should I do?</summary>
+<p>Try the following steps:</p>
+<ol>
+<li><strong>Restore from backup</strong> — if you copied the JSON files before editing, replace the broken files with your backup copies.</li>
+<li><strong>Fix it</strong> — if no backup exists, look through the JSON files and correct any fields which do not fit the format. Reboot MyCelia after fixing it.</li>
+</ol>
 </details>
 
-<details markdown="1">
-<summary markdown="1">How do I transfer my data to another computer?</summary>
-
-1. [Install MyCelia](#quick-start) on the new computer.
-2. On your old computer, locate the folder containing the `.jar` file.
-3. Copy `addressbook.json` and `deliverybook.json` to an external drive or cloud storage.
-4. On the new computer, replace the newly created JSON files with the ones from your old computer.
-5. Relaunch MyCelia — your data should appear exactly as before.
-
+<details>
+<summary>How do I transfer my data to another computer?</summary>
+<ol>
+<li>Install MyCelia on the new computer.</li>
+<li>On your old computer, locate the folder containing the <code>.jar</code> file.</li>
+<li>Copy <code>addressbook.json</code> and <code>deliverybook.json</code> to an external drive or cloud storage.</li>
+<li>On the new computer, replace the newly created JSON files with the ones from your old computer.</li>
+<li>Relaunch MyCelia — your data should appear exactly as before.</li>
+</ol>
 </details>
 
-<details markdown="1">
-<summary markdown="1">Why did my route planning fail to assign some deliveries?</summary>
-
-Route planning requires at least one delivery to be selected. Use `select INDEX` or check the delivery's checkbox in the list, then run `route` again.
-
-Also ensure your origin address has been set with `set a/ADDRESS`.
-
+<details>
+<summary>Why did my route planning fail to assign some deliveries?</summary>
+<p>Route planning requires at least one delivery to be selected. Use <code>select INDEX</code> or check the delivery's checkbox in the list, then run <code>route</code> again.</p>
+<p>Also ensure your origin address has been set with <code>set a/ADDRESS</code>.</p>
 </details>
 
-<details markdown="1">
-<summary markdown="1">Why did is my route planning taking so long?</summary>
-
-Route planning requires internet connection. If you have that it is taking too long, please switch to a better connection.
-
+<details>
+<summary>Why is my route planning taking so long?</summary>
+<p>Route planning requires an internet connection. If it is taking too long, please switch to a better connection.</p>
 </details>
 
-<details markdown="1">
-<summary markdown="1">Why does adding a delivery fail even though the company exists?</summary>
-
-Company matching is case-insensitive but must be an exact name match — no partial matches. Make sure the name in `c/COMPANY` matches the name stored in the Company Book exactly.
-
-Use `list` in the Company Book to verify the exact company name.
-
+<details>
+<summary>Why does adding a delivery fail even though the company exists?</summary>
+<p>Company matching is case-insensitive but must be an exact name match — no partial matches. Make sure the name in <code>c/COMPANY</code> matches the name stored in the Company Book exactly.</p>
+<p>Use <code>list</code> in the Company Book to verify the exact company name.</p>
 </details>
 
 ---
 
 ## Troubleshooting
 
-> [!NOTE]
-> **Error** messages in red mean the command **did not succeed**.
+<div class="note" markdown="1">
+📝 **Note:**
+
+**Error** messages in red mean the command **did not succeed**.
+</div>
 
 ---
 

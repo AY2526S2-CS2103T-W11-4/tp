@@ -639,89 +639,6 @@ clear
 
 ---
 
-## FAQ
-
-<details>
-<summary>How do I back up my data?</summary>
-<ul>
-<li>Locate the folder where MyCelia's <code>.jar</code> file is stored.</li>
-<li>Copy both <code>addressbook.json</code> and <code>deliverybook.json</code> to a safe location of your choice.</li>
-</ul>
-<p>Both files contain all your company and delivery data respectively.</p>
-</details>
-
-<details>
-<summary>How do I edit my data directly?</summary>
-<ul>
-<li>Locate the folder where MyCelia's <code>.jar</code> file is stored.</li>
-<li>Open <code>addressbook.json</code> or <code>deliverybook.json</code> in a text editor.</li>
-</ul>
-<div class="warning" markdown="1">
-⚠️ **Warning**
-
-Follow the file format carefully. Files that do not conform to the required format will be considered invalid and MyCelia may not load them.
-</div>
-<p><code>addressbook.json</code> — stores company details:</p>
-<pre><code class="language-json">{
-  "persons": [ {
-    "name": "NAME",
-    "phone": "PHONE",
-    "email": "EMAIL",
-    "address": "ADDRESS",
-    "tags": [ "TAGS" ]
-  } ]
-}</code></pre>
-<p><code>deliverybook.json</code> — stores delivery details:</p>
-<pre><code class="language-json">{
-  "deliveries": [ {
-    "product": "PRODUCT",
-    "company": "COMPANY",
-    "deadline": "yyyy-MM-dd HH:mm",
-    "isDelivered": false,
-    "tags": [ "TAGS" ]
-  } ]
-}</code></pre>
-</details>
-
-<details>
-<summary>I edited the data file directly and MyCelia has some missing data. What should I do?</summary>
-<p>Try the following steps:</p>
-<ol>
-<li><strong>Restore from backup</strong> — if you copied the JSON files before editing, replace the broken files with your backup copies.</li>
-<li><strong>Fix it</strong> — if no backup exists, look through the JSON files and correct any fields which do not fit the format. Reboot MyCelia after fixing it.</li>
-</ol>
-</details>
-
-<details>
-<summary>How do I transfer my data to another computer?</summary>
-<ol>
-<li>Install MyCelia on the new computer.</li>
-<li>On your old computer, locate the folder containing the <code>.jar</code> file.</li>
-<li>Copy <code>addressbook.json</code> and <code>deliverybook.json</code> to an external drive or cloud storage.</li>
-<li>On the new computer, replace the newly created JSON files with the ones from your old computer.</li>
-<li>Relaunch MyCelia — your data should appear exactly as before.</li>
-</ol>
-</details>
-
-<details>
-<summary>Why did my route planning fail to assign some deliveries?</summary>
-<p>Route planning requires at least one delivery to be selected. Use <code>select INDEX</code> or check the delivery's checkbox in the list, then run <code>route</code> again.</p>
-<p>Also ensure your origin address has been set with <code>set a/ADDRESS</code>.</p>
-</details>
-
-<details>
-<summary>Why is my route planning taking so long?</summary>
-<p>Route planning requires an internet connection. If it is taking too long, please switch to a better connection.</p>
-</details>
-
-<details>
-<summary>Why does adding a delivery fail even though the company exists?</summary>
-<p>Company matching is case-insensitive but must be an exact name match — no partial matches. Make sure the name in <code>c/COMPANY</code> matches the name stored in the Company Book exactly.</p>
-<p>Use <code>list</code> in the Company Book to verify the exact company name.</p>
-</details>
-
----
-
 ## Troubleshooting
 
 <div class="note" markdown="1">
@@ -866,6 +783,93 @@ Follow the file format carefully. Files that do not conform to the required form
 |----------|--------------|------------|
 | No prefixes provided | `Invalid command format! ...` | Provide at least one filter prefix, e.g. `filter c/Dell`. |
 | Deadline filter is in the wrong format | `Deadline must follow the format yyyy-MM-dd HH:mm.` | Use the correct format, e.g. `d/2026-03-25 14:30`. |
+
+## FAQ
+
+<details>
+<summary>How do I back up my data?</summary>
+<ul>
+<li>Locate the folder where MyCelia's <code>.jar</code> file is stored.</li>
+<li>Copy both <code>addressbook.json</code> and <code>deliverybook.json</code> to a safe location of your choice.</li>
+</ul>
+<p>Both files contain all your company and delivery data respectively.</p>
+</details>
+
+<details>
+<summary>How do I edit my data directly?</summary>
+<ul>
+<li>Locate the folder where MyCelia's <code>.jar</code> file is stored.</li>
+<li>Open <code>addressbook.json</code> or <code>deliverybook.json</code> in a text editor.</li>
+</ul>
+<div class="warning" markdown="1">
+⚠️ **Warning**
+
+Follow the file format carefully. Files that do not conform to the required format will be considered invalid and MyCelia may not load them.
+</div>
+<p><code>addressbook.json</code> — stores company details:</p>
+<pre><code class="language-json">{
+  "persons": [ {
+    "name": "NAME",
+    "phone": "PHONE",
+    "email": "EMAIL",
+    "address": "ADDRESS",
+    "tags": [ "TAGS" ]
+  } ]
+}</code></pre>
+<p><code>deliverybook.json</code> — stores delivery details:</p>
+<pre><code class="language-json">{
+  "deliveries": [ {
+    "product": "PRODUCT",
+    "company": "COMPANY",
+    "deadline": "yyyy-MM-dd HH:mm",
+    "isDelivered": false,
+    "tags": [ "TAGS" ]
+  } ]
+}</code></pre>
+</details>
+
+<details>
+<summary>I edited the data file directly and MyCelia has some missing data. What should I do?</summary>
+<p>Try the following steps:</p>
+<ol>
+<li><strong>Restore from backup</strong> — if you copied the JSON files before editing, replace the broken files with your backup copies.</li>
+<li><strong>Fix it</strong> — if no backup exists, look through the JSON files and correct any fields which do not fit the format. Reboot MyCelia after fixing it.</li>
+</ol>
+</details>
+
+<details>
+<summary>How do I transfer my data to another computer?</summary>
+<ol>
+<li>Install MyCelia on the new computer.</li>
+<li>On your old computer, locate the folder containing the <code>.jar</code> file.</li>
+<li>Copy <code>addressbook.json</code> and <code>deliverybook.json</code> to an external drive or cloud storage.</li>
+<li>On the new computer, replace the newly created JSON files with the ones from your old computer.</li>
+<li>Relaunch MyCelia — your data should appear exactly as before.</li>
+</ol>
+</details>
+
+<details>
+<summary>Why did my route planning fail to assign some deliveries?</summary>
+<p>Route planning requires at least one delivery to be selected. Use <code>select INDEX</code> or check the delivery's checkbox in the list, then run <code>route</code> again.</p>
+<p>Also ensure your origin address has been set with <code>set a/ADDRESS</code>.</p>
+</details>
+
+<details>
+<summary>Why is my route planning taking so long?</summary>
+<p>Route planning requires an internet connection. If it is taking too long, please switch to a better connection.</p>
+</details>
+
+<details>
+<summary>Why does adding a delivery fail even though the company exists?</summary>
+<p>Company matching is case-insensitive but must be an exact name match — no partial matches. Make sure the name in <code>c/COMPANY</code> matches the name stored in the Company Book exactly.</p>
+<p>Use <code>list</code> in the Company Book to verify the exact company name.</p>
+</details>
+
+---
+
+## Known Issues
+
+___
 
 ## Built With
 

@@ -84,7 +84,6 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                         }
                     })
                     .toList();
-            
         } catch (RuntimeException e) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));

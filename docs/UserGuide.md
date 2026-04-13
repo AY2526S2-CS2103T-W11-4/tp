@@ -382,7 +382,9 @@ clear
 <div class="warning" markdown="1">
 **⚠️ Important:**
 
-This action is permanent and cannot be undone. Use with caution.
+- This action also clears delivery book as the deliveries are associated with the companies
+
+- This action is permanent and cannot be undone. Use with caution.
 </div>
 
 ---

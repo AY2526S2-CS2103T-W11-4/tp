@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
@@ -27,7 +28,7 @@ public class DeleteCommand extends Command {
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_DELETE_COMPANY_SUCCESS = "Deleted Company: %1$s";
+    public static final String MESSAGE_DELETE_COMPANY_SUCCESS = "Deleted Company: %1$s\n";
 
     private final Index targetIndex;
 
@@ -45,13 +46,22 @@ public class DeleteCommand extends Command {
         }
 
         Company companyToDelete = lastShownList.get(targetIndex.getZeroBased());
+        List<Delivery> deletedDeliveries = new ArrayList<>();
         for (Delivery d: new ArrayList<>(model.getFilteredDeliveryList())) {
             if (d.getCompany().equals(companyToDelete)) {
+                deletedDeliveries.add(d);
                 model.deleteDelivery(d);
             }
         }
         model.deleteCompany(companyToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_COMPANY_SUCCESS, Messages.format(companyToDelete)));
+        String resultMessage = String.format(MESSAGE_DELETE_COMPANY_SUCCESS, Messages.format(companyToDelete));
+        if (!deletedDeliveries.isEmpty()) {
+            String deliveryList = deletedDeliveries.stream()
+                    .map(d -> "\n  - " + d.toString())
+                    .collect(Collectors.joining());
+            resultMessage += "\nThe following associated deliveries were also deleted:" + deliveryList;
+        }
+        return new CommandResult(resultMessage);
     }
 
     @Override

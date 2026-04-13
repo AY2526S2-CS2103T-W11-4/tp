@@ -119,6 +119,7 @@ You can check individual deliveries using their checkboxes to select them for ro
 
 The Routes view displays an interactive map with the optimised route for selected deliveries. Switch to it using the **Routes** pill button, or trigger it automatically via the `route` command or the **Plan Today's Route** button.
 
+Note: Mycelia requires an **active internet connection** to access the routes feature, offline system is in the works.
 ---
 
 ### Storage

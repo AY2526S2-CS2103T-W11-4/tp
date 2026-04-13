@@ -847,10 +847,12 @@ Switch to the Delivery Book with `switch` before running these test cases.
 
 Team size: 4
 
-1. **Clearer error message display** — some error messages are longer as there are more restrictions to the command usage. UI will be better accommodating for various lengths of error messages
+1. **Clearer error message display** — Some error messages are longer as there are more restrictions to the command usage. UI will be better accommodating for various lengths of error messages
 
 2. **Better UI support for route** — UI displayed for route command is very simple. There are situations where it might cause some overlaps which make user unable to click the deliveries.
 
-3. **Add more specific error messages are shown to let user know what went wrong** - currently the text turns red and a valid example will be shown for all forms of invalid command usage. It will be more suitable to indicate to user exactly which field is missing or invalid.
+3. **Add more specific error messages are shown to let user know what went wrong** - Currently the text turns red and a valid example will be shown for all forms of invalid command usage. It will be more suitable to indicate to user exactly which field is missing or invalid.
 
 4. **Better support for different OS** - There are some known issues such as being unable to use route command for different OS systems like `linux`. Better support for different systems will be implemented in the future.
+
+5.**Add memort and offline support to route system** - Currently, users cannot access routes and coordinates they have accessed on a previous use nor can they use any of the map and route features without an active internet connection. For ease of use, speed and lower api load, it is better to save previously computed coordinates and route, potentially using them for offline repeated routes that some companies may often use. 

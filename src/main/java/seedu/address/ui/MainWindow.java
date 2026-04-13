@@ -256,8 +256,6 @@ public class MainWindow extends UiPart<Stage> {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
-            resultDisplayPlaceholder.setVisible(true);
-            resultDisplayPlaceholder.setManaged(true);
             if (commandResult.isShowHelp()) {
                 handleHelp();
             }
@@ -278,8 +276,6 @@ public class MainWindow extends UiPart<Stage> {
         } catch (CommandException | ParseException e) {
             logger.info("An error occurred while executing command: " + commandText);
             resultDisplay.setFeedbackToUser("");
-            resultDisplayPlaceholder.setVisible(false);
-            resultDisplayPlaceholder.setManaged(false);
             throw e;
         }
     }

@@ -134,12 +134,10 @@ The Routes view displays an interactive map with the optimised route for selecte
 
 ## Commands
 
----
-
 ### General Information
 
-<div class="note" markdown="1">
-📝 **Note:**
+<div class="warning" markdown="1">
+⚠️ **Important:**
 
 **Error** messages in red mean the command **did not succeed**.
 
@@ -155,8 +153,10 @@ You will be notified of the correct command format below the command box
 - `Deadline` fields strictly require the format `yyyy-MM-dd HH:mm`
 - Avoid giving invalid addresses as it will prevent you from accessing the route feature fully
 - Duplicate entries are not allowed
-- Use of special cases such as `!, /, \, #, @` in any of the fields is not allowed except for `Email`
+- Use of special cases such as `! / \ # @` in any of the fields is not allowed, with some exceptions in `Email`
 </div>
+
+---
 
 ### Global Commands
 
@@ -251,16 +251,6 @@ Manage your network of business contacts. These commands are active when you're 
 |`e/`|Email address|Yes|
 |`a/`|Physical address|Yes|
 |`t/`|Tag (repeatable)|No|
-
-**Filter prefixes:**
-
-|Prefix|Meaning|
-|-|-|
-|`c/`|Company name contains keyword|
-|`a/`|Address contains keyword|
-|`p/`|Phone number contains digits|
-|`e/`|Email contains keyword|
-|`t/`|Tag matches keyword|
 
 ---
 
@@ -722,6 +712,7 @@ Follow the file format carefully. Files that do not conform to the required form
 
 - `Route` command will not function on **specific OS versions** (More common on `linux` systems).
 - When using `Route` command with multiple deliveries heading to the same location, the map will not display all deliveries due to an overlap in UI, this will be fixed in later releases.
+
 ___
 
 ## Built With

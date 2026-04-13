@@ -8,6 +8,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_COMPANIES;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -85,7 +86,7 @@ public class EditCommand extends Command {
         if (!companyToEdit.isSameCompany(editedCompany) && model.hasCompany(editedCompany)) {
             throw new CommandException(MESSAGE_DUPLICATE_COMPANY);
         }
-        for (Delivery d: model.getFilteredDeliveryList()) {
+        for (Delivery d: new ArrayList<>(model.getFilteredDeliveryList())) {
             if (d.getCompany().equals(companyToEdit)) {
                 model.deleteDelivery(d);
                 model.addDelivery(new Delivery(d.getProduct(), editedCompany, d.getDeadline(), d.getTags()));

@@ -59,6 +59,7 @@ public class LogicManager implements Logic {
 
             try {
                 storage.saveAddressBook(model.getAddressBook());
+                storage.saveDeliveryBook(model.getDeliveryBook());
                 storage.saveUser(model.getUser());
             } catch (AccessDeniedException e) {
                 throw new CommandException(String.format(FILE_OPS_PERMISSION_ERROR_FORMAT, e.getMessage()), e);
@@ -70,6 +71,7 @@ public class LogicManager implements Logic {
             commandResult = command.execute(model);
 
             try {
+                storage.saveAddressBook(model.getAddressBook());
                 storage.saveDeliveryBook(model.getDeliveryBook());
                 storage.saveUser(model.getUser());
             } catch (AccessDeniedException e) {

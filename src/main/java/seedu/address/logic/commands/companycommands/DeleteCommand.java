@@ -2,6 +2,7 @@ package seedu.address.logic.commands.companycommands;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import seedu.address.commons.core.index.Index;
@@ -44,7 +45,7 @@ public class DeleteCommand extends Command {
         }
 
         Company companyToDelete = lastShownList.get(targetIndex.getZeroBased());
-        for (Delivery d: model.getFilteredDeliveryList()) {
+        for (Delivery d: new ArrayList<>(model.getFilteredDeliveryList())) {
             if (d.getCompany().equals(companyToDelete)) {
                 model.deleteDelivery(d);
             }

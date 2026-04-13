@@ -263,9 +263,10 @@ Manage your network of business contacts. These commands are active when you're 
 <div class="warning" markdown="1"> 
 ⚠️ **Important:**
 
-While we allow the creation of companies with names that only differ only in casing i.e. `Apple` and `apple` , it is not recommended as it can cause issues when assigning deliveries.
-
-You may however do so at your own discretion.
+- While we allow the creation of companies with names that only differ only in casing i.e. `Apple` and `apple` , it is not recommended as it can cause issues when assigning deliveries. You may however do so at your own discretion.
+- Prefix fields are only checked for invalid characters and formats, it is up to the user to make sure that the fields they provided are valid
+- `Phone` field is must only contain numbers and at least 3 digits long
+- `Email` field is additionally checked for valid email. A valid email must follow the format `xxxx@domain`
 </div>
 
 ---
@@ -382,7 +383,9 @@ Example:
 <div class="warning" markdown="1">
 **⚠️ Important:**
 
-Deleting a company automatically deletes its associated deliveries in the Delivery Book. 
+- This action also clears delivery book as the deliveries are associated with the companies
+
+- This action is permanent and cannot be undone. Use with caution.
 </div>
 
 ---
@@ -436,7 +439,8 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 <div class="warning" markdown="1"> 
 ⚠️ **Important:**
 
-The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
+- The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
+- Address of delivery is tied to the company it is assigned to, changing `company` of a delivery will also change the address
 </div>
 
 ---

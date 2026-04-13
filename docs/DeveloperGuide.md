@@ -379,9 +379,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | first-time user | view a guided tour                                  | learn the app quickly                   |
 | `*`      | Driving user    | View map through the app                            | to navigate quickly          |
 
-## Use cases
+### Use cases
 
-### UC01 Create a delivery record linked to a client contact
+#### UC01 Create a delivery record linked to a client contact
 
 
 **Actor:** User
@@ -409,7 +409,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ---
 
 
-### UC02 Mark a delivery as complete
+#### UC02 Mark a delivery as complete
 
 **Actor:** User (dispatcher / delivery coordinator)
 **Preconditions:**
@@ -435,7 +435,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ---
 
 
-### UC03 Tag a client contact for special handling
+#### UC03 Tag a client contact for special handling
 
 
 **Actor:** User
@@ -459,7 +459,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ---
 
 
-## Non-functional requirements (NFRs)
+### Non-functional requirements (NFRs)
 
 **Usability:**
 
@@ -503,7 +503,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ---
 
-## Glossary
+### Glossary
 
 
 - **Client contact:** A customer entry (company/person) with key fields such as name, phone, address, and notes.
@@ -526,8 +526,6 @@ Given below are instructions to test the app manually.
 testers are expected to do more *exploratory* testing.
 
 </div>
-
-## Appendix: Instructions for Manual Testing
 
 ### Launch and shutdown
 

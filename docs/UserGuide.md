@@ -383,7 +383,9 @@ Example:
 <div class="warning" markdown="1">
 **⚠️ Important:**
 
-Deleting a company automatically deletes its associated deliveries in the Delivery Book. 
+- This action also clears delivery book as the deliveries are associated with the companies
+
+- This action is permanent and cannot be undone. Use with caution.
 </div>
 
 ---

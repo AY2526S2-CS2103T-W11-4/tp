@@ -12,7 +12,7 @@ _MyCelia — named after mycelium, the underground network that keeps fungi conn
 
 MyCelia is a command-line-driven desktop application for B2B delivery coordinators. Manage your business contacts and track outgoing deliveries — all from a single keyboard-driven interface. No clicking around. Just type and go.
 
-<img src="images/ui-overview.png" width="700" alt="MyCelia Main Window" />
+<img src="images/Ui.png" width="700" alt="MyCelia Main Window" />
 
 ---
 

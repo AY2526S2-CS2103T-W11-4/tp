@@ -215,7 +215,7 @@ This section describes some noteworthy details on how certain features are imple
 
 To facilitate deliveries to an assigned company, MyCelia allows the user to create deliveries with reference to an existing company.
 
-Internally, `AddCommand` does not store only a raw company name. Instead, it stores a `CompanyNameContainsKeywordsPredicate` and uses it during execution to search the existing Company Book for a matching company. 
+Internally, `AddCommand` does not store only a raw company name. Instead, it stores a `CompanyNameContainsKeywordsPredicate` and uses it during execution to search the existing Company Book for a matching company.
 
 This design allows for changes within a `Company` to be reflected on the deliveries, reducing the need for users to manually edit every delivery if there is a change to the company.
 
@@ -323,7 +323,7 @@ MyCelia uses the [OpenRouteService (ORS)](https://openrouteservice.org/) API for
 
 When a routing request is made, `OrsHttpClient` attempts to resolve the API key in the following order:
 
-1. **`KeyDeriver` (release builds)** — The real `KeyDeriver.java` is encrypted with git-crypt and only available to maintainers. 
+1. **`KeyDeriver` (release builds)** — The real `KeyDeriver.java` is encrypted with git-crypt and only available to maintainers.
 
 2. **Local key file (development builds)** — If `KeyDeriver.java` is the stub (see below), `OrsHttpClient` falls back to reading the key from a plain text file at:
    - Windows: `%APPDATA%\MyCelia\ors.key`
@@ -701,7 +701,7 @@ Switch to the Delivery Book with `switch` before running these test cases.
 
 4. Test case: `edit 1` or `edit 999 d/2026-04-01 09:00`
    - Expected: Command input turns red and displays the correct command format.
-   
+
 5. Test case: `edit 1 c/NonExistentCo`
    - Expected: `Company not found`.
 
@@ -847,12 +847,12 @@ Switch to the Delivery Book with `switch` before running these test cases.
 
 Team size: 4
 
-1. **Clearer error message display** — Some error messages are longer as there are more restrictions to the command usage. UI will be better accommodating for various lengths of error messages
+1. **Clearer error message display** — Some error messages are longer as there are more restrictions to the command usage. UI will be better accommodating for various lengths of error messages.
 
 2. **Better UI support for route** — UI displayed for route command is very simple. There are situations where it might cause some overlaps which make user unable to click the deliveries.
 
-3. **Add more specific error messages are shown to let user know what went wrong** - Currently the text turns red and a valid example will be shown for all forms of invalid command usage. It will be more suitable to indicate to user exactly which field is missing or invalid.
+3. **Add more specific error messages are shown to let user know what went wrong** - Currently the text turns red and a valid example will be shown for most invalid commands. Only certain errors have been adapted to be shown for the user. It will be more suitable to indicate to user exactly which field is missing or invalid.
 
 4. **Better support for different OS** - There are some known issues such as being unable to use route command for different OS systems like `linux`. Better support for different systems will be implemented in the future.
 
-5.**Add memort and offline support to route system** - Currently, users cannot access routes and coordinates they have accessed on a previous use nor can they use any of the map and route features without an active internet connection. For ease of use, speed and lower api load, it is better to save previously computed coordinates and route, potentially using them for offline repeated routes that some companies may often use. 
+5.**Add memory and offline support to route system** - Currently, users cannot access routes and coordinates they have accessed on a previous use nor can they use any of the map and route features without an active internet connection. For ease of use, speed and lower api load, it is better to save previously computed coordinates and route, potentially using them for offline repeated routes that some companies may often use.

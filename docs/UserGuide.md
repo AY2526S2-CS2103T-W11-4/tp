@@ -54,10 +54,10 @@ You're all set! MyCelia should come with Sample Data for you to get started on u
 
 > MyCelia manages two separate books. Commands are **context-specific** — make sure you're in the right book before running a command.
 
-| Book | What it contains | 
+| Book | What it contains |
 |------|-----------------|
-| **Company Book** | Your directory of business partners, suppliers, and clients | 
-| **Delivery Book** | Your log of outgoing deliveries linked to companies | 
+| **Company Book** | Your directory of business partners, suppliers, and clients |
+| **Delivery Book** | Your log of outgoing deliveries linked to companies |
 
 Switch between them with a single command or via the UI tabs. Everything saves automatically.
 
@@ -261,7 +261,7 @@ Manage your network of business contacts. These commands are active when you're 
 |`a/`|Physical address|Yes|
 |`t/`|Tag (repeatable)|No|
 
-<div class="warning" markdown="1"> 
+<div class="warning" markdown="1">
 ⚠️ **Important:**
 
 - While we allow the creation of companies with names that only differ only in casing i.e. `Apple` and `apple` , it is not recommended as it can cause issues when assigning deliveries. You may however do so at your own discretion.
@@ -437,7 +437,7 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 |`d/`|Deadline (`yyyy-MM-dd HH:mm`)|Yes for `add`, optional for `edit`|
 |`t/`|Tag (repeatable)|No|
 
-<div class="warning" markdown="1"> 
+<div class="warning" markdown="1">
 ⚠️ **Important:**
 
 - The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
@@ -561,10 +561,10 @@ Format:
 route
 ```
 
-<div class="warning" markdown="1"> 
+<div class="warning" markdown="1">
 ⚠️ **Important:**
 
-- Please ensure you have a stable internet connection before using this feature. The process might take a while depending on your connection. 
+- Please ensure you have a stable internet connection before using this feature. The process might take a while depending on your connection.
 - `Planning Route for User... please wait` indicates that the planning is not completed.
 - At least one delivery must be selected before running `route`. Equivalent to clicking **Plan Today's Route** in the UI after selecting deliveries.
 </div>

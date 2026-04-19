@@ -40,7 +40,7 @@ Open **Command Prompt** and run:
 
 ```bash
 cd PATH_TO_FOLDER_WITH_JAR_FILE
-java -jar vendorvault.jar
+java -jar MyCelia.jar
 ```
 
 You're all set! MyCelia should come with Sample Data for you to get started on using the basic features.
@@ -135,9 +135,9 @@ Note: Mycelia requires an **active internet connection** to access the routes fe
 The only field that should be edited in `user.json` is `address`. Editing other fields can result in the failure of certain commands. Delete `user.json` and start with the sample version if necessary.
 </div>
 
-* All files are created in the same folder as the jar on first launch
+* All files are created in the folder named `data` and the `data` folder is located in the same location as the jar on first launch
 * To back up, copy the JSON files somewhere safe
-* To transfer to another machine, move the jar and the JSON files together
+* To transfer to another machine, move the jar and the data files together
 
 ---
 
@@ -412,21 +412,21 @@ This action is permanent and cannot be undone. Use with caution.
 
 Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from the Company Book.
 
-| Command                | Format                                                  |Example|
-|------------------------|---------------------------------------------------------|-|
-| Add                    | `add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...`         |`add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`|
-| Delete                 | `delete INDEX`                                          |`delete 2`|
+| Command                | Format                                             |Example|
+|------------------------|----------------------------------------------------|-|
+| Add                    | `add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...`    |`add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`|
+| Delete                 | `delete INDEX`                                     |`delete 2`|
 | Edit                   | `edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...` |`edit 1 d/2026-03-26 09:00 t/fragile`|
-| Mark delivered         | `mark INDEX`                                            |`mark 1`|
-| Unmark                 | `unmark INDEX`                                          |`unmark 1`|
-| Select for routing     | `select INDEX [INDEX]...`                               |`select 1 3 5`|
-| Clear selection        | `select none`                                           |`select none`|
-| Plan route             | `route`                                                 |`route`|
+| Mark delivered         | `mark INDEX`                                       |`mark 1`|
+| Unmark                 | `unmark INDEX`                                     |`unmark 1`|
+| Select for routing     | `select INDEX [INDEX]...`                          |`select 1 3 5`|
+| Clear selection        | `select none`                                      |`select none`|
+| Plan route             | `route`                                            |`route`|
 | Filter                 | `filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...` |`filter c/Dell p/Laptop t/fragile`|
-| Reset filter           | `unfilter`                                              |`unfilter`|
- List all               | `list`                                                  |`list`|
-| Sort delivery by field | `sort [p/] [c/] [a/] [d/]`                              |`sort c/`|
-| Clear all              | `clear`                                                 |`clear`|
+| Reset filter           | `unfilter`                                         |`unfilter`|
+ List all               | `list`                                             |`list`|
+| Sort delivery by field | `sort [p/] [c/] [d/]`                              |`sort c/`|
+| Clear all              | `clear`                                            |`clear`|
 
 **Delivery prefixes:**
 

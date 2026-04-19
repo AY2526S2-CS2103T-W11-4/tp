@@ -776,13 +776,13 @@ Switch to the Delivery Book with `switch` before running these test cases.
 
 1. Prerequisites: There should be a delivery linked to `Dell Singapore` with tag `fragile`.
 
-2. Test case: `filter c/Dell`
+2. Test case: `filter n/Dell`
    - Expected: All deliveries linked to Dell Singapore are shown.
 
 3. Test case: `filter t/fragile`
    - Expected: All deliveries tagged `fragile` are shown.
 
-4. Test case: `filter c/Dell t/fragile`
+4. Test case: `filter n/Dell t/fragile`
    - Expected: Only deliveries matching both conditions are shown.
 
 5. Test case: `filter`
@@ -807,11 +807,11 @@ Switch to the Delivery Book with `switch` before running these test cases.
 2. Test case: Run any command that modifies data (e.g. add a company), then close and relaunch the app.
    - Expected: The modified data persists after relaunch.
 
-3. Test case: Delete `addressbook.json` and restart the app.
+3. Test case: Delete `addressbook.json` in `/data` and restart the app.
    - Expected: App initialises with sample company data.
 
-4. Test case: Enter invalid JSON into `deliverybook.json` and restart the app.
-   - Expected: A warning is logged to the terminal and the app starts with an empty Delivery Book.
+4. Test case: Enter invalid JSON into `deliverybook.json` in `/data` and restart the app.
+   - Expected: A warning is logged to the terminal and the app starts with a Delivery Book without the invalid JSON.
 
 ## Appendix: Effort
 
@@ -855,4 +855,4 @@ Team size: 4
 
 4. **Better support for different OS** - There are some known issues such as being unable to use route command for different OS systems like `linux`. Better support for different systems will be implemented in the future.
 
-5.**Add memory and offline support to route system** - Currently, users cannot access routes and coordinates they have accessed on a previous use nor can they use any of the map and route features without an active internet connection. For ease of use, speed and lower api load, it is better to save previously computed coordinates and route, potentially using them for offline repeated routes that some companies may often use.
+5. **Add memory and offline support to route system** - Currently, users cannot access routes and coordinates they have accessed on a previous use nor can they use any of the map and route features without an active internet connection. For ease of use, speed and lower api load, it is better to save previously computed coordinates and route, potentially using them for offline repeated routes that some companies may often use.
